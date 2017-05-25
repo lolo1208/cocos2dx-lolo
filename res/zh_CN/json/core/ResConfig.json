@@ -1,0 +1,18 @@
+{
+    "language" : { "url":"json/core/Language.json", "type":"json" },
+    "style" : { "url":"json/core/Style.json", "type":"json", "nameID":"020101" },
+    "uiConfig" : { "url":"json/core/UIConfig.json", "type":"json", "nameID":"020102" },
+    "skin" : { "url":"json/core/Skin.json", "type":"json", "nameID":"020103" },
+    "animationConfig" : { "url":"json/core/AnimationConfig.json", "type":"json", "nameID":"020104" },
+    "bitmapConfig" : { "url":"json/core/BitmapConfig.json", "type":"json", "nameID":"020105" },
+    
+    "mainUIConfig" : { "url":"json/uiConfig/MainUI.json", "type":"json", "nameID":"020199" },
+    
+	"testConfig1" : { "url":"json/uiConfig/test/Config1.json", "type":"json", "nameID":"020201" },
+	"testConfig2" : { "url":"json/uiConfig/test/Config2.json", "type":"json", "nameID":"020201" },
+	
+	
+	
+    
+    "" : ""
+}

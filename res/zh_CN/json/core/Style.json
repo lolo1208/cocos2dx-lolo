@@ -1,0 +1,141 @@
+{
+
+"textField" : {
+	"font"		: "FZZhunYuan-M02S",
+	"size"		: 20,
+	"color"		: "0xFFFFFF",
+	"stroke"	: "none",
+	"strokeSize": 1,
+	"leading"	: 3
+},
+
+"label" : {},
+"inputText" : {},
+
+"alertText" : {
+	"size"					: 30,
+	"color"					: "0x990000",
+	"stroke"				: "0xFFFFFF",
+	"colorList"				: [ "0x990000", "0x009900" ],
+	"showDelay"				: 0,
+	"hideDelay"				: 1.8,
+	"showEffectDuration"	: 0.3,
+	"hideEffectDuration"	: 0.5
+},
+
+"numberText" : {
+	"upColor"		: "0x24B052",
+	"downColor"		: "0xB13F23",
+	"delay"			: 80
+},
+
+
+
+"baseButton1" : {
+	"skinName" : "button1"
+},
+
+"button1" : {
+	"skinName"				: "button1",
+	"labelPaddingTop"		: 5,
+	"labelPaddingBottom"	: 5,
+	"labelPaddingLeft"		: 5,
+	"labelPaddingRight"		: 5,
+	"labelStyle"	: {
+		"size"			: 20,
+		"color"			: "0xFFFFFF",
+		"disabledStyle"	: { "color":"0xF1F1F1" }
+	}
+},
+
+"imageButton1" : {
+	"skinName"				: "button1",
+	"imagePaddingTop"		: 3,
+	"imagePaddingBottom"	: 3,
+	"imagePaddingLeft"		: 3,
+	"imagePaddingRight"		: 3,
+	"imagePrefix"			: "test.text.imageBtn"
+},
+
+"checkBox1" : {
+	"skinName"			: "checkBox1",
+	"labelPaddingTop"	: 1,
+	"labelPaddingLeft"	: 30,
+	"labelStyle"	: {
+		"color"	: "0x666666",
+		"selectedStyle"	: { "color":"0x999999" },
+		"disabledStyle"	: { "color":"0xAAAAAA" }
+	}
+},
+	
+"radioButton1" : {
+	"skinName"	: "radioButton1",
+	"labelPaddingTop"	: 1,
+	"labelPaddingLeft"	: 30,
+	"labelStyle"	: {
+		"color"	: "0x666666",
+		"selectedStyle"	: { "color":"0x999999" },
+		"disabledStyle"	: { "color":"0xAAAAAA" }
+	}
+},
+
+
+
+"vScrollBar1" : {
+	"thumbSourceName"	: "skin.scrollBar.v1.thumb",
+	"thumbMinSize"		: 15
+},
+
+"hScrollBar1" : {
+	"thumbSourceName"	: "skin.scrollBar.h1.thumb",
+	"thumbMinSize"		: 15
+},
+
+
+"alert" : {
+	"background": "skin.alert.default.background",
+	"modalAlpha": 0.1,
+
+	"minWidth"	: 320,
+	"minHeight"	: 230,
+	"maxWidth"	: 450,
+	"maxHeight"	: 260,
+	
+	"labelProp"			: { "color":"0x333333", "align":1 },
+	"labelPaddingTop"	: 20,
+	"labelPaddingBottom": 30,
+	"labelPaddingLeft"	: 20,
+	"labelPaddingRight"	: 20,
+	
+	"buttonProp"			: { "autoSize"	: true,
+								"style"		: { "labelPaddingTop":15, "labelPaddingBottom":15, "labelPaddingLeft":25, "labelPaddingRight":25 },
+								"labelProps": { "size":22 }
+							  },
+	"buttonStyleName"		: "button1",
+	"buttonGap"				: 35,
+	"buttonPaddingBottom"	: 25
+},
+
+
+
+"toolTip" : {
+	"background"	: "skin.tooltip.default.background",
+	"labelMaxWidth"	: 200,
+	
+	"showDelay"				: 0.4,
+	"hideDelay"				: 3.5,
+	"showEffectDuration"	: 0.3,
+	"hideEffectDuration"	: 0.2,
+	
+	"paddingMouseX"			: -1,
+	"paddingMouseY"			: 22,
+	
+	"labelPaddingTop"		: 4,
+	"labelPaddingBottom"	: 4,
+	"labelPaddingLeft"		: 5,
+	"labelPaddingRight"		: 4,
+	"labelStyle"			: { "color":"0x333333", "leading":8 }
+}
+
+
+}

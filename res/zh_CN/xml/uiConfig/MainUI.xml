@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <loadBar stageLayout='{}'>
+    <modalBackground id="modalBG" properties='{"alpha":0.6}'/>
+    <bitmapSprite id="bg" properties='{"sourceName":"mainUI.loadBar.bg"}'/>
+    <bitmapSprite id="progressBar" properties='{"x":7, "y":39, "sourceName":"mainUI.loadBar.progressBar"}'/>
+    <label id="progressText" properties='{"y":13, "width":252, "height":18}' style='{"color":"0xFFFFFF", "stroke":"0x302010", "align":"center"}' editorProps='{"tipsText":"正在加载[测试场景界面] 59% 12/37"}'/>
+  </loadBar>
+  <requestModal vars='{"modalTransparency":{"normal":0.01, "deep":0.2}}' stageLayout='{}'>
+    <modalBackground id="modalBG" properties='{"alpha":0.01}'/>
+    <bitmapSprite id="bg" properties='{"sourceName":"mainUI.requestModal.bg"}'/>
+    <animation id="loadingAni" properties='{"x":60, "y":30, "sourceName":"ui.mainUI.requestModal.loading", "fps":20}'/>
+    <bitmapSprite id="loadingText" properties='{"x":35, "y":52, "sourceName":"mainUI.text.loadingText"}'/>
+    <bitmapSprite id="timeoutText" properties='{"x":18, "y":18, "sourceName":"mainUI.text.timeoutText"}'/>
+  </requestModal>
+  <avatarLoading>
+    <bitmapSprite id="sketch" properties='{"y":-9, "sourceName":"mainUI.avatarLoading.sketch"}'/>
+    <label id="progressText" properties='{"x":-24, "y":-4, "width":50, "height":25}' style='{"color":"0xFFFFFF", "stroke":"0x302010", "align":"center"}' editorProps='{"tipsText":"100%"}'/>
+  </avatarLoading>
+</config>

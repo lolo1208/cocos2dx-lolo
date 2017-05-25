@@ -1,0 +1,12 @@
+.idea
+bin-debug
+bin-release
+publish
+frameworks/cocos2d-html5
+frameworks/cocos2d-x
+frameworks/runtime-src/proj.android
+frameworks/runtime-src/proj.android-studio
+frameworks/runtime-src/proj.ios_mac
+frameworks/runtime-src/proj.linux
+frameworks/runtime-src/proj.win8.1-universal
+frameworks/runtime-src/proj.win32

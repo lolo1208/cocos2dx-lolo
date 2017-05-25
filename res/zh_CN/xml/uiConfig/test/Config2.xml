@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <container id="nt" stageLayout='{}'>
+    <numberText id="nt" properties='{"width":300, "height":35}' style='{"align":"center", "strokeSize":1}' editorProps='{"tipsText":"NumberText"}'/>
+  </container>
+  <container id="btn" stageLayout='{}'>
+    <baseButton id="btn1" properties='{"y":50, "width":100, "height":50, "styleName":"baseButton1"}'/>
+    <imageButton properties='{"x":400, "y":50, "width":100, "height":50, "styleName":"imageButton1"}'/>
+    <button id="btn2" properties='{"x":200, "y":50, "width":100, "height":50, "label":"Button", "styleName":"button1"}'/>
+    <label properties='{"width":200, "height":40, "text":"BaseButton"}' style='{"strokeSize":1}'/>
+    <label properties='{"x":200, "width":100, "height":40, "text":"Button"}' style='{"align":"center", "strokeSize":1}'/>
+    <label properties='{"x":300, "width":200, "height":40, "text":"ImageButton"}' style='{"align":"right", "strokeSize":1}'/>
+    <label id="label1" properties='{"y":130, "width":300, "height":200, "text":"label1"}' style='{"strokeSize":1}'/>
+    <label id="label2" properties='{"x":300, "y":130, "width":300, "height":200, "text":"label2"}' style='{"strokeSize":1}'/>
+  </container>
+  <container id="it" stageLayout='{}'>
+    <bitmapSprite properties='{"y":50, "width":460, "height":50, "sourceName":"skin.button.1.selectedUp"}'/>
+    <bitmapSprite properties='{"y":150, "width":460, "height":50, "sourceName":"skin.button.1.selectedUp"}'/>
+    <bitmapSprite properties='{"x":155, "y":250, "width":300, "height":150, "sourceName":"skin.button.1.selectedUp"}'/>
+    <label properties='{"width":150, "height":50, "text":"username:"}' style='{"align":"right", "strokeSize":1}' vars='{"valign":1}' editorProps='{"lock":true}'/>
+    <label properties='{"y":50, "width":150, "height":50, "text":"password:"}' style='{"align":"right", "strokeSize":1}' vars='{"valign":1}' editorProps='{"lock":true}'/>
+    <label properties='{"y":100, "width":150, "height":50, "text":"age:"}' style='{"align":"right", "strokeSize":1}' vars='{"valign":1}' editorProps='{"lock":true}'/>
+    <label properties='{"y":150, "width":150, "height":50, "text":"e-mail:"}' style='{"align":"right", "strokeSize":1}' vars='{"valign":1}' editorProps='{"lock":true}'/>
+    <label properties='{"y":200, "width":150, "height":50, "text":"homepage:"}' style='{"align":"right", "strokeSize":1}' vars='{"valign":1}' editorProps='{"lock":true}'/>
+    <label properties='{"y":250, "width":150, "height":35, "text":"intro:"}' style='{"align":"right", "strokeSize":1}' editorProps='{"lock":true}'/>
+    <inputText id="unIT" properties='{"x":160, "width":300, "height":50}' style='{"strokeSize":1}' editorProps='{"lock":true, "tipsText":"InputText"}'/>
+    <inputText id="pwIT" properties='{"x":160, "y":50, "width":300, "height":50}' style='{"strokeSize":1}' editorProps='{"lock":true, "tipsText":"InputText"}'/>
+    <inputText id="ageIT" properties='{"x":160, "y":100, "width":300, "height":50}' style='{"strokeSize":1}' editorProps='{"lock":true, "tipsText":"InputText"}'/>
+    <inputText id="emIT" properties='{"x":160, "y":150, "width":300, "height":50}' style='{"strokeSize":1}' editorProps='{"lock":true, "tipsText":"InputText"}'/>
+    <inputText id="hpIT" properties='{"x":160, "y":200, "width":300, "height":50}' style='{"strokeSize":1}' editorProps='{"lock":true, "tipsText":"InputText"}'/>
+    <inputText id="introIT" properties='{"x":160, "y":250, "width":300, "height":150}' style='{"strokeSize":1}' editorProps='{"lock":true, "tipsText":"InputText"}'/>
+  </container>
+  <container id="http" stageLayout='{"height":360}'>
+    <button id="sendBtn" properties='{"height":50, "label":"send", "styleName":"button1"}'/>
+    <sprite id="contentC" properties='{"y":60}'/>
+    <label id="contentText" parent="contentC" properties='{"width":650}' style='{"size":14, "strokeSize":1}' editorProps='{"tipsText":"Label"}'/>
+    <touchScrollBar id="contentVSB" target="contentC" properties='{"x":650, "y":60, "viewableArea":{"width":650,"y":60,"height":300,"x":0}, "size":300, "styleName":"vScrollBar1"}'/>
+  </container>
+  <container id="ws" stageLayout='{"height":360}'>
+    <sprite id="c" properties='{"y":60}'/>
+    <label id="text" parent="c" properties='{"width":650}' style='{"size":14, "strokeSize":1}' editorProps='{"tipsText":"Label"}'/>
+    <touchScrollBar id="vsb" target="c" properties='{"x":650, "y":60, "viewableArea":{"width":650,"y":60,"height":300,"x":0}, "size":300, "styleName":"vScrollBar1"}'/>
+    <button id="btn" properties='{"width":170, "height":50, "label":"connect", "styleName":"button1"}'/>
+    <button id="sendStrBtn" properties='{"x":190, "width":140, "height":50, "label":"send string", "styleName":"button1"}'/>
+    <button id="senBytesBtn" properties='{"x":350, "width":140, "height":50, "label":"send bytes", "styleName":"button1"}'/>
+    <button id="clearBtn" properties='{"x":550, "width":100, "height":50, "label":"clear", "styleName":"button1"}'/>
+  </container>
+  <container id="upd" stageLayout='{}'>
+    <button id="clearBtn" properties='{"width":220, "height":50, "label":"清空已更新数据", "styleName":"button1"}'/>
+    <button id="resetBtn" properties='{"y":80, "width":220, "height":50, "label":"重置（重启）APP", "styleName":"button1"}'/>
+    <label id="versionText" properties='{"x":5, "y":160, "width":220, "height":70}' style='{"align":"center", "strokeSize":1}' editorProps='{"tipsText":"Label"}'/>
+  </container>
+  <container id="eff" stageLayout='{}'>
+    <itemGroup id="group" properties='{"verticalGap":25, "layout":"vertical"}'/>
+    <radioButton parent="group" group="group" properties='{"y":165, "label":"UpFloat", "styleName":"radioButton1"}'/>
+    <radioButton parent="group" group="group" properties='{"y":55, "label":"DownFloat", "styleName":"radioButton1"}'/>
+    <radioButton parent="group" group="group" properties='{"y":110, "selected":true, "label":"BehindFloat", "styleName":"radioButton1"}'/>
+    <radioButton parent="group" group="group" properties='{"label":"BezierFloat", "styleName":"radioButton1"}'/>
+    <radioButton parent="group" group="group" properties='{"y":220, "label":"DelayedHide", "styleName":"radioButton1"}'/>
+    <radioButton parent="group" group="group" properties='{"y":275, "label":"PositionFloat", "styleName":"radioButton1"}'/>
+  </container>
+  <container id="par" stageLayout='{}'>
+    <label properties='{"width":100, "height":30, "text":"Weather："}' style='{"strokeSize":1}'/>
+    <itemGroup id="weatherG" properties='{"y":50, "verticalGap":25, "layout":"vertical"}'/>
+    <radioButton parent="weatherG" group="weatherG" properties='{"label":"none", "styleName":"radioButton1"}'/>
+    <radioButton parent="weatherG" group="weatherG" properties='{"y":55, "label":"rain", "styleName":"radioButton1"}'/>
+    <radioButton parent="weatherG" group="weatherG" properties='{"y":110, "label":"snow", "styleName":"radioButton1"}'/>
+    <radioButton parent="weatherG" group="weatherG" properties='{"y":165, "label":"smoke", "styleName":"radioButton1"}'/>
+    <label properties='{"x":170, "width":100, "height":30, "text":"Touch："}' style='{"strokeSize":1}'/>
+    <itemGroup id="touchG" properties='{"x":170, "y":50, "verticalGap":25, "layout":"vertical"}'/>
+    <radioButton parent="touchG" group="touchG" properties='{"label":"none", "styleName":"radioButton1"}'/>
+    <radioButton parent="touchG" group="touchG" properties='{"y":55, "label":"ghost", "styleName":"radioButton1"}'/>
+    <radioButton parent="touchG" group="touchG" properties='{"y":110, "label":"smoke", "styleName":"radioButton1"}'/>
+    <radioButton parent="touchG" group="touchG" properties='{"y":165, "label":"sun1", "styleName":"radioButton1"}'/>
+    <radioButton parent="touchG" group="touchG" properties='{"y":220, "label":"sun2", "styleName":"radioButton1"}'/>
+    <radioButton parent="touchG" group="touchG" properties='{"y":275, "label":"explosion", "styleName":"radioButton1"}'/>
+  </container>
+</config>

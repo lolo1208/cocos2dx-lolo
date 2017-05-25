@@ -1,0 +1,16 @@
+{
+    "mapData" : "map/{0}/info.json",
+    "mapThumbnail" : "map/{0}/thumbnail.jpg",
+    "mapChunk" : "map/{0}/chunks/{1}_{2}.chunk",
+    "mapCover" : "map/{0}/covers/{1}.png",
+    "mapTouchAni" : "ui.mainUI.touchMap",
+    
+    "avatarAnimation" : "ani/avatar/{0}_{1}.ast",
+    "adjunctAnimation" : "ani/adjunct/{0}/{1}.ast",
+    
+	
+    "sound" : "snd/{0}.mp3",
+	
+	
+    "" : ""
+}

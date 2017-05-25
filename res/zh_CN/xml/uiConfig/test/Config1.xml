@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <button id="backBtn" properties='{"x":590, "y":410, "width":100, "height":50, "label":"back", "styleName":"button1"}' stageLayout='{"paddingRight":20, "paddingBottom":20}'/>
+  <sprite id="c" stageLayout='{}'/>
+  <button id="testBtn" parent="c" properties='{"height":50, "label":"Test", "styleName":"button1"}'/>
+  <button parent="c" properties='{"x":310, "y":140, "width":110, "height":50, "label":"Buttons", "styleName":"button1"}' props='{"name":"btn"}'/>
+  <button parent="c" properties='{"x":150, "y":210, "width":110, "height":50, "label":"Page", "styleName":"button1"}' props='{"name":"p"}'/>
+  <button parent="c" properties='{"y":140, "width":140, "height":50, "label":"NumberText", "styleName":"button1"}' props='{"name":"nt"}'/>
+  <button parent="c" properties='{"x":280, "y":210, "width":170, "height":50, "label":"TouchScrollBar", "styleName":"button1"}' props='{"name":"tsb"}'/>
+  <button parent="c" properties='{"y":210, "width":130, "height":50, "label":"ItemGroup", "styleName":"button1"}' props='{"name":"ig"}'/>
+  <button parent="c" properties='{"y":280, "width":130, "height":50, "label":"List", "styleName":"button1"}' props='{"name":"l"}'/>
+  <button parent="c" properties='{"x":150, "y":280, "width":110, "height":50, "label":"PageList", "styleName":"button1"}' props='{"name":"pl"}'/>
+  <button parent="c" properties='{"x":280, "y":280, "width":170, "height":50, "label":"ScrollList", "styleName":"button1"}' props='{"name":"sl"}'/>
+  <button parent="c" properties='{"x":160, "y":140, "width":130, "height":50, "label":"InputText", "styleName":"button1"}' props='{"name":"it"}'/>
+  <button parent="c" properties='{"y":70, "width":100, "height":50, "label":"HTTP", "styleName":"button1"}' props='{"name":"http"}'/>
+  <button parent="c" properties='{"x":120, "y":70, "width":130, "height":50, "label":"WebSocket", "styleName":"button1"}' props='{"name":"ws"}'/>
+  <button parent="c" properties='{"x":270, "y":70, "width":100, "height":50, "label":"Update", "styleName":"button1"}' props='{"name":"upd"}'/>
+  <button parent="c" properties='{"x":270, "width":90, "height":50, "label":"Effect", "styleName":"button1"}' props='{"name":"eff"}'/>
+  <button parent="c" properties='{"x":380, "width":100, "height":50, "label":"Particle", "styleName":"button1"}' props='{"name":"par"}'/>
+  <button id="errorBtn" parent="c" properties='{"x":100, "width":100, "height":50, "label":"ERROR", "styleName":"button1"}'/>
+  <container id="p" stageLayout='{}'>
+    <page id="page" properties='{"firstBtnProp":{"width":100,"height":40,"label":"first","styleName":"button1"}, "lastBtnProp":{"width":100,"styleName":"button1","height":40,"label":"last","x":480}, "prevBtnProp":{"width":100,"styleName":"button1","height":40,"label":"prev","x":120}, "nextBtnProp":{"width":100,"styleName":"button1","height":40,"label":"next","x":360}, "pageTextProp":{"width":100,"y":5,"height":40,"align":"center","autoSize":"none","x":240}}'/>
+  </container>
+  <container id="tsb">
+    <bitmapSprite properties='{"x":50, "y":50, "width":500, "height":500, "sourceName":"skin.alert.default.background"}'/>
+    <imageLoader id="content" properties='{"fileName":"1", "extension":"jpg", "directory":"background/scene"}' editorProps='{"eye":false}'/>
+    <touchScrollBar id="vsb" properties='{"x":505, "y":100, "viewableArea":{"width":400,"y":100,"height":400,"x":100}, "size":400, "styleName":"vScrollBar1"}'/>
+    <touchScrollBar id="hsb" properties='{"x":100, "y":505, "direction":"horizontal", "viewableArea":{"width":400,"y":100,"height":400,"x":100}, "bounces":false, "size":400, "styleName":"hScrollBar1"}'/>
+    <label properties='{"x":570, "y":60, "width":150, "height":40, "text":"vertical:"}' style='{"strokeSize":1}'/>
+    <checkBox id="veCB" properties='{"x":600, "y":120, "selected":true, "label":"enabled", "styleName":"checkBox1"}'/>
+    <checkBox id="vbCB" properties='{"x":750, "y":121, "selected":true, "label":"bounces", "styleName":"checkBox1"}'/>
+    <label properties='{"x":566, "y":220, "width":150, "height":40, "text":"horizontal:"}' style='{"strokeSize":1}'/>
+    <checkBox id="heCB" properties='{"x":600, "y":280, "selected":true, "label":"enabled", "styleName":"checkBox1"}'/>
+    <checkBox id="hbCB" properties='{"x":750, "y":280, "label":"bounces", "styleName":"checkBox1"}'/>
+  </container>
+  <container id="l" stageLayout='{}'>
+    <list id="list" properties='{"horizontalGap":10, "verticalGap":10}' editorProps='{"item":"item"}'/>
+  </container>
+  <container id="pl" stageLayout='{}'>
+    <page id="page" properties='{"y":345, "firstBtnProp":{"width":100,"height":40,"label":"first","styleName":"button1"}, "lastBtnProp":{"width":100,"styleName":"button1","height":40,"label":"last","x":480}, "prevBtnProp":{"width":100,"styleName":"button1","height":40,"label":"prev","x":120}, "nextBtnProp":{"width":100,"styleName":"button1","height":40,"label":"next","x":360}, "pageTextProp":{"width":100,"y":5,"height":40,"align":"center","autoSize":"none","x":240}}'/>
+    <pageList id="list" target="page" properties='{"x":2, "horizontalGap":20, "verticalGap":10, "columnCount":4}' editorProps='{"item":"item"}'/>
+    <checkBox id="ulCB" properties='{"y":410, "label":"更新 Button 文本", "styleName":"checkBox1"}'/>
+  </container>
+  <container id="sl" stageLayout='{}'>
+    <bitmapSprite properties='{"width":500, "height":420, "sourceName":"skin.alert.default.background"}' editorProps='{"lock":true}'/>
+    <scrollList id="list" properties='{"x":30, "y":40, "horizontalGap":20, "verticalGap":5}' editorProps='{"scrollBar":"vsb", "item":"item"}'/>
+    <touchScrollBar id="vsb" target="list" properties='{"x":475, "y":40, "viewableArea":{"width":430,"y":40,"height":310,"x":30}, "size":310, "styleName":"vScrollBar1"}'/>
+    <checkBox id="ulCB" properties='{"x":30, "y":375, "label":"更新 Button 文本", "styleName":"checkBox1"}'/>
+  </container>
+  <item>
+    <bitmapSprite id="bg" properties='{"width":130, "height":100, "sourceName":"skin.alert.default.background"}'/>
+    <artText id="at" properties='{"x":64, "y":18, "text":"123", "prefix":"public.artText.num1", "align":"center", "valign":"middle"}'/>
+    <button id="btn" properties='{"x":13, "y":34, "width":100, "height":50, "label":"Button", "styleName":"button1"}' style='{"labelStyle":{"size":16}}'/>
+  </item>
+</config>
