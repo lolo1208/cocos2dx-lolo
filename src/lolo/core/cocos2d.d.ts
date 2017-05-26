@@ -63,6 +63,8 @@ declare namespace cc {
 
         getOpacity(): number;
 
+        setVisible(visivle: boolean): void;
+
         isVisible(): boolean;
 
         addChild(child: Node, localZOrder?: number, tagOrName?: number|string): void;
@@ -643,6 +645,11 @@ declare namespace cc {
     class EaseSineOut extends ActionEase {
     }
 
+    class EaseBackIn extends ActionEase {
+    }
+    class EaseBackOut extends ActionEase {
+    }
+
     class EaseRateAction extends ActionEase {
     }
     class EaseOut extends EaseRateAction {
@@ -682,6 +689,10 @@ declare namespace cc {
     function easeOut(rate: number): EaseOut;
 
     function easeSineOut(): EaseSineOut;
+
+    function easeBackIn(): EaseBackIn;
+
+    function easeBackOut(): EaseBackOut;
 
     //
     //

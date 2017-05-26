@@ -195,7 +195,7 @@ namespace lolo {
                 disObj.rotation = 0;
                 disObj.alpha = 1;
                 disObj.visible = true;
-                disObj.setScale(1, 1);
+                disObj.setScale(1);
                 disObj.removeFromParent();
             }
 
