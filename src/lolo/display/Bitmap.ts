@@ -32,6 +32,7 @@ namespace lolo {
         /**纹理加载完毕时的渲染回调列表（url 为 key）*/
         private static _handlers: Dictionary;
 
+
         /**宽*/
         private _width: number = 0;
         /**高*/
@@ -160,7 +161,8 @@ namespace lolo {
          * @param sourceName 图像的源名称
          */
         public constructor(sourceName: string = "") {
-            isNative ? this.ctor() : super();
+            super();
+            lolo.CALL_SUPER_REPLACE_KEYWORD();
 
             this.cascadeOpacity = true;
             this.sourceName = sourceName;

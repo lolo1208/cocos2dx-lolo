@@ -37,15 +37,12 @@ namespace lolo {
          */
         public constructor() {
             let s9s: cc.Scale9Sprite = new cc.Scale9Sprite(lolo.getResUrl(Constants.EMPTY_S9S_URL));
-            this._cSize = cc.size(100, 100);
-            if (isNative) {
-                super();// 不调用 super() 语法检查会报错（EditBox::EditBox() 调用两次并不会有问题）
-                this.ctor(this._cSize, s9s);
-            }
-            else {
-                super(this._cSize, s9s);
-            }
+            let size: cc.Size = cc.size(100, 100);
 
+            super(size, s9s);
+            lolo.CALL_SUPER_REPLACE_KEYWORD();
+
+            this._cSize = size;
             this._inputMode = cc.EDITBOX_INPUT_MODE_ANY;
             this._inputFlag = cc.EDITBOX_INPUT_FLAG_SENSITIVE;
             this._returnType = cc.KEYBOARD_RETURNTYPE_DEFAULT;

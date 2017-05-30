@@ -114,10 +114,9 @@ namespace lolo {
             }
             this.target = null;
 
-            if (this.onComplete != null) {
-                this.onComplete.execute(complete, this);
-                this.onComplete = null;
-            }
+            let handler: Handler = this.onComplete;
+            this.onComplete = null;
+            if (handler != null) handler.execute(complete, this);
         }
 
         //

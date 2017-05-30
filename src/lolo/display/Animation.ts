@@ -202,7 +202,8 @@ namespace lolo {
          * @param fps 动画的帧频（默认值：0，表示使用打包时的设置的帧频）
          */
         public constructor(sourceName: string = "", fps: number = 0) {
-            isNative ? this.ctor() : super();
+            super();
+            lolo.CALL_SUPER_REPLACE_KEYWORD();
 
             this._timer = new Timer(1000, new Handler(this.timerHandler, this));
 

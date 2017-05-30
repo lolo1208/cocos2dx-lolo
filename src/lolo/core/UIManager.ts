@@ -123,7 +123,8 @@ namespace lolo {
 
 
         public constructor() {
-            isNative ? this.ctor() : super();
+            super();
+            lolo.CALL_SUPER_REPLACE_KEYWORD();
 
             this.stage_resizeHandler();
             this.scheduleUpdate();

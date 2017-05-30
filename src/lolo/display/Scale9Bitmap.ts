@@ -174,7 +174,7 @@ namespace lolo {
 
 
         public constructor() {
-            isNative ? this.ctor() : super();
+            super();
 
             this.setAnchorPoint(0, 1);
             this.rect = new Rectangle();

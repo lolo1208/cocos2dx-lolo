@@ -182,6 +182,8 @@ namespace lolo {
             }
 
             let obj: any = args[0];
+            if (obj == null) return;
+
             // event handler
             if (obj instanceof Event) {
                 let event: Event = obj;

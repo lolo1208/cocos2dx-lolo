@@ -16,7 +16,7 @@ namespace app.core {
             super.initialize();
 
             // this._loadBar = new LoadBar();
-            // this._requestModal = new RequestModal();
+            this._requestModal = new RequestModal();
             this._loadBar = {
                 isListener: false,
                 autoShow: false,

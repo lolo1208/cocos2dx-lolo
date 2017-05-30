@@ -559,6 +559,10 @@ declare namespace lolo {
 
         static resetApp(): void;
     }
+
+
+    //# 这是用来在编译阶段匹配替换 call super() 的关键字符
+    function CALL_SUPER_REPLACE_KEYWORD();
 }
 
 

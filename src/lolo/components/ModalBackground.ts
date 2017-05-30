@@ -11,7 +11,8 @@ namespace lolo {
 
 
         public constructor(target?: cc.Node) {
-            isNative ? this.ctor() : super();
+            super();
+            lolo.CALL_SUPER_REPLACE_KEYWORD();
 
             this._textureRect = {x: 0, y: 0, width: 0, height: 0};
             this.touchEnabled = true;

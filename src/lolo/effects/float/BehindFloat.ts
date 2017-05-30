@@ -119,7 +119,7 @@ namespace lolo {
         }
 
         private finish(): void {
-            this.target.alpha = 1;
+            this.target.setOpacity(255);
             if (this.target.parent != null) this.target.parent.removeChild(this.target);
             this.end(true);
         }
@@ -142,10 +142,9 @@ namespace lolo {
             }
             this.target = null;
 
-            if (this.onComplete != null) {
-                this.onComplete.execute(complete, this);
-                this.onComplete = null;
-            }
+            let handler: Handler = this.onComplete;
+            this.onComplete = null;
+            if (handler != null) handler.execute(complete, this);
         }
 
         //

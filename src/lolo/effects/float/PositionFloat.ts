@@ -79,7 +79,7 @@ namespace lolo {
             let target: cc.Node = this.target;
             let y1: number = target.y + this.step1_y;
             let y2: number = this.step2_p.y;
-            
+
             target.setOpacity(0);
             target.stopAllActions();
             target.runAction(cc.sequence(
@@ -96,9 +96,8 @@ namespace lolo {
         }
 
         private finish(): void {
-            this.target.alpha = 1;
-            this.target.scaleX = 1;
-            this.target.scaleY = 1;
+            this.target.setOpacity(255);
+            this.target.setScale(1);
             if (this.target.parent != null) this.target.parent.removeChild(this.target);
             this.end(true);
         }
@@ -118,10 +117,9 @@ namespace lolo {
             }
             this.target = null;
 
-            if (this.onComplete != null) {
-                this.onComplete.execute(complete, this);
-                this.onComplete = null;
-            }
+            let handler: Handler = this.onComplete;
+            this.onComplete = null;
+            if (handler != null) handler.execute(complete, this);
         }
 
         //

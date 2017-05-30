@@ -10,3 +10,6 @@ frameworks/runtime-src/proj.ios_mac
 frameworks/runtime-src/proj.linux
 frameworks/runtime-src/proj.win8.1-universal
 frameworks/runtime-src/proj.win32
+
+*.ani
+*.ui

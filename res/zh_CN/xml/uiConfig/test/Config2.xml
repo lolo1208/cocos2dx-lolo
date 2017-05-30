@@ -34,12 +34,12 @@
     <button id="sendBtn" properties='{"height":50, "label":"send", "styleName":"button1"}'/>
     <sprite id="contentC" properties='{"y":60}'/>
     <label id="contentText" parent="contentC" properties='{"width":650}' style='{"size":14, "strokeSize":1}' editorProps='{"tipsText":"Label"}'/>
-    <touchScrollBar id="contentVSB" target="contentC" properties='{"x":650, "y":60, "viewableArea":{"width":650,"y":60,"height":300,"x":0}, "size":300, "styleName":"vScrollBar1"}'/>
+    <touchScrollBar id="contentVSB" target="contentC" properties='{"x":650, "y":60, "viewableArea":{"x":0,"y":60,"height":300,"width":650}, "size":300, "styleName":"vScrollBar1"}'/>
   </container>
   <container id="ws" stageLayout='{"height":360}'>
     <sprite id="c" properties='{"y":60}'/>
     <label id="text" parent="c" properties='{"width":650}' style='{"size":14, "strokeSize":1}' editorProps='{"tipsText":"Label"}'/>
-    <touchScrollBar id="vsb" target="c" properties='{"x":650, "y":60, "viewableArea":{"width":650,"y":60,"height":300,"x":0}, "size":300, "styleName":"vScrollBar1"}'/>
+    <touchScrollBar id="vsb" target="c" properties='{"x":650, "y":60, "viewableArea":{"x":0,"y":60,"height":300,"width":650}, "size":300, "styleName":"vScrollBar1"}'/>
     <button id="btn" properties='{"width":170, "height":50, "label":"connect", "styleName":"button1"}'/>
     <button id="sendStrBtn" properties='{"x":190, "width":140, "height":50, "label":"send string", "styleName":"button1"}'/>
     <button id="senBytesBtn" properties='{"x":350, "width":140, "height":50, "label":"send bytes", "styleName":"button1"}'/>
@@ -52,27 +52,28 @@
   </container>
   <container id="eff" stageLayout='{}'>
     <itemGroup id="group" properties='{"verticalGap":25, "layout":"vertical"}'/>
-    <radioButton parent="group" group="group" properties='{"y":165, "label":"UpFloat", "styleName":"radioButton1"}'/>
-    <radioButton parent="group" group="group" properties='{"y":55, "label":"DownFloat", "styleName":"radioButton1"}'/>
-    <radioButton parent="group" group="group" properties='{"y":110, "selected":true, "label":"BehindFloat", "styleName":"radioButton1"}'/>
+    <radioButton parent="group" group="group" properties='{"y":168, "label":"UpFloat", "styleName":"radioButton1"}'/>
+    <radioButton parent="group" group="group" properties='{"y":56, "label":"DownFloat", "styleName":"radioButton1"}'/>
+    <radioButton parent="group" group="group" properties='{"y":112, "selected":true, "label":"BehindFloat", "styleName":"radioButton1"}'/>
     <radioButton parent="group" group="group" properties='{"label":"BezierFloat", "styleName":"radioButton1"}'/>
-    <radioButton parent="group" group="group" properties='{"y":220, "label":"DelayedHide", "styleName":"radioButton1"}'/>
-    <radioButton parent="group" group="group" properties='{"y":275, "label":"PositionFloat", "styleName":"radioButton1"}'/>
+    <radioButton parent="group" group="group" properties='{"y":224, "label":"DelayedHide", "styleName":"radioButton1"}'/>
+    <radioButton parent="group" group="group" properties='{"y":280, "label":"PositionFloat", "styleName":"radioButton1"}'/>
+    <radioButton parent="group" group="group" properties='{"y":336, "label":"CircleFloat", "styleName":"radioButton1"}'/>
   </container>
   <container id="par" stageLayout='{}'>
     <label properties='{"width":100, "height":30, "text":"Weather："}' style='{"strokeSize":1}'/>
     <itemGroup id="weatherG" properties='{"y":50, "verticalGap":25, "layout":"vertical"}'/>
     <radioButton parent="weatherG" group="weatherG" properties='{"label":"none", "styleName":"radioButton1"}'/>
-    <radioButton parent="weatherG" group="weatherG" properties='{"y":55, "label":"rain", "styleName":"radioButton1"}'/>
-    <radioButton parent="weatherG" group="weatherG" properties='{"y":110, "label":"snow", "styleName":"radioButton1"}'/>
-    <radioButton parent="weatherG" group="weatherG" properties='{"y":165, "label":"smoke", "styleName":"radioButton1"}'/>
+    <radioButton parent="weatherG" group="weatherG" properties='{"y":56, "label":"rain", "styleName":"radioButton1"}'/>
+    <radioButton parent="weatherG" group="weatherG" properties='{"y":112, "label":"snow", "styleName":"radioButton1"}'/>
+    <radioButton parent="weatherG" group="weatherG" properties='{"y":168, "label":"smoke", "styleName":"radioButton1"}'/>
     <label properties='{"x":170, "width":100, "height":30, "text":"Touch："}' style='{"strokeSize":1}'/>
     <itemGroup id="touchG" properties='{"x":170, "y":50, "verticalGap":25, "layout":"vertical"}'/>
     <radioButton parent="touchG" group="touchG" properties='{"label":"none", "styleName":"radioButton1"}'/>
-    <radioButton parent="touchG" group="touchG" properties='{"y":55, "label":"ghost", "styleName":"radioButton1"}'/>
-    <radioButton parent="touchG" group="touchG" properties='{"y":110, "label":"smoke", "styleName":"radioButton1"}'/>
-    <radioButton parent="touchG" group="touchG" properties='{"y":165, "label":"sun1", "styleName":"radioButton1"}'/>
-    <radioButton parent="touchG" group="touchG" properties='{"y":220, "label":"sun2", "styleName":"radioButton1"}'/>
-    <radioButton parent="touchG" group="touchG" properties='{"y":275, "label":"explosion", "styleName":"radioButton1"}'/>
+    <radioButton parent="touchG" group="touchG" properties='{"y":56, "label":"ghost", "styleName":"radioButton1"}'/>
+    <radioButton parent="touchG" group="touchG" properties='{"y":112, "label":"smoke", "styleName":"radioButton1"}'/>
+    <radioButton parent="touchG" group="touchG" properties='{"y":168, "label":"sun1", "styleName":"radioButton1"}'/>
+    <radioButton parent="touchG" group="touchG" properties='{"y":224, "label":"sun2", "styleName":"radioButton1"}'/>
+    <radioButton parent="touchG" group="touchG" properties='{"y":280, "label":"explosion", "styleName":"radioButton1"}'/>
   </container>
 </config>

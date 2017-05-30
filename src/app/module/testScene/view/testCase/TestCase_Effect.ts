@@ -14,6 +14,8 @@ namespace app.testScene {
     import Point = lolo.Point;
     import Bitmap = lolo.Bitmap;
     import CachePool = lolo.CachePool;
+    import CircleFloat = lolo.CircleFloat;
+    import MathUtil = lolo.MathUtil;
 
 
     /**
@@ -66,7 +68,7 @@ namespace app.testScene {
                     CachePool.recycle(at);
                     let arrow: Bitmap = CachePool.getBitmap("test.arrow");
                     lolo.stage.addChildToLayer(arrow, lolo.Constants.LAYER_NAME_ALERT);
-                    BezierFloat.once(tp, hp, arrow);
+                    BezierFloat.once(arrow, tp, hp);
                     break;
 
                 case "DelayedHide":
@@ -75,6 +77,10 @@ namespace app.testScene {
 
                 case "PositionFloat":
                     PositionFloat.once(at, hp);
+                    break;
+
+                case "CircleFloat":
+                    CircleFloat.once(at, hp, 1, null, null, MathUtil.random());
                     break;
             }
         }

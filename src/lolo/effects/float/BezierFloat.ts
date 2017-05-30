@@ -49,16 +49,16 @@ namespace lolo {
          * 注意：：使用 BezierFloat.once() 创建的实例 once 属性默认为 true。
          * 播放完毕后，实例(_pool) 和 target(CachePool) 将会自动回收到池中。
          * ！！！
+         * @param target 飞行的目标
          * @param pStrat 起始点
          * @param pEnd 结束点
-         * @param target 飞行的目标
          * @param onComplete 飞行完成时的回调。onComplete(complete:boolean, float:IFloat)
          * @param start 是否立即开始播放
          * @param orientToBezier 目标是否跟随贝塞尔曲线旋转
          */
-        public static once(pStrat: Point = null,
+        public static once(target: cc.Node = null,
+                           pStrat: Point = null,
                            pEnd: Point = null,
-                           target: cc.Node = null,
                            onComplete: Handler = null,
                            orientToBezier: boolean = true,
                            start: boolean = true): BezierFloat {
@@ -124,7 +124,6 @@ namespace lolo {
             CachePool.recycle(this._pCenter);
             this._pCenter = null;
 
-            if (this.target instanceof Animation) (<Animation>this.target).stop();
             if (this.target.parent != null) this.target.parent.removeChild(this.target);
             this.end(true);
         }
@@ -144,10 +143,9 @@ namespace lolo {
             }
             this.target = null;
 
-            if (this.onComplete != null) {
-                this.onComplete.execute(complete, this);
-                this.onComplete = null;
-            }
+            let handler: Handler = this.onComplete;
+            this.onComplete = null;
+            if (handler != null) handler.execute(complete, this);
         }
 
         //

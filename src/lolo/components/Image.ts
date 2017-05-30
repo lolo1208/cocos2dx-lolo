@@ -137,7 +137,8 @@ namespace lolo {
 
 
         public constructor() {
-            isNative ? this.ctor() : super();
+            super();
+            lolo.CALL_SUPER_REPLACE_KEYWORD();
 
             this._extension = Constants.EXTENSION_PNG;
             this._textureRect = new Rectangle();
