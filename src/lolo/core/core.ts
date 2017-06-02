@@ -377,6 +377,11 @@ namespace lolo {
         Object.defineProperty(p, "touchEnabled", {
             enumerable: true, configurable: true,
             set: function (value: boolean): void {
+                if (value && this._touchEnabled) {
+                    if (isNative) return;
+                    else if (this.touchListener._registered) return;
+                }
+
                 this._touchEnabled = value;
                 if (value)
                     cc.eventManager.addListener(this.touchListener, this);

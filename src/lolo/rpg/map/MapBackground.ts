@@ -92,6 +92,7 @@ namespace lolo.rpg {
                     chunk.needLoad = false;
                     chunk.count++;
                     if (chunk.count > 5) {
+                        // TODO 背景图块无法加载时，显示马赛克背景还未现实
                         // let ox: number = cw * x;
                         // let oy: number = ch * y;
                         //

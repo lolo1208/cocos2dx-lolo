@@ -492,6 +492,7 @@ namespace lolo {
             else {
                 // 将 content 放入到 Mask.clipper 中，并将 Mask.clipper 放入到 content.parent 中
                 this._mask = new Mask();
+                this._mask.touchEnabled = true;
                 this._mask.content = this._content;
             }
             this._mask.setRect(this._viewableArea.x, this._viewableArea.y, this._viewableArea.width, this._viewableArea.height);

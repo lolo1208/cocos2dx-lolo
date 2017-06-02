@@ -21,9 +21,9 @@ namespace app.core {
     export class RequestModal extends DisplayObjectContainer implements IRequestModal {
 
         /**请求无响应，该时间后显示加载中界面（毫秒）*/
-        private DELAY_LOADING: number = 2000;
+        private DELAY_LOADING: number = 1300;
         /**请求无响应，该时间后显示加载失败界面（毫秒）*/
-        private DELAY_TIMEOUT: number = 5000;
+        private DELAY_TIMEOUT: number = 4800;
 
         /**模态背景*/
         public modalBG: ModalBackground;
@@ -50,7 +50,7 @@ namespace app.core {
             AutoUtil.autoUI(this, "mainUIConfig.requestModal");
 
             this._list = [];
-            this._timer = new Timer(1000, new Handler(this.timerHandler, this));
+            this._timer = new Timer(500, new Handler(this.timerHandler, this));
         }
 
 
@@ -65,9 +65,8 @@ namespace app.core {
 
             // 没有正在请求的接口
             if (!this._timer.running) {
-                this.stopAllActions();
                 this._timer.start();
-                this.alpha = 1;
+                this.runAction(cc.fadeIn(0));
                 lolo.ui.addChildToLayer(this, Constants.LAYER_NAME_TOP);
             }
             this.timerHandler();
@@ -98,7 +97,7 @@ namespace app.core {
             // 该出现 loding 了
             if (time >= this.DELAY_LOADING) {
                 this.bg.visible = true;
-                this.modalBG.alpha = this.modalTransparency.deep;
+                this.modalBG.opacity = this.modalTransparency.deep;
 
                 this.loadingText.visible = this.loadingAni.visible = time < this.DELAY_TIMEOUT;
                 this.loadingAni.playing = this.loadingText.visible;
@@ -109,7 +108,7 @@ namespace app.core {
                 if (time >= this.DELAY_TIMEOUT) {
                     this._timer.reset();
                     this.runAction(cc.sequence(
-                        cc.delayTime(1.5),
+                        cc.delayTime(1),
                         cc.fadeOut(0.5),
                         cc.callFunc(this.reset, this)
                     ));
@@ -122,7 +121,7 @@ namespace app.core {
                 }
             }
             else {
-                this.modalBG.alpha = this.modalTransparency.normal;
+                this.modalBG.opacity = this.modalTransparency.normal;
 
                 this.loadingText.visible = this.loadingAni.visible = this.timeoutText.visible = this.bg.visible = false;
                 this.loadingAni.stop();

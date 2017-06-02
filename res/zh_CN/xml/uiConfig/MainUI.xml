@@ -6,7 +6,7 @@
     <bitmapSprite id="progressBar" properties='{"x":7, "y":39, "sourceName":"mainUI.loadBar.progressBar"}'/>
     <label id="progressText" properties='{"y":13, "width":252, "height":18}' style='{"align":"center", "stroke":"0x302010", "strokeSize":1}' editorProps='{"tipsText":"正在加载[测试场景界面] 59% 12/37"}'/>
   </loadBar>
-  <requestModal vars='{"modalTransparency":{"normal":0.01, "deep":0.2}}' stageLayout='{"width":120, "height":80}'>
+  <requestModal vars='{"modalTransparency":{"normal":1, "deep":60}}' stageLayout='{"width":120, "height":80}'>
     <modalBackground id="modalBG" properties='{"alpha":0.01}'/>
     <bitmapSprite id="bg" properties='{"sourceName":"mainUI.requestModal.bg"}'/>
     <animation id="loadingAni" properties='{"x":60, "y":30, "sourceName":"ui.mainUI.requestModal.loading", "fps":20}'/>

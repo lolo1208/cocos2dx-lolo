@@ -111,8 +111,8 @@ namespace lolo {
             // 根据时间计算出当前角度
             let time: number = (TimeUtil.nowTime - this._startTime) / 1000;
             let angle: number = this.reverse
-                ? Math.min(360, time / this.duration * 360)
-                : Math.max(0, (this.duration - time) / this.duration * 360);
+                ? Math.max(0, (this.duration - time) / this.duration * 360)
+                : Math.min(360, time / this.duration * 360);
             // 根据角度得出弧度
             let radian: number = CircleFloat.RADIAN * (angle + this._startAngle);
             // 根据弧度和半径得出当前位置

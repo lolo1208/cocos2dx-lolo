@@ -443,12 +443,12 @@ namespace lolo.rpg {
          */
         public addElement(element: cc.Node, above: boolean = true, depth: number = -1): void {
             let c: DisplayObjectContainer = above ? this._aboveC : this._belowC;
-            if (depth < 0 || c.numChildren == 0) {
+            if (depth < 0 || c.childrenCount == 0) {
                 c.addChild(element);
             }
             else {
-                if (depth >= c.numChildren) depth = c.numChildren - 1;
-                c.addChildAt(element, depth);
+                // TODO 添加深度效果还未测试
+                c.addChild(element, depth);
             }
         }
 
@@ -479,40 +479,41 @@ namespace lolo.rpg {
 
         private touchEnabledChanged(): void {
             if (this._autoPlayTouchAnimation || this._avatarTouchEnabled) {
-                this._background.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.background_touchBegin, this);
+                this._background.event_addListener(TouchEvent.TOUCH_BEGIN, this.background_touchBegin, this);
             }
             else {
-                this._background.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.background_touchBegin, this);
+                this._background.event_removeListener(TouchEvent.TOUCH_BEGIN, this.background_touchBegin, this);
             }
         }
 
         /**
          * touch 背景
          */
-        private background_touchBegin(event: egret.TouchEvent): void {
+        private background_touchBegin(event: TouchEvent): void {
             if (this._avatarTouchEnabled) {
-                let sx: number = event.stageX;
-                let sy: number = event.stageY;
-                let lx: number = event.localX;
-                let ly: number = event.localY;
-                let rect: egret.Rectangle = CachePool.getRectangle();
-                let p: egret.Point = CachePool.getPoint();
+                let sx: number = lolo.gesture.touchPoint.x;
+                let sy: number = lolo.gesture.touchPoint.y;
+                let pLocal: cc.Point = this._background.convertToNodeSpace(lolo.gesture.touchPoint);
+                let lx: number = pLocal.x;
+                let ly: number = pLocal.y;
+                let rect: Rectangle = CachePool.getRectangle();
+                let p: Point = CachePool.getPoint();
 
-                let c: egret.DisplayObjectContainer = this._avatarC;
+                let c: DisplayObjectContainer = this._avatarC;
                 let avatar: Avatar;
-                //从上往下循环搜索
-                for (let i = c.numChildren - 1; i >= 0; i--) {
-                    avatar = <Avatar>c.getChildAt(i);
-                    avatar.getBounds(rect);
-                    rect.x += lx;
-                    rect.y += ly;
-                    //在该Avatar的范围内
+                // 从上往下循环搜索
+                let children: cc.Node[] = c.children;
+                for (let i = children.length - 1; i >= 0; i--) {
+                    avatar = <Avatar>children[i];
+                    rect.setTo(avatar.x, avatar.y, avatar.width, avatar.height);
+                    // 在该Avatar的范围内
                     if (rect.contains(lx, ly)) {
-                        //并且点到了像素上
-                        if (avatar.hitTestPoint(sx, sy, true)) {
-                            avatar.dispatchAvatarEvent(AvatarEvent.TOUCH, true);
-                            return;
-                        }
+                        // 并且点到了像素上
+                        // TODO 像素检测还未实现
+                        // if (avatar.hitTestPoint(sx, sy, true)) {
+                        avatar.dispatchAvatarEvent(AvatarEvent.TOUCH, true);
+                        return;
+                        // }
                     }
                 }
             }
@@ -532,11 +533,12 @@ namespace lolo.rpg {
         }
 
 
-        public get touchTile(): egret.Point {
-            let p1: egret.Point = this.globalToLocal(lolo.ui.stageX, lolo.ui.stageY);
-            let p2: egret.Point = getTile(p1, this._info);
-            CachePool.recover(p1);
-            return p2;
+        public get touchTile(): Point {
+            let p1: cc.Point = this.convertToNodeSpace(lolo.gesture.touchPoint);
+            let p2: Point = CachePool.getPoint(p1.x, p1.y);
+            let p3: Point = getTile(p2, this._info);
+            CachePool.recycle(p2);
+            return p3;
         }
 
 
@@ -544,10 +546,9 @@ namespace lolo.rpg {
          * 抛出地图相关事件
          */
         public dispatchMapEvent(type: string): void {
-            let event: MapEvent = egret.Event.create(MapEvent, type);
+            let event: MapEvent = Event.create(MapEvent, type);
             event.tile = this.touchTile;
-            this.dispatchEvent(event);
-            egret.Event.release(event);
+            this.event_dispatch(event);
         }
 
 
@@ -557,8 +558,9 @@ namespace lolo.rpg {
 
 
         public clearAllAvatar(): void {
-            while (this._avatarC.numChildren > 0) {
-                this.removeAvatar(<Avatar>this._avatarC.removeChildAt(0));
+            let children: cc.Node[] = this._avatarC.children;
+            for (let i = 0; i < children.length; i++) {
+                this.removeAvatar(<Avatar>children[i]);
             }
 
             this.trackingAvatar = null;
@@ -567,33 +569,38 @@ namespace lolo.rpg {
 
 
         public clear(): void {
-            lolo.stage.removeEventListener(egret.Event.RESIZE, this.stage_resizeHandler, this);
+            lolo.stage.event_removeListener(Event.RESIZE, this.stage_resizeHandler, this);
             if (this._sortTimer != null) this._sortTimer.stop();
 
             this.clearAllAvatar();
-            this._background.clear();
+            this._background.clean();
 
-            //移除附加的显示元素，并尝试调用 dispose() 和 clear() 方法
-            let element: egret.DisplayObject;
-            while (this._aboveC.numChildren > 0) {
-                element = this._aboveC.removeChildAt(0);
+            //移除附加的显示元素，并尝试调用 destroy() 和 clean() 方法
+            let i: number, element: cc.Node;
+            let children: cc.Node[] = this._aboveC.children;
+            for (i = 0; i < children.length; i++) {
+                element = children[i];
+                element.removeFromParent();
                 try {
-                    element["dispose"]();
+                    element.destroy();
                 } catch (error) {
                 }
                 try {
-                    element["clear"]();
+                    element["clean"]();
                 } catch (error) {
                 }
             }
-            while (this._belowC.numChildren > 0) {
-                element = this._belowC.removeChildAt(0);
+
+            children = this._belowC.children;
+            for (i = 0; i < children.length; i++) {
+                element = children[i];
+                element.removeFromParent();
                 try {
-                    element["dispose"]();
+                    element.destroy();
                 } catch (error) {
                 }
                 try {
-                    element["clear"]();
+                    element["clean"]();
                 } catch (error) {
                 }
             }

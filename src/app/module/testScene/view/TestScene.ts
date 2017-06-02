@@ -72,7 +72,6 @@ namespace app.testScene {
         }
 
 
-
         private testBtn_touchTapHandler(event: TouchEvent): void {
             let t: number = new Date().getTime();
 

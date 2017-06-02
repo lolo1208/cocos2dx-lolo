@@ -19,9 +19,6 @@ namespace lolo {
         /**通信时，是否需要模态*/
         public modal: boolean;
 
-        /**是否正在请求中*/
-        public requesting: boolean = false;
-
 
         public constructor(command: string = "", modal: boolean = true, ...params: string[]) {
             this.command = command;

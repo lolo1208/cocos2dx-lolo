@@ -40,7 +40,6 @@ namespace lolo {
                 onTouchEnded: Mask.touchEnded
             });
             this.touchListener.retain();
-            this.touchEnabled = true;
         }
 
 
@@ -116,8 +115,12 @@ namespace lolo {
          * 是否启用 touch
          */
         public set touchEnabled(value: boolean) {
-            this._touchEnabled = value;
+            if (value && this._touchEnabled) {
+                if (isNative) return;
+                else if (this.touchListener._registered) return;
+            }
 
+            this._touchEnabled = value;
             if (value)
                 cc.eventManager.addListener(this.touchListener, this._clipper);
             else
@@ -180,6 +183,14 @@ namespace lolo {
         //
 
 
+        public get clipper(): cc.ClippingNode {
+            return this._clipper;
+        }
+
+
+        //
+
+
         /**
          * 销毁
          */
@@ -188,7 +199,10 @@ namespace lolo {
             this.touchListener.release();
 
             if (this._clipper != null) {
-                this._clipper.removeAllChildren();
+                let children: cc.Node[] = this._clipper.children;
+                for (let i = 0; i < children.length; i++) {
+                    this._clipper.parent.addChild(children[i]);// 将子节点还回 parent 中
+                }
                 this._clipper.release();
                 this._clipper = null;
             }

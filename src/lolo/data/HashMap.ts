@@ -221,6 +221,7 @@ namespace lolo {
          */
         public set values(value: any[]) {
             this._values = value;
+            this.dispatchDataEvent();
         }
 
         public get values(): any[] {

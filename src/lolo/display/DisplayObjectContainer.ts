@@ -207,7 +207,7 @@ namespace lolo {
             this.event_removeListener(Event.CHILD_RESIZE, this.childResizeHandler, this);
 
             // 尝试调用子节点的 destroy()
-            let children: cc.Node[] = this.children;
+            let children: cc.Node[] = this.children.concat();
             for (let i = 0; i < children.length; i++) {
                 let child: cc.Node = children[i];
                 child.removeFromParent();

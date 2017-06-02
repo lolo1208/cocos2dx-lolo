@@ -31,7 +31,7 @@ namespace app.core {
 
             this.addAllModule();
 
-            this.showModule(app.AppConstants.MN_S_TEST);
+            this.showModule(AppConstants.MN_S_TEST);
         }
 
 
@@ -39,7 +39,7 @@ namespace app.core {
          * 注册好游戏内的所有模块
          */
         private addAllModule(): void {
-            this.addModule(app.AppConstants.MN_S_TEST, app.testScene.TestScene, "testConfig1", "testConfig2");
+            this.addModule(AppConstants.MN_S_TEST, app.testScene.TestScene, "testConfig1", "testConfig2");
         }
 
 
