@@ -12,7 +12,7 @@ namespace lolo
 
 	/* Type define */
 	typedef unsigned char byte;
-	typedef unsigned long ulong;
+	typedef unsigned int ulong;
 
 	using std::string;
 	using std::ifstream;
