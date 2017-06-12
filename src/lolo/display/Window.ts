@@ -28,6 +28,7 @@ namespace lolo {
      * @author LOLO
      */
     export class Window extends Module implements IWindowLayout {
+
         /**是否自动隐藏*/
         protected _autoHide: boolean = false;
         /**互斥的，不能同时存在的窗口moduleName列表*/

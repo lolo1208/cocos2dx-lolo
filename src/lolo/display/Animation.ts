@@ -171,7 +171,7 @@ namespace lolo {
          * @return
          */
         public static hasAnimation(sourceName: string): boolean {
-            return this._cache.contains(sourceName);
+            return this._cache.contains(this._config.getItem(sourceName).url);
         }
 
 
@@ -234,7 +234,7 @@ namespace lolo {
                     let lii: LoadItemInfo = new LoadItemInfo();
                     lii.isSecretly = true;
                     lii.type = Constants.RES_TYPE_IMG;
-                    lii.parseUrl(info.url);
+                    lii.url = info.url;
                     lolo.loader.cleanRes(lii.url);// 可能已经加载过了
                     lolo.loader.add(lii);
                     lolo.loader.start();
@@ -488,6 +488,10 @@ namespace lolo {
          * 销毁
          */
         public destroy(): void {
+            if (this.handler != null) {
+                this.handler.clean();
+                this.handler = null;
+            }
             this.stop();
         }
 

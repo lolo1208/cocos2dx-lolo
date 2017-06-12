@@ -113,6 +113,10 @@ namespace lolo.rpg {
         public static FPS_LEISURE: number = 0;
 
 
+        /**加载优先级 - 角色动画*/
+        public static PRIORITY_AVATAR: number = 100;
+
+
         //
     }
 }

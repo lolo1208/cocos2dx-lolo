@@ -62,7 +62,7 @@ namespace app.testScene {
                 cc.moveTo(Math.random() * 1.5 + 0.5, Math.random() * lolo.ui.stageWidth, Math.random() * lolo.ui.stageHeight),
                 cc.callFunc(function () {
                     p.stopSystem();
-                    delayedCall(2000, p.removeFromParent, p);
+                    delayedCall(2000, p.destroy, p);
                 })
             ));
         }

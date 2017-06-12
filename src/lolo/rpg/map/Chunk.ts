@@ -5,7 +5,7 @@ namespace lolo.rpg {
      * 图块
      * @author LOLO
      */
-    export class Chunk extends cc.Sprite {
+    export class Chunk extends SimpleBitmap {
 
         /**地图ID*/
         public mapID: string;
@@ -25,12 +25,12 @@ namespace lolo.rpg {
 
         public constructor(id: string, info: MapInfo, x: number, y: number) {
             super();
+
             this.mapID = id;
             this.chunkX = x;
             this.chunkY = y;
 
-            this.x = x * info.chunkWidth;
-            this.y = y * info.chunkHeight;
+            this.setPosition(x * info.chunkWidth, y * info.chunkHeight);
         }
 
 
@@ -82,6 +82,15 @@ namespace lolo.rpg {
         }
 
 
+        public set name(value: string) {
+            super.setName(value);
+        }
+
+        public get name(): string {
+            return super.getName();
+        }
+
+
         //
 
 
@@ -89,7 +98,11 @@ namespace lolo.rpg {
          * 清理，销毁
          */
         public destroy(): void {
-            this._handler = null;
+            this.release();
+            if (this._handler != null) {
+                this._handler.clean();
+                this._handler = null;
+            }
         }
 
         //

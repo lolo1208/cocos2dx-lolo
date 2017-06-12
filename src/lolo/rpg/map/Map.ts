@@ -13,7 +13,7 @@ namespace lolo.rpg {
         private _info: MapInfo;
 
         /**背景*/
-        private _background: MapBackground;
+        private _background: Background;
         /**角色容器*/
         private _avatarC: DisplayObjectContainer;
         /**在所有角色和遮挡物之上的容器*/
@@ -50,21 +50,18 @@ namespace lolo.rpg {
         public constructor(id: string = null) {
             super();
 
-            this._background = new MapBackground(this);
+            this._background = new Background(this);
             this._background.name = lolo.Constants.LAYER_NAME_BG;
             this._background.touchEnabled = true;
             this.addChild(this._background);
 
             this._belowC = new DisplayObjectContainer();
-            this._belowC.touchEnabled = false;
             this.addChild(this._belowC);
 
             this._avatarC = new DisplayObjectContainer();
-            this._avatarC.touchEnabled = false;
             this.addChild(this._avatarC);
 
             this._aboveC = new DisplayObjectContainer();
-            this._aboveC.touchEnabled = false;
             this.addChild(this._aboveC);
 
             this.touchEnabledChanged();
@@ -78,7 +75,7 @@ namespace lolo.rpg {
          * @param id 地图的ID
          */
         public init(id: string): void {
-            this.clear();
+            this.clean();
 
             this._id = id;
             this.name = "id" + id;
@@ -173,7 +170,7 @@ namespace lolo.rpg {
             if (avatar.parent == this._avatarC) this._avatarC.removeChild(avatar);
 
             avatar.event_removeListener(AvatarEvent.TILE_CHANGED, this.avatarTileChangedHandler, this);
-            avatar.clear();
+            avatar.destroy();
         }
 
 
@@ -534,8 +531,8 @@ namespace lolo.rpg {
 
 
         public get touchTile(): Point {
-            let p1: cc.Point = this.convertToNodeSpace(lolo.gesture.touchPoint);
-            let p2: Point = CachePool.getPoint(p1.x, p1.y);
+            let p1: cc.Point = this.convertToNodeSpace(lolo.gesture.worldPoint);
+            let p2: Point = CachePool.getPoint(p1.x, -p1.y);
             let p3: Point = getTile(p2, this._info);
             CachePool.recycle(p2);
             return p3;
@@ -552,13 +549,13 @@ namespace lolo.rpg {
         }
 
 
-        public get cleared(): boolean {
+        public get cleaned(): boolean {
             return this._info == null;
         }
 
 
-        public clearAllAvatar(): void {
-            let children: cc.Node[] = this._avatarC.children;
+        public cleanAllAvatar(): void {
+            let children: cc.Node[] = this._avatarC.children.concat();
             for (let i = 0; i < children.length; i++) {
                 this.removeAvatar(<Avatar>children[i]);
             }
@@ -568,46 +565,47 @@ namespace lolo.rpg {
         }
 
 
-        public clear(): void {
+        public clean(): void {
+            this._id = null;
+            this._info = null;
+
             lolo.stage.event_removeListener(Event.RESIZE, this.stage_resizeHandler, this);
             if (this._sortTimer != null) this._sortTimer.stop();
 
-            this.clearAllAvatar();
+            this.cleanAllAvatar();
             this._background.clean();
 
             //移除附加的显示元素，并尝试调用 destroy() 和 clean() 方法
             let i: number, element: cc.Node;
-            let children: cc.Node[] = this._aboveC.children;
+            let children: cc.Node[] = this._aboveC.children.concat();
             for (i = 0; i < children.length; i++) {
                 element = children[i];
                 element.removeFromParent();
                 try {
-                    element.destroy();
+                    element["clean"]();
                 } catch (error) {
                 }
                 try {
-                    element["clean"]();
+                    element.destroy();
                 } catch (error) {
                 }
             }
 
-            children = this._belowC.children;
+            children = this._belowC.children.concat();
             for (i = 0; i < children.length; i++) {
                 element = children[i];
                 element.removeFromParent();
                 try {
-                    element.destroy();
-                } catch (error) {
-                }
-                try {
                     element["clean"]();
                 } catch (error) {
                 }
+                try {
+                    element.destroy();
+                } catch (error) {
+                }
             }
-
-            this._id = null;
-            this._info = null;
         }
+
 
         //
     }

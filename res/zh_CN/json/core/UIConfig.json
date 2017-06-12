@@ -5,8 +5,8 @@
     "mapCover" : "map/{0}/covers/{1}.png",
     "mapTouchAni" : "ui.mainUI.touchMap",
     
-    "avatarAnimation" : "ani/avatar/{0}_{1}.ast",
-    "adjunctAnimation" : "ani/adjunct/{0}/{1}.ast",
+    "avatarAnimation" : "ani/avatar/{0}_{1}.ani",
+    "adjunctAnimation" : "ani/adjunct/{0}/{1}.ani",
     
 	
     "sound" : "snd/{0}.mp3",

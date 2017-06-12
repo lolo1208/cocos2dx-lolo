@@ -25,6 +25,7 @@ namespace lolo {
      * @author LOLO
      */
     export class Bitmap extends cc.Sprite {
+
         /**配置信息列表（通过sn获取BitmapInfo）*/
         private static _config: Dictionary;
         /**LRU缓存（通过url获取Texture）*/
@@ -194,7 +195,7 @@ namespace lolo {
                     let lii: LoadItemInfo = new LoadItemInfo();
                     lii.isSecretly = true;
                     lii.type = Constants.RES_TYPE_IMG;
-                    lii.parseUrl(info.url);
+                    lii.url = info.url;
                     lolo.loader.cleanRes(lii.url);// 可能已经加载过了
                     lolo.loader.add(lii);
                     lolo.loader.start();
@@ -356,6 +357,17 @@ namespace lolo {
                 lolo.temp_rect.setTo(0, 0, this._info.rect.width, this._info.rect.height);
 
             return lolo.temp_rect.contains(p.x, p.y);
+        }
+
+
+        //
+
+
+        public destroy(): void {
+            if (this._scale9Bitmap != null) {
+                Scale9Bitmap.recycle(this._scale9Bitmap);
+                this._scale9Bitmap = null;
+            }
         }
 
 

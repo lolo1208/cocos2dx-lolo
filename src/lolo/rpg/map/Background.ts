@@ -5,10 +5,10 @@ namespace lolo.rpg {
      * 地图背景
      * @author LOLO
      */
-    export class MapBackground extends DisplayObjectContainer {
+    export class Background extends DisplayObjectContainer {
 
         /**缩略图*/
-        private _thumbnail: cc.Sprite;
+        private _thumbnail: SimpleBitmap;
         /**图块容器*/
         private _chunkC: DisplayObjectContainer;
         /**touch地图时，播放的动画*/
@@ -29,25 +29,22 @@ namespace lolo.rpg {
 
             this._map = map;
             this._reloadTimer = new Timer(5000, new Handler(this.loadChunk, this));
-
-            this._thumbnail = new cc.Sprite();
-            // this._thumbnail.setLocalZOrder(-1);
-
-            this._chunkC = new DisplayObjectContainer();
-            this.addChild(this._chunkC);
         }
 
 
         public init(thumbnailTexture: cc.Texture2D): void {
             this.clean();
 
-            //显示缩略图
+            // 显示缩略图
+            this._thumbnail = new SimpleBitmap();
             this._thumbnail.texture = thumbnailTexture;
             this._thumbnail.width = this._map.info.mapWidth;
             this._thumbnail.height = this._map.info.mapHeight;
             this.addChild(this._thumbnail);
 
             //加载图块
+            this._chunkC = new DisplayObjectContainer();
+            this.addChild(this._chunkC);
             this._loaderList = [];
             this.loadChunk();
         }
@@ -120,7 +117,8 @@ namespace lolo.rpg {
             }
             //全部加载完毕了
             else if (this._loaderList.length == 0) {
-                this.removeChild(this._thumbnail);
+                this._thumbnail.destroy();
+                this._thumbnail = null;
                 this._loaderList = null;
                 console.log("[RPG] 地图[" + map.id + "]背景图块全部加载完毕！");
             }
@@ -130,11 +128,11 @@ namespace lolo.rpg {
         /**
          * 有图块加载结束
          * @param chunk
-         * @param success 加载是否成功
+         * @param successful 加载是否成功
          */
-        private chunkLoaded(chunk: Chunk, success: boolean): void {
+        private chunkLoaded(chunk: Chunk, successful: boolean): void {
             this.removeChunkLoader(chunk);
-            if (success) {
+            if (successful) {
                 this.loadChunk();
             }
             else {
@@ -151,8 +149,6 @@ namespace lolo.rpg {
          * @param chunk
          */
         private removeChunkLoader(chunk: Chunk): void {
-            chunk.destroy();
-
             if (this._loaderList != null) {
                 for (let i = 0; i < this._loaderList.length; i++) {
                     if (this._loaderList[i] == chunk) {
@@ -161,6 +157,7 @@ namespace lolo.rpg {
                     }
                 }
             }
+            chunk.destroy();
         }
 
 
@@ -189,7 +186,24 @@ namespace lolo.rpg {
         public clean(): void {
             this._reloadTimer.stop();
 
-            this._chunkC.removeAllChildren();
+            if (this._chunkC != null) {
+                this._chunkC.destroy();
+                this._chunkC = null;
+            }
+
+            if (this._thumbnail != null) {
+                this._thumbnail.removeFromParent();
+                this._thumbnail = null;
+            }
+
+            let children: cc.Node[] = this.children.concat();
+            for (let i = 0; i < children.length; i++) {
+                try {
+                    children[i].destroy();
+                }
+                catch (error) {
+                }
+            }
 
             if (this._loaderList != null) {
                 while (this._loaderList.length > 0)

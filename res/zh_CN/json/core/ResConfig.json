@@ -8,8 +8,9 @@
     
     "mainUIConfig" : { "url":"json/uiConfig/MainUI.json", "type":"json", "nameID":"020199" },
     
-	"testConfig1" : { "url":"json/uiConfig/test/Config1.json", "type":"json", "nameID":"020150" },
-	"testConfig2" : { "url":"json/uiConfig/test/Config2.json", "type":"json", "nameID":"020150" },
+	"testCfg1" : { "url":"json/uiConfig/test/Config1.json", "type":"json", "nameID":"020150" },
+	"testCfg2" : { "url":"json/uiConfig/test/Config2.json", "type":"json", "nameID":"020150" },
+	"testRpgCfg" : { "url":"json/uiConfig/test/Rpg.json", "type":"json", "nameID":"020150" },
 	
 	
 	

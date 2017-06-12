@@ -247,6 +247,7 @@ namespace lolo {
                         texture2d.initWithElement(data);
                         texture2d.handleLoadedTexture();
                     }
+                    // texture2d.setAliasTexParameters();
                     lii.data = texture2d;
             }
 

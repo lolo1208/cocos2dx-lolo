@@ -6,6 +6,8 @@ namespace lolo {
      * @author LOLO
      */
     export class StringUtil {
+
+
         /**
          * 将指定字符串内的 "{n}" 标记替换成传入的参数
          * @param str 要替换的字符串
@@ -173,6 +175,7 @@ namespace lolo {
             str = prefix + str.toLocaleUpperCase();
             return str;
         }
+
 
         //
     }

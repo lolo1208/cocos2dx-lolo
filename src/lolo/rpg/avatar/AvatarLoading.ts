@@ -44,13 +44,6 @@ namespace lolo.rpg {
         }
 
 
-        /**
-         * 清除并丢弃该Loading
-         */
-        public clean(): void {
-            if (this.parent != null) this.parent.removeChild(this);
-        }
-
         //
     }
 }

@@ -176,7 +176,7 @@ namespace lolo {
         cc_extendDisplayObject(UIManager);
         cc_extendDisplayObject(DisplayObjectContainer);
         cc_extendDisplayObject(Bitmap);
-        cc_extendDisplayObject(Image);
+        cc_extendDisplayObject(SimpleBitmap);
         cc_extendDisplayObject(Animation);
         cc_extendDisplayObject(TextField);
         cc_extendDisplayObject(InputText);
@@ -263,6 +263,7 @@ namespace lolo {
         p._original_destroy = p.destroy;
         p.destroy = function () {
             if (p._original_destroy != null) p._original_destroy.call(this);
+            this.removeFromParent();
 
             this.touchEnabled = false;
             this.touchListener.release();

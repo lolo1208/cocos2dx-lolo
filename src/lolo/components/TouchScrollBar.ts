@@ -156,7 +156,7 @@ namespace lolo {
             this._min = this._viewableArea[this._xy];
             this._max = this._viewableArea[this._wh] - this._content[this._wh] + this._min;
 
-            if (!this._showed) this._content[this._xy] = this._viewableArea[this._xy];//触发内容更新
+            this._content[this._xy] = this._viewableArea[this._xy];// 触发内容更新
 
             this.updateThumb();
             if (this.scrollPolicy != Constants.POLICY_AUTO) this.showOrHide(false);

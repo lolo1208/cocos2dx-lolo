@@ -15,7 +15,7 @@ namespace lolo {
 
 
         public constructor() {
-            throw new Error("不允许创建 LocalData 的实例");
+            throwError("不允许创建 LocalData 的实例");
         }
 
 

@@ -19,13 +19,13 @@
   <button parent="c" properties='{"x":380, "width":100, "height":50, "label":"Particle", "styleName":"button1"}' props='{"name":"par"}'/>
   <button id="errorBtn" parent="c" properties='{"x":100, "width":100, "height":50, "label":"ERROR", "styleName":"button1"}'/>
   <container id="p" stageLayout='{}'>
-    <page id="page" properties='{"firstBtnProp":{"height":40,"label":"first","styleName":"button1","width":100}, "lastBtnProp":{"width":100,"height":40,"label":"last","styleName":"button1","x":480}, "prevBtnProp":{"width":100,"height":40,"label":"prev","styleName":"button1","x":120}, "nextBtnProp":{"width":100,"height":40,"label":"next","styleName":"button1","x":360}, "pageTextProp":{"y":5,"width":100,"align":"center","height":40,"autoSize":"none","x":240}}'/>
+    <page id="page" properties='{"firstBtnProp":{"width":100,"height":40,"label":"first","styleName":"button1"}, "lastBtnProp":{"width":100,"styleName":"button1","height":40,"label":"last","x":480}, "prevBtnProp":{"width":100,"styleName":"button1","height":40,"label":"prev","x":120}, "nextBtnProp":{"width":100,"styleName":"button1","height":40,"label":"next","x":360}, "pageTextProp":{"width":100,"y":5,"height":40,"align":"center","autoSize":"none","x":240}}'/>
   </container>
   <container id="tsb">
     <bitmapSprite properties='{"x":50, "y":50, "width":500, "height":500, "sourceName":"skin.alert.default.background"}'/>
-    <imageLoader id="content" properties='{"directory":"background/scene", "extension":"jpg", "fileName":"1"}' editorProps='{"eye":false}'/>
-    <touchScrollBar id="vsb" properties='{"x":505, "y":100, "viewableArea":{"x":100,"y":100,"height":400,"width":400}, "size":400, "styleName":"vScrollBar1"}'/>
-    <touchScrollBar id="hsb" properties='{"x":100, "y":505, "direction":"horizontal", "viewableArea":{"x":100,"y":100,"height":400,"width":400}, "bounces":false, "styleName":"hScrollBar1", "size":400}'/>
+    <imageLoader id="content" properties='{"fileName":"1", "extension":"jpg", "directory":"background/scene"}' editorProps='{"eye":false}'/>
+    <touchScrollBar id="vsb" properties='{"x":505, "y":100, "viewableArea":{"width":400,"y":100,"height":400,"x":100}, "size":400, "styleName":"vScrollBar1"}'/>
+    <touchScrollBar id="hsb" properties='{"x":100, "y":505, "direction":"horizontal", "viewableArea":{"width":400,"y":100,"height":400,"x":100}, "bounces":false, "size":400, "styleName":"hScrollBar1"}'/>
     <label properties='{"x":570, "y":60, "width":150, "height":40, "text":"vertical:"}' style='{"strokeSize":1}'/>
     <checkBox id="veCB" properties='{"x":600, "y":120, "selected":true, "label":"enabled", "styleName":"checkBox1"}'/>
     <checkBox id="vbCB" properties='{"x":750, "y":121, "selected":true, "label":"bounces", "styleName":"checkBox1"}'/>
@@ -37,14 +37,14 @@
     <list id="list" properties='{"horizontalGap":10, "verticalGap":10}' editorProps='{"item":"item"}'/>
   </container>
   <container id="pl" stageLayout='{}'>
-    <page id="page" properties='{"y":345, "firstBtnProp":{"height":40,"label":"first","styleName":"button1","width":100}, "lastBtnProp":{"width":100,"height":40,"label":"last","styleName":"button1","x":480}, "prevBtnProp":{"width":100,"height":40,"label":"prev","styleName":"button1","x":120}, "nextBtnProp":{"width":100,"height":40,"label":"next","styleName":"button1","x":360}, "pageTextProp":{"y":5,"width":100,"align":"center","height":40,"autoSize":"none","x":240}}'/>
+    <page id="page" properties='{"y":345, "firstBtnProp":{"width":100,"height":40,"label":"first","styleName":"button1"}, "lastBtnProp":{"width":100,"styleName":"button1","height":40,"label":"last","x":480}, "prevBtnProp":{"width":100,"styleName":"button1","height":40,"label":"prev","x":120}, "nextBtnProp":{"width":100,"styleName":"button1","height":40,"label":"next","x":360}, "pageTextProp":{"width":100,"y":5,"height":40,"align":"center","autoSize":"none","x":240}}'/>
     <pageList id="list" target="page" properties='{"x":2, "horizontalGap":20, "verticalGap":10, "columnCount":4}' editorProps='{"item":"item"}'/>
     <checkBox id="ulCB" properties='{"y":410, "label":"更新 Button 文本", "styleName":"checkBox1"}'/>
   </container>
   <container id="sl" stageLayout='{}'>
     <bitmapSprite properties='{"width":500, "height":420, "sourceName":"skin.alert.default.background"}' editorProps='{"lock":true}'/>
-    <scrollList id="list" properties='{"x":30, "y":40, "horizontalGap":20, "verticalGap":5}' editorProps='{"item":"item", "scrollBar":"vsb"}'/>
-    <touchScrollBar id="vsb" target="list" properties='{"x":475, "y":40, "viewableArea":{"x":30,"y":40,"height":310,"width":430}, "size":310, "styleName":"vScrollBar1"}'/>
+    <scrollList id="list" properties='{"x":30, "y":40, "horizontalGap":20, "verticalGap":5}' editorProps='{"scrollBar":"vsb", "item":"item"}'/>
+    <touchScrollBar id="vsb" target="list" properties='{"x":475, "y":40, "viewableArea":{"width":430,"y":40,"height":310,"x":30}, "size":310, "styleName":"vScrollBar1"}'/>
     <checkBox id="ulCB" properties='{"x":30, "y":375, "label":"更新 Button 文本", "styleName":"checkBox1"}'/>
   </container>
   <item>

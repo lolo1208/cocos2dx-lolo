@@ -121,7 +121,7 @@ namespace lolo {
                         let lii: LoadItemInfo = new LoadItemInfo();
                         lii.isSecretly = true;
                         lii.type = Constants.RES_TYPE_PARTICLE;
-                        lii.parseUrl(this._url);
+                        lii.url = this._url;
                         lolo.loader.cleanRes(lii.url);// 可能已经加载过了
                         lolo.loader.add(lii);
                         lolo.loader.start();

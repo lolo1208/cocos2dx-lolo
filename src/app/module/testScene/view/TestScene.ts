@@ -16,6 +16,8 @@ namespace app.testScene {
     import Particle = lolo.Particle;
     import delayedCall = lolo.delayedCall;
     import Image = lolo.Image;
+    import AppUIManager = app.core.AppUIManager;
+    import RpgScene = app.rpgScene.RpgScene;
 
 
     /**
@@ -30,6 +32,8 @@ namespace app.testScene {
         public c: DisplayObjectContainer;
         public testBtn: Button;
         public errorBtn: Button;
+
+        public rpgScene: RpgScene = new RpgScene();
 
         public p: TestCase_Page = new TestCase_Page();
         public nt: TestCase_NumberText = new TestCase_NumberText();
@@ -56,8 +60,9 @@ namespace app.testScene {
 
 
         public initialize(): void {
-            this.initUI("testConfig1");
-            this.initUI("testConfig2");
+            this.initUI("testCfg1");
+            this.initUI("testCfg2");
+            this.initUI("testRpgCfg");
 
             let children: cc.Node[] = this.c.children;
             for (let i = 0; i < children.length; i++) {
@@ -73,6 +78,12 @@ namespace app.testScene {
 
 
         private testBtn_touchTapHandler(event: TouchEvent): void {
+            (<AppUIManager>lolo.ui).loadRpgMap(RpgScene.TEST_MAP_ID, lolo.handler(() => {
+                this.rpgScene.show();
+            }, this));
+
+
+            return;
             let t: number = new Date().getTime();
 
             let n1: number = 999;

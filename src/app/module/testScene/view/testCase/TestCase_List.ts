@@ -64,7 +64,7 @@ namespace app.testScene {
 
         public constructor() {
             super();
-            AutoUtil.autoUI(this, "testConfig1.item");
+            AutoUtil.autoUI(this, "testCfg1.item");
 
             this.btn.touchListener.swallowTouches = false;
         }

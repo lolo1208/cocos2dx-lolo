@@ -31,7 +31,7 @@ namespace lolo {
          * 重写添加子对象方法
          * - 支持对 child 多次调用addChild()
          * - 标记子节点变化，用于计算宽度
-         * @param args
+         * @param args [ child: Node, localZOrder?: number, tagOrName?: number|string ]
          */
         public addChild(...args: any[]): void {
             let child: cc.Node = args[0];
@@ -189,8 +189,8 @@ namespace lolo {
             let children: cc.Node[] = this.children;
             for (let i = 0; i < children.length; i++) {
                 let child: cc.Node = children[i];
+                if (child.hitTest == null) continue;// 子对象直接继承至 cc.Node 或 cc.Sprite 等基类，没有该方法
                 if (child instanceof ModalBackground) continue;// 忽略模态背景
-                if (child instanceof cc.TextFieldTTF) return true;// 忽略模态背景
                 if (child.hitTest(worldPoint))  return true;
             }
             return false;
@@ -212,7 +212,7 @@ namespace lolo {
                 let child: cc.Node = children[i];
                 child.removeFromParent();
                 try {
-                    child["destroy"]();
+                    child.destroy();
                 } catch (error) {
                 }
             }

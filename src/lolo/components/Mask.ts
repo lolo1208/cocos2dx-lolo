@@ -115,7 +115,7 @@ namespace lolo {
          * 是否启用 touch
          */
         public set touchEnabled(value: boolean) {
-            if (value && this._touchEnabled) {
+            if (value == this._touchEnabled) {
                 if (isNative) return;
                 else if (this.touchListener._registered) return;
             }

@@ -15,7 +15,7 @@ namespace app.core {
         lolo.stage.addChild(_loading);
 
         let lii: lolo.LoadItemInfo = new lolo.LoadItemInfo();
-        lii.parseUrl("json/core/ResConfig.json");
+        lii.url = "json/core/ResConfig.json";
         lii.configName = "resConfig";
         lii.type = lolo.Constants.RES_TYPE_JSON;
         lolo.loader.event_addListener(lolo.LoadEvent.ITEM_COMPLETE, this.loader_completeHandler, this);

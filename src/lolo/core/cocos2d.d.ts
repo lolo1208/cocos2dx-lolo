@@ -229,6 +229,8 @@ declare namespace cc {
 
         handleLoadedTexture(): void;
 
+        setAliasTexParameters(): void;
+
         retain(): void;
 
         release(): void;
@@ -534,184 +536,7 @@ declare namespace cc {
 }
 
 
-// Action
-declare namespace cc {
-
-    class Action extends Class {
-        // target: Node;// native 会取到 undefined，请使用 getTarget()
-        // originalTarget: Node;
-        tag: number;
-
-        clone(): Action;
-
-        update(dt: number): void;
-
-        getTarget(): Node;
-
-        getOriginalTarget(): Node;
-
-        stop(): void;
-
-        isDone(): boolean;
-    }
-
-    class FiniteTimeAction extends Action {
-        setDuration(value: number): void;
-
-        getDuration(): number;
-
-        reverse(): void;
-    }
-
-
-    class ActionInterval extends FiniteTimeAction {
-        easing(...easeObj: ActionEase[]): ActionInterval;// return this
-        repeatForever(): ActionInterval;// return this
-        repeat(times: number): ActionInterval;// return this
-        speed(speed: number): ActionInterval;// return this
-    }
-    //
-    class MoveBy extends ActionInterval {
-        constructor(duration: number, deltaPos: number|Point, deltaY?: number);
-    }
-    class MoveTo extends MoveBy {
-        constructor(duration: number, position: number|Point, y?: number);
-    }
-    //
-    class FadeTo extends ActionInterval {
-        constructor(duration: number, opacity: number);
-    }
-    class FadeIn extends FadeTo {
-        constructor(duration: number);
-    }
-    class FadeOut extends FadeTo {
-        constructor(duration: number);
-    }
-    //
-    class ScaleTo extends ActionInterval {
-        constructor(duration: number, sx: number, sy?: number);
-    }
-    class ScaleBy extends ScaleTo {
-        constructor(duration: number, sx: number, sy?: number);
-    }
-    //
-    class RotateTo extends ActionInterval {
-        constructor(duration: number, deltaAngleX: number, deltaAngleY?: number);
-    }
-    class RotateBy extends ActionInterval {
-        constructor(duration: number, deltaAngleX: number, deltaAngleY?: number);
-    }
-
-    //
-
-    class DelayTime extends ActionInterval {
-        constructor(delay: number);
-    }
-
-    class Sequence extends ActionInterval {
-        constructor(...tempArray: FiniteTimeAction[]);
-    }
-
-    class Spawn extends ActionInterval {
-        constructor(...tempArray: FiniteTimeAction[]);
-    }
-
-    //
-
-    class ActionInstant extends FiniteTimeAction {
-    }
-
-    class CallFunc extends ActionInstant {
-        constructor(selector: Function, selectorTarget: any, data?: any);
-
-        execute(): void;
-
-        getTargetCallback(): any;// return selectorTarget
-    }
-
-    class Show extends ActionInstant {
-        constructor();
-    }
-
-    class Hide extends ActionInstant {
-        constructor();
-    }
-
-    //
-
-    class ActionEase extends ActionInterval {
-    }
-
-    class EaseSineOut extends ActionEase {
-    }
-
-    class EaseBackIn extends ActionEase {
-    }
-    class EaseBackOut extends ActionEase {
-    }
-
-    class EaseRateAction extends ActionEase {
-    }
-    class EaseOut extends EaseRateAction {
-    }
-
-}
-
-
-// Action 快捷创建
-declare namespace cc {
-
-    function moveBy(duration: number, deltaPos: number|Point, deltaY?: number): MoveBy;
-
-    function moveTo(duration: number, position: number|Point, y?: number): MoveTo;
-
-    //
-    function fadeTo(duration: number, opacity: number): FadeTo;
-
-    function fadeIn(duration: number): FadeIn;
-
-    function fadeOut(duration: number): FadeOut;
-
-    //
-    function scaleTo(duration: number, sx: number, sy?: number): ScaleTo;
-
-    function scaleBy(duration: number, sx: number, sy?: number): ScaleBy;
-
-    //
-    function rotateTo(duration: number, deltaAngleX: number, deltaAngleY?: number): RotateTo;
-
-    function rotateBy(duration: number, deltaAngleX: number, deltaAngleY?: number): RotateBy;
-
-    //
-    //
-    function easeRateAction(action: ActionInterval, rate: number): EaseRateAction;
-
-    function easeOut(rate: number): EaseOut;
-
-    function easeSineOut(): EaseSineOut;
-
-    function easeBackIn(): EaseBackIn;
-
-    function easeBackOut(): EaseBackOut;
-
-    //
-    //
-
-    function delayTime(delay: number): DelayTime;
-
-    function sequence(...tempArray: FiniteTimeAction[]): Sequence;
-
-    function spawn(...tempArray: FiniteTimeAction[]): Spawn;
-
-    //
-    //
-    function callFunc(selector: Function, selectorTarget?: any, data?: any): CallFunc;
-
-    function show(): Show;
-
-    function hide(): Hide;
-
-}
+//
 
 
 declare namespace jsb {
@@ -751,5 +576,457 @@ declare namespace cc.loader {
     function loadJs(url: string|string[], cb: Function): void;
 
     function getXMLHttpRequest(): XMLHttpRequest;
+}
+
+
+//
+
+
+// Action
+declare namespace cc {
+
+    class Action extends Class {
+        // target: Node;// native 会取到 undefined，请使用 getTarget()
+        // originalTarget: Node;
+        tag: number;
+
+        clone(): Action;
+
+        update(dt: number): void;
+
+        getTarget(): Node;
+
+        getOriginalTarget(): Node;
+
+        stop(): void;
+
+        isDone(): boolean;
+    }
+
+    class FiniteTimeAction extends Action {
+        setDuration(value: number): void;
+
+        getDuration(): number;
+
+        reverse(): void;
+    }
+
+    class Follow extends Action {
+        constructor(followedNode: Node, rect: Rect);
+    }
+    function follow(followedNode: Node, rect: Rect): Follow;
+
+    class Speed extends Action {
+        constructor(action: ActionInterval, speed: number);
+    }
+    function speed(action: ActionInterval, speed: number): Speed;
+
+    //
+
+    class ActionInstant extends FiniteTimeAction {
+    }
+
+    class ActionInterval extends FiniteTimeAction {
+        easing(...easeObj: ActionEase[]): ActionInterval;// return this
+        repeatForever(): ActionInterval;// return this
+        repeat(times: number): ActionInterval;// return this
+        speed(speed: number): ActionInterval;// return this
+    }
+
+    //
+    //
+
+    /** 延时调用函数 */
+    class CallFunc extends ActionInstant {
+        constructor(selector: Function, selectorTarget: any, data?: any);
+    }
+    function callFunc(selector: Function, selectorTarget?: any, data?: any): CallFunc;
+
+    /** visible = true */
+    class Show extends ActionInstant {
+        constructor();
+    }
+    function show(): Show;
+
+    /** visible = false */
+    class Hide extends ActionInstant {
+        constructor();
+    }
+    function hide(): Hide;
+
+    /** visible = !visible */
+    class ToggleVisibility extends ActionInstant {
+        constructor();
+    }
+    function toggleVisibility(): ToggleVisibility;
+
+    /** 立即设置 x / y 坐标 */
+    class Place extends ActionInstant {
+        constructor(pos: Point|number, y?: number);
+    }
+    function place(pos: Point|number, y?: number): Place;
+
+    /** 立即从父级容器中移除自己 */
+    class RemoveSelf extends ActionInstant {
+        constructor(isNeedCleanUp: boolean = true);
+    }
+    function removeSelf(isNeedCleanUp: boolean = true): RemoveSelf;
+
+    /** 立即水平翻转 */
+    class FlipX extends ActionInstant {
+        constructor(flip: boolean = false);
+    }
+    function flipX(flip: boolean = false): FlipX;
+
+    /** 立即垂直翻转 */
+    class FlipY extends ActionInstant {
+        constructor(flip: boolean = false);
+    }
+    function flipY(flip: boolean = false): FlipY;
+
+
+    class ReuseGrid extends ActionInstant {
+        constructor(times: number);
+    }
+    function reuseGrid(times: number): ReuseGrid;
+
+    class StopGrid extends ActionInstant {
+        constructor();
+    }
+    function stopGrid(): StopGrid;
+
+    //
+    //
+
+    class DelayTime extends ActionInterval {
+        constructor(delay: number);
+    }
+    function delayTime(delay: number): DelayTime;
+
+    class Sequence extends ActionInterval {
+        constructor(...tempArray: FiniteTimeAction[]);
+    }
+    function sequence(...tempArray: FiniteTimeAction[]): Sequence;
+
+    class Spawn extends ActionInterval {
+        constructor(...tempArray: FiniteTimeAction[]);
+    }
+    function spawn(...tempArray: FiniteTimeAction[]): Spawn;
+
+
+    class Repeat extends ActionInterval {
+        constructor(action: FiniteTimeAction, times: number);
+    }
+    function repeat(action: FiniteTimeAction, times: number): Repeat;
+
+    class RepeatForever extends ActionInterval {
+        constructor(action: FiniteTimeAction);
+    }
+    function repeatForever(action: FiniteTimeAction): RepeatForever;
+
+    class ReverseTime extends ActionInterval {
+        constructor(action: FiniteTimeAction);
+    }
+    function reverseTime(action: FiniteTimeAction): ReverseTime;
+
+    //
+
+    class BezierBy extends ActionInterval {
+        constructor(t: number, c: Point[]);
+    }
+    function bezierBy(t: number, c: Point[]): BezierBy;
+
+    class BezierTo extends BezierBy {
+        constructor(t: number, c: Point[]);
+    }
+    function bezierTo(t: number, c: Point[]): BezierTo;
+
+    class Blink extends ActionInterval {
+        constructor(duration: number, blinks: number);
+    }
+    function blink(duration: number, blinks: number): Blink;
+
+    class FadeTo extends ActionInterval {
+        constructor(duration: number, opacity: number);
+    }
+    function fadeTo(duration: number, opacity: number): FadeTo;
+
+    class FadeIn extends FadeTo {
+        constructor(duration: number);
+    }
+    function fadeIn(duration: number): FadeIn;
+
+    class FadeOut extends FadeTo {
+        constructor(duration: number);
+    }
+    function fadeOut(duration: number): FadeOut;
+
+    class JumpBy extends ActionInterval {
+        constructor(duration: number);
+    }
+    function jumpBy(duration: number, position: Point|number, y: number, height: number, jumps?: number): JumpBy;
+
+    class JumpTo extends JumpBy {
+        constructor(duration: number);
+    }
+    function jumpTo(duration: number, position: Point|number, y: number, height: number, jumps?: number): JumpTo;
+
+    class MoveBy extends ActionInterval {
+        constructor(duration: number, deltaPos: number|Point, deltaY?: number);
+    }
+    function moveBy(duration: number, deltaPos: number|Point, deltaY?: number): MoveBy;
+
+    class MoveTo extends MoveBy {
+        constructor(duration: number, position: number|Point, y?: number);
+    }
+    function moveTo(duration: number, position: number|Point, y?: number): MoveTo;
+
+    class RotateBy extends ActionInterval {
+        constructor(duration: number, deltaAngleX: number, deltaAngleY?: number);
+    }
+    function rotateBy(duration: number, deltaAngleX: number, deltaAngleY?: number): RotateBy;
+
+    class RotateTo extends ActionInterval {
+        constructor(duration: number, deltaAngleX: number, deltaAngleY?: number);
+    }
+    function rotateTo(duration: number, deltaAngleX: number, deltaAngleY?: number): RotateTo;
+
+    class ScaleTo extends ActionInterval {
+        constructor(duration: number, sx: number, sy?: number);
+    }
+    function scaleTo(duration: number, sx: number, sy?: number): ScaleTo;
+
+    class ScaleBy extends ScaleTo {
+        constructor(duration: number, sx: number, sy?: number);
+    }
+    function scaleBy(duration: number, sx: number, sy?: number): ScaleBy;
+
+    class SkewTo extends ActionInterval {
+        constructor(t: number, sx: number, sy: number);
+    }
+    function skewTo(t: number, sx: number, sy: number): SkewTo;
+
+    class SkewBy extends SkewTo {
+        constructor(t: number, sx: number, sy: number);
+    }
+    function skewBy(t: number, sx: number, sy: number): SkewBy;
+
+    class TargetedAction extends ActionInterval {
+        constructor(target: Node, action: FiniteTimeAction);
+    }
+    function targetedAction(target: Node, action: FiniteTimeAction): TargetedAction;
+
+    class TintBy extends ActionInterval {
+        constructor(duration: number, deltaRed: number, deltaGreen: number, deltaBlue: number);
+    }
+    function tintBy(duration: number, deltaRed: number, deltaGreen: number, deltaBlue: number): TintBy;
+
+    class TintTo extends ActionInterval {
+        constructor(duration: number, red: number, green: number, blue: number);
+    }
+    function tintTo(duration: number, red: number, green: number, blue: number): TintTo;
+
+
+    class ActionTween extends ActionInterval {
+        constructor(duration: number, key: string, from: number, to: number);
+    }
+    function actionTween(duration: number, key: string, from: number, to: number): ActionTween;
+
+
+    class CardinalSplineTo extends ActionInterval {
+        constructor(duration: number, points: Point[], tension: number);
+    }
+    function cardinalSplineTo(duration: number, points: Point[], tension: number): CardinalSplineTo;
+
+    class CardinalSplineBy extends CardinalSplineTo {
+        constructor(duration: number, points: Point[], tension: number);
+    }
+    function cardinalSplineBy(duration: number, points: Point[], tension: number): CardinalSplineBy;
+
+    class CatmullRomBy extends CardinalSplineBy {
+        constructor(dt: number, points: Point[]);
+    }
+    function catmullRomBy(dt: number, points: Point[]): CatmullRomBy;
+
+    class CatmullRomTo extends CardinalSplineTo {
+        constructor(dt: number, points: Point[]);
+    }
+    function catmullRomTo(dt: number, points: Point[]): CatmullRomTo;
+}
+
+
+// ease
+declare namespace cc {
+
+    class ActionEase extends ActionInterval {
+    }
+
+    class EaseBezierAction extends ActionEase {
+    }
+    function easeBezierAction(p0: number, p1: number, p2: number, p3: number): EaseBezierAction;
+
+
+    //
+    class EaseBackIn extends ActionEase {
+    }
+    function easeBackIn(): EaseBackIn;
+
+    class EaseBackOut extends ActionEase {
+    }
+    function easeBackOut(): EaseBackOut;
+
+    class EaseBackInOut extends ActionEase {
+    }
+    function easeBackInOut(): EaseBackInOut;
+
+
+    //
+    class EaseBounce extends ActionEase {
+    }
+
+    class EaseBounceIn extends EaseBounce {
+    }
+    function easeBounceIn(): EaseBounceIn;
+
+    class EaseBounceOut extends EaseBounce {
+    }
+    function easeBounceOut(): EaseBounceOut;
+
+    class EaseBounceInOut extends EaseBounce {
+    }
+    function easeBounceInOut(): EaseBounceInOut;
+
+
+    //
+    class EaseCircleActionIn extends ActionEase {
+    }
+    function easeCircleActionIn(): EaseCircleActionIn;
+
+    class EaseCircleActionOut extends ActionEase {
+    }
+    function easeCircleActionOut(): EaseCircleActionOut;
+
+    class EaseCircleActionInOut extends ActionEase {
+    }
+    function easeCircleActionInOut(): EaseCircleActionInOut;
+
+
+    //
+    class EaseCubicActionIn extends ActionEase {
+    }
+    function easeCubicActionIn(): EaseCubicActionIn;
+
+    class EaseCubicActionOut extends ActionEase {
+    }
+    function easeCubicActionOut(): EaseCubicActionOut;
+
+    class EaseCubicActionInOut extends ActionEase {
+    }
+    function easeCubicActionInOut(): EaseCubicActionInOut;
+
+
+    //
+    class EaseElastic extends ActionEase {
+    }
+
+    class EaseElasticIn extends EaseElastic {
+    }
+    function easeElasticIn(period: number = 0.3): EaseElasticIn;
+
+    class EaseElasticOut extends EaseElastic {
+    }
+    function easeElasticOut(period: number = 0.3): EaseElasticOut;
+
+    class EaseElasticInOut extends EaseElastic {
+    }
+    function easeElasticInOut(period: number = 0.3): EaseElasticInOut;
+
+
+    //
+    class EaseExponentialIn extends ActionEase {
+    }
+    function easeExponentialIn(): EaseExponentialIn;
+
+    class EaseExponentialOut extends ActionEase {
+    }
+    function easeExponentialOut(): EaseExponentialOut;
+
+    class EaseExponentialInOut extends ActionEase {
+    }
+    function easeExponentialInOut(): EaseExponentialInOut;
+
+
+    //
+    class EaseQuadraticActionIn extends ActionEase {
+    }
+    function easeQuadraticActionIn(): EaseQuadraticActionIn;
+
+    class EaseQuadraticActionOut extends ActionEase {
+    }
+    function easeQuadraticActionOut(): EaseQuadraticActionOut;
+
+    class EaseQuadraticActionInOut extends ActionEase {
+    }
+    function easeQuadraticActionInOut(): EaseQuadraticActionInOut;
+
+
+    //
+    class EaseQuarticActionIn extends ActionEase {
+    }
+    function easeQuarticActionIn(): EaseQuarticActionIn;
+
+    class EaseQuarticActionOut extends ActionEase {
+    }
+    function easeQuarticActionOut(): EaseQuarticActionOut;
+
+    class EaseQuarticActionInOut extends ActionEase {
+    }
+    function easeQuarticActionInOut(): EaseQuarticActionInOut;
+
+
+    //
+    class EaseQuinticActionIn extends ActionEase {
+    }
+    function easeQuinticActionIn(): EaseQuinticActionIn;
+
+    class EaseQuinticActionOut extends ActionEase {
+    }
+    function easeQuinticActionOut(): EaseQuinticActionOut;
+
+    class EaseQuinticActionInOut extends ActionEase {
+    }
+    function easeQuinticActionInOut(): EaseQuinticActionInOut;
+
+
+    //
+    class EaseRateAction extends ActionEase {
+    }
+
+    class EaseIn extends EaseRateAction {
+    }
+    function easeIn(rate: number): EaseIn;
+
+    class EaseOut extends EaseRateAction {
+    }
+    function easeOut(rate: number): EaseOut;
+
+    class EaseInOut extends EaseRateAction {
+    }
+    function easeInOut(rate: number): EaseInOut;
+
+
+    //
+    class EaseSineIn extends ActionEase {
+    }
+    function easeSineIn(): EaseSineIn;
+
+    class EaseSineOut extends ActionEase {
+    }
+    function easeSineOut(): EaseSineOut;
+
+    class EaseSineInOut extends ActionEase {
+    }
+    function easeSineInOut(): EaseSineInOut;
+
 }
 

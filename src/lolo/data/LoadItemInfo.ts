@@ -14,8 +14,6 @@ namespace lolo {
         /**url的替换参数*/
         public urlArgs: string[];
 
-        /**文件的url（未格式化的url）*/
-        public url: string;
         /**文件的类型（后缀为 ui 或 ani，可以不用指定类型）*/
         public type: string;
         /**文件的名称（不是必填，可重复）*/
@@ -52,6 +50,9 @@ namespace lolo {
 
         /**加载耗时（毫秒）*/
         public loadTime: number = 0;
+
+        /**文件的url（未格式化的url）*/
+        private _url: string;
 
 
         /**
@@ -105,12 +106,21 @@ namespace lolo {
          * @param url
          * @param urlArgs
          */
-        public parseUrl(url: string, urlArgs: string[] = null): void {
+        public parseUrl(url: string, urlArgs?: string[]): void {
             if (!url) return;
 
             this.urlArgs = urlArgs;
-            this.url = (urlArgs == null) ? url : StringUtil.substitute(url, urlArgs);
-            this.extension = this.url.substring(this.url.lastIndexOf(".") + 1).toLocaleLowerCase();
+            this._url = (urlArgs == null) ? url : StringUtil.substitute(url, urlArgs);
+            this.extension = this._url.substring(this._url.lastIndexOf(".") + 1).toLocaleLowerCase();
+        }
+
+        /**文件的url（未格式化的url）*/
+        public set url(value: string) {
+            this.parseUrl(value);
+        }
+
+        public get url(): string {
+            return this._url;
         }
 
 
