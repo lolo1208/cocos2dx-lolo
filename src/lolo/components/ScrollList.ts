@@ -303,6 +303,22 @@ namespace lolo {
         }
 
 
+        /**
+         * 数据有改变
+         * @param event
+         */
+        protected dataChangedHandler(event: DataEvent): void {
+            //修改item的数据
+            if (event.index != -1) {
+                this.setItemData(this.getItemByIndex(event.index), event.newValue);
+            }
+            //数据列表有变动
+            else {
+                super.render();
+            }
+        }
+
+
         //
 
 
