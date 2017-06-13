@@ -87,6 +87,8 @@ declare namespace cc {
 
         convertToNodeSpace(worldPoint: Point): Point;
 
+        convertToWorldSpace(nodePoint: Point): Point;
+
         attr(props: any): void;
 
         setName(name: string): void;
