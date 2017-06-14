@@ -241,7 +241,7 @@ namespace lolo {
          * 清空，显示空纹理
          */
         public clean(): void {
-            this._fileName = this._url = null;
+            this._url = null;
             this.setTexture(Constants.EMPTY_TEXTURE);
         }
 
@@ -253,7 +253,7 @@ namespace lolo {
          * 销毁
          */
         public destroy(): void {
-            this._fileName = this._url = null;
+            this._url = null;
             if (this.hander != null) {
                 this.hander.recycle();
                 this.hander = null;
