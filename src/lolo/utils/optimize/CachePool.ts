@@ -153,7 +153,7 @@ namespace lolo {
          * 获取一个 Dictionary 对象
          */
         public static getDictionary(): Dictionary {
-            if (CachePool._rectPool.length == 0) {
+            if (CachePool._dicPool.length == 0) {
                 return new Dictionary();
             }
             else {

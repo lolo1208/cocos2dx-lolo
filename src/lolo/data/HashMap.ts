@@ -2,7 +2,9 @@ namespace lolo {
 
 
     /**
-     * 类描述
+     * 哈希表数据
+     * 可通过 索引 或 键 获取对应的值
+     * 可多个键对应一个值
      * @author LOLO
      */
     export class HashMap extends EventDispatcher {
@@ -15,18 +17,70 @@ namespace lolo {
         /**
          * 在数据有改变时，是否需要抛出 DataEvent.DATA_CHANGED 事件（默认不抛）
          */
-        public dispatchChanged: boolean;
+        public dispatchChanged: boolean = false;
 
 
         /**
          * 构造一个哈希表数据
-         * @param values 初始的值列表（Array 或 Vector）
-         * @param keys 与值列表对应的键列表
+         * @param values 初始的值数组
+         * @param keys 如果只有一个值，并且为 Dictionary 对象时，将会设置为 _keys。
+         *             如果值为字符串数组时，将会做为 key 属性名称列表，在 values 中获取对应的 key
          */
-        public constructor(values?: any[], keys?: Dictionary) {
+        public constructor(values?: any[], ...keys: any[]) {
             super();
-            this._values = (values == null) ? [] : values;
-            this._keys = (keys == null) ? new Dictionary() : keys;
+            this._keys = CachePool.getDictionary();
+            this.init(values, keys);
+        }
+
+
+        /**
+         * 初始化数据
+         * @param values 初始的值数组，传入 null 表示使用 this._values
+         * @param keys 如果只有一个值，并且为 Dictionary 对象时，将会设置为 this._keys。
+         *             如果值为字符串数组时，将会做为 key 属性名称列表，在 values 中获取对应的 key
+         */
+        public init(values: any[], ...keys: any[]): void {
+            if (values == null) {// 没传 values
+                if (this._values == null) {
+                    this._values = [];
+                    this._keys.clean();
+                    this.dispatchDataEvent();
+                    return;
+                }
+                else {
+                    values = this._values;
+                }
+            }
+            else {
+                this._values = values;
+            }
+
+            if (ObjectUtil.isArray(keys[0])) keys = keys[0];
+            if (keys.length == 0) {// 没传 keys
+                this._keys.clean();
+                this.dispatchDataEvent();
+                return;
+            }
+
+            let keyLen: number = keys.length;
+            if (keyLen == 1 && keys[0] instanceof Dictionary) {
+                CachePool.recycle(this._keys);
+                this._keys = keys[0];// keys 是 Dictionary
+            }
+            else {
+                // 获取 keys 对应的字段
+                this._keys.clean();
+                let valLen: number = values.length;
+                for (let i = 0; i < valLen; i++) {
+                    let val = values[i];
+                    if (val == null) continue;// value 为 null
+                    for (let n = 0; n < keyLen; n++) {
+                        let key = val[keys[n]];
+                        if (key != null) this._keys.setItem(key, i);// value 中没有对应的属性，忽略
+                    }
+                }
+            }
+            this.dispatchDataEvent();
         }
 
 

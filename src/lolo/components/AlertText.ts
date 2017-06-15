@@ -58,9 +58,7 @@ namespace lolo {
          * @param handler 隐藏结束后的回调函数
          */
         public static show(text: string, key: string = "common", handler: Handler = null): AlertText {
-            let alertText: AlertText = this.getInstance(key);
-            alertText.show(text, handler);
-            return alertText;
+            return this.getInstance(key).show(text, handler);
         }
 
 
@@ -86,7 +84,7 @@ namespace lolo {
          * @param text 内容
          * @param handler 隐藏结束后的回调
          */
-        public show(text: string, handler: Handler = null): void {
+        public show(text: string, handler: Handler = null): AlertText {
             this.text = text;
             this.handler = handler;
 
@@ -107,6 +105,8 @@ namespace lolo {
                 cc.fadeOut(this.hideEffectDuration),
                 cc.callFunc(this.hideComplete, this)
             ));
+
+            return this;
         }
 
 
