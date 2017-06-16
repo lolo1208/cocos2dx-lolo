@@ -606,7 +606,9 @@ namespace lolo {
         }
 
 
-        /**滚动条当前是否已显示（内容尺寸是否超出了显示区域）*/
+        /**
+         * 滚动条当前是否已显示（内容尺寸是否超出了显示区域）
+         */
         public get showed(): boolean {
             return this._showed;
         }

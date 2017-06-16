@@ -113,58 +113,85 @@ declare namespace cc {
 
         release(): void;
 
-
         /////////////////////////////////
         //
-        //   以下均由 lolo.cc_support() 实现
+        //   以下由 extend.ts 实现
         //
         /////////////////////////////////
-        // 私有属性和方法
         _original_ctor: (...args: any[]) => void;
         _original_onEnter: () => void;
+        _original_addChild: (child: Node, localZOrder?: number, tagOrName?: number|string) => void;
+
+        _original_setPosition: (newPosOrxValue: Point|number, yValue: number) => void;
         _original_setPositionX: (value: number) => void;
         _original_getPositionX: () => number;
         _original_setPositionY: (value: number) => void;
         _original_getPositionY: () => number;
-        _original_setPosition: (newPosOrxValue: Point|number, yValue: number) => void;
-        _original_destroy: () => void;
+
+        _original_setScale: (scale: number, scaleY?: number) => void;
+        _original_setScaleX: (newScaleX: number) => void;
+        _original_getScaleX: () => number;
+        _original_setScaleY: (newScaleY: number) => void;
+        _original_getScaleY: () => number;
+
         _x: number;
         _y: number;
+        _width: number;
+        _height: number;
+        _scaleX: number;
+        _scaleY: number;
         _ed: lolo.IEventDispatcher;
         _touchEnabled: boolean;
 
-        // 属性
         alpha: number;
-        name: string;
-
-        // 未实现，子类有需要时自行实现
-        _xChanged(): void;// x 坐标有改变时，注意子类 this._xChanged() 调用 super.setPositionX() 死循环
-        _yChanged(): void;// y 坐标有改变时
-        destroy();// 由 cc_extendDisplayObject() 实现
-
-        /** @see lolo.inStageVisibled */
-        inStageVisibled(): boolean;
-
-
-        /** @see lolo.IEventDispatcher */
-        event_addListener(type: string, listener: (event: lolo.Event, ...args: any[]) => void, caller: any, priority: number = 0, ...args: any[]): void;
-
-        event_removeListener(type: string, listener: (event: lolo.Event, ...args: any[]) => void, caller: any): void;
-
-        event_dispatch(event: lolo.Event, bubbles: boolean = false, recycle: boolean = true): void;
-
-        event_hasListener(type: string): boolean;
-
-        // Touch
-        /**是否启用touch事件*/
+        name: string;// override
+        /**是否已经被销毁了*/
+        destroyed: boolean;
+        /**是否还未调用过release()*/
+        notRelease: boolean;
+        /**是否启用touch事件，默认：false*/
         touchEnabled: boolean;
         /**是否抛出 touch 相关事件，默认：true*/
         propagateTouchEvents: boolean;
         /**touch事件侦听器*/
         touchListener: TouchListener;
 
-        /** @see lolo.touchHitTest (default) */
-        hitTest(worldPoint: Point): boolean;
+        setPosition(newPosOrxValue: number|Point, yValue?: number): void;//
+        setPositionX(value: number): void;//
+        getPositionX(): number;//
+        setPositionY(value: number): void;//
+        getPositionY(): number;//
+
+        setScale(scale: number, scaleY?: number): void;//
+        setScaleX(newScaleX: number): void;//
+        getScaleX(): number;//
+        setScaleY(newScaleY: number): void;//
+        getScaleY(): number;//
+
+        setWidth(value: number): void;//
+        getWidth(): number;//
+        setHeight(value: number): void;//
+        getHeight(): number;//
+
+        /**
+         * 对象是否在舞台，并且可见
+         * 以下情况将会返回 false：
+         *  - 不在显示列表中
+         *  - 自己或父级的 visible = false
+         *  - 自己或父级的 opacity = 0
+         * @return {boolean}
+         */
+        inStageVisibled(): boolean;//
+        /**点击测试函数*/
+        hitTest(worldPoint: Point): boolean;//
+        /**销毁时调用的函数*/
+        destroy();//
+
+        // @see lolo.IEventDispatcher
+        event_addListener(type: string, listener: (event: lolo.Event, ...args: any[]) => void, caller: any, priority: number = 0, ...args: any[]): void;//
+        event_removeListener(type: string, listener: (event: lolo.Event, ...args: any[]) => void, caller: any): void;//
+        event_dispatch(event: lolo.Event, bubbles: boolean = false, recycle: boolean = true): void;//
+        event_hasListener(type: string): boolean;//
     }
 
 

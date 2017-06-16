@@ -9,15 +9,14 @@ namespace lolo {
      */
     export class Scale9Bitmap {
 
-
+        /**缓存池*/
         private static _pool: Scale9Bitmap[] = [];
 
-
-        /**空纹理区域*/
-        public rect: lolo.Rectangle;
         /**对应的 Bitmap 对象*/
         public target: Bitmap;
 
+        /**空纹理区域*/
+        private _rect: Rectangle;
         /**九切片图片实例列表*/
         private _bitmaps: Scale9Sprite[];
 
@@ -53,10 +52,22 @@ namespace lolo {
 
 
         /**
+         * 清理缓存池
+         */
+        public static clean(): void {
+            let len: number = this._pool.length;
+            for (let i = 0; i < len; i++) {
+                this._pool[i].destroy();
+            }
+            this._pool.length = 0;
+        }
+
+
+        /**
          * 请使用 Scale9Bitmap.create() 创建 Scale9Bitmap 实例
          */
         public constructor() {
-            this.rect = new Rectangle();
+            this._rect = CachePool.getRectangle();
             this._bitmaps = [];
             for (let i = 0; i < 9; i++) this._bitmaps[i] = new Scale9Sprite();
         }
@@ -93,8 +104,8 @@ namespace lolo {
 
             bitmaps[index.TC].x = bitmaps[index.MC].x = bitmaps[index.BC].x = bitmaps[index.TL].width;
 
-            this.rect.width = width;
-            this.rect.height = height;
+            this._rect.width = width;
+            this._rect.height = height;
             this.render();
         }
 
@@ -104,7 +115,7 @@ namespace lolo {
          */
         private render(): void {
             let bitmaps: Scale9Sprite[] = this._bitmaps;
-            let w: number = this.rect.width, h: number = this.rect.height;
+            let w: number = this._rect.width, h: number = this._rect.height;
 
             bitmaps[index.TL].y = bitmaps[index.TC].y = bitmaps[index.TR].y = -h;
             bitmaps[index.ML].y = bitmaps[index.MC].y = bitmaps[index.MR].y = bitmaps[index.TL].height - h;
@@ -113,7 +124,7 @@ namespace lolo {
             bitmaps[index.TC].width = bitmaps[index.MC].width = bitmaps[index.BC].width = w - bitmaps[index.TL].width - bitmaps[index.BR].width;
             bitmaps[index.ML].height = bitmaps[index.MC].height = bitmaps[index.MR].height = h - bitmaps[index.TL].height - bitmaps[index.BR].height;
 
-            this.target.setTextureRect(this.rect);
+            this.target.setTextureRect(this._rect);
         }
 
 
@@ -122,13 +133,13 @@ namespace lolo {
          * @param value
          */
         public set width(value: number) {
-            if (value == this.rect.width) return;
-            this.rect.width = value;
+            if (value == this._rect.width) return;
+            this._rect.width = value;
             this.render();
         }
 
         public get width(): number {
-            return this.rect.width;
+            return this._rect.width;
         }
 
 
@@ -137,13 +148,13 @@ namespace lolo {
          * @param value
          */
         public set height(value: number) {
-            if (value == this.rect.height) return;
-            this.rect.height = value;
+            if (value == this._rect.height) return;
+            this._rect.height = value;
             this.render();
         }
 
         public get height(): number {
-            return this.rect.height;
+            return this._rect.height;
         }
 
 
@@ -153,6 +164,23 @@ namespace lolo {
          */
         public get bitmaps(): Scale9Sprite[] {
             return this._bitmaps;
+        }
+
+
+        /**
+         * 销毁
+         */
+        public destroy(): void {
+            if (this._bitmaps != null) {
+                for (let i = 0; i < 9; i++) {
+                    this._bitmaps[i].destroy();
+                }
+                this._bitmaps = null;
+            }
+            if (this._rect != null) {
+                CachePool.recycle(this._rect);
+                this._rect = null;
+            }
         }
 
 
@@ -167,55 +195,45 @@ namespace lolo {
      */
     export class Scale9Sprite extends cc.Sprite {
 
-        public rect: Rectangle;
-        private _width: number;
-        private _height: number;
-        private _y: number;
+        private _rect: Rectangle;
 
 
         public constructor() {
             super();
 
             this.setAnchorPoint(0, 1);
-            this.rect = new Rectangle();
+            this._rect = CachePool.getRectangle();
         }
+
 
         public setTo(texture: cc.Texture2D, x: number, y: number, w: number, h: number): void {
             this._width = w;
             this._height = h;
-            this.rect.setTo(x, y, w, h);
             this.setTexture(texture);
-            this.setTextureRect(this.rect);
+            this._rect.setTo(x, y, w, h);
+            this.setTextureRect(this._rect);
         }
 
 
-        public set width(value: number) {
+        public setWidth(value: number): void {
             this._width = value;
-            this.scaleX = value / this.rect.width;
-        }
-
-        public get width(): number {
-            return this._width;
+            this.setScaleX(value / this._rect.width);
         }
 
 
-        public set height(value: number) {
+        public setHeight(value: number): void {
             this._height = value;
-            this.scaleY = value / this.rect.height;
-        }
-
-        public get height(): number {
-            return this._height;
+            this.setScaleY(value / this._rect.height);
         }
 
 
-        public set y(value: number) {
-            this._y = value;
-            this.setPositionY(-value);
-        }
+        public destroy(): void {
+            if (this._rect != null) {
+                CachePool.recycle(this._rect);
+                this._rect = null;
+            }
 
-        public get y(): number {
-            return this._y;
+            super.destroy();
         }
 
         //

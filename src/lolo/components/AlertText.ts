@@ -12,8 +12,13 @@ namespace lolo {
      * @author LOLO
      */
     export class AlertText extends TextField {
+
+        /**y轴默认偏移*/
+        public static offsetY: number = -50;
+
         /**实例列表*/
         private static _instanceList: Object = {};
+
 
         /**该时间后显示（该时间后播放显示动画。单位：秒）*/
         public showDelay: number;
@@ -96,8 +101,8 @@ namespace lolo {
                 if (this._parent != null) this._parent.addChild(this);
             }
 
-            this.setOpacity(0);
             this.stopAllActions();
+            this.setOpacity(0);
             this.runAction(cc.sequence(
                 cc.delayTime(this.showDelay),
                 cc.fadeIn(this.showEffectDuration),
@@ -137,7 +142,7 @@ namespace lolo {
          */
         public moveToStageTouchPosition(): void {
             this.x = lolo.gesture.touchPoint.x - this.width / 2;
-            this.y = lolo.gesture.touchPoint.y - 50;
+            this.y = lolo.gesture.touchPoint.y + AlertText.offsetY;
         }
 
 
@@ -171,7 +176,7 @@ namespace lolo {
          * @return
          */
         public get centerWidth(): number {
-            return this.width;
+            return this.getWidth();
         }
 
         /**
@@ -179,38 +184,28 @@ namespace lolo {
          * @return
          */
         public get centerHeight(): number {
-            return this.height;
+            return this.getHeight();
         }
 
 
         protected setText(value: string): void {
             super.setText(value);
-            this.x = this.x;
-            this.y = this.y;
+            this.setPosition(this._x, this._y);
         }
 
 
-        public set x(value: number) {
+        public setPositionX(value: number): void {
             // 超出舞台的情况
             if (value + this.width > lolo.ui.stageWidth) value = lolo.ui.stageWidth - this.width;
             else if (value < 0) value = 0;
-            this.setPositionX(value);
+            super.setPositionX(value);
         }
 
-        public get x(): number {
-            return this.getPositionX();
-        }
-
-
-        public set y(value: number) {
+        public setPositionY(value: number): void {
             // 超出舞台的情况
             if (value + this.height > lolo.ui.stageHeight) value = lolo.ui.stageHeight - this.height;
             else if (value < 0) value = 0;
             super.setPositionY(value);
-        }
-
-        public get y(): number {
-            return this.getPositionY();
         }
 
 

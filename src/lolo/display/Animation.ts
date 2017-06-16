@@ -262,6 +262,8 @@ namespace lolo {
          * 在加载完成后，显示当前帧
          */
         private render(): void {
+            if (this.destroyed) return;
+
             let texture: cc.Texture2D = Constants.EMPTY_TEXTURE;
             let fps: number = 60;
             let info: AnimationInfo = this._info;
@@ -298,7 +300,7 @@ namespace lolo {
             this.setTextureRect(info.rect);
             this.setAnchorPoint(info.anchor);
 
-            if (this.propagateAnimationEvents) this.dispatchAnimationEvent(AnimationEvent.ENTER_FRAME);
+            if (this.propagateAnimationEvents) this.event_dispatch(Event.create(AnimationEvent, AnimationEvent.ENTER_FRAME));
         }
 
 
@@ -389,8 +391,8 @@ namespace lolo {
             //只有一帧，或没有帧
             if (totalFrames <= 1) {
                 this.stop();
-                if (this.propagateAnimationEvents) this.dispatchAnimationEvent(AnimationEvent.ENTER_STOP_FRAME);
-                this.dispatchAnimationEvent(AnimationEvent.ANIMATION_END);
+                if (this.propagateAnimationEvents) this.event_dispatch(Event.create(AnimationEvent, AnimationEvent.ENTER_STOP_FRAME));
+                this.event_dispatch(Event.create(AnimationEvent, AnimationEvent.ANIMATION_END));
                 return;
             }
 
@@ -401,7 +403,7 @@ namespace lolo {
                     : this.stopFrame;
                 //到达停止帧
                 if (this._currentFrame == stopFrame) {
-                    if (this.propagateAnimationEvents) this.dispatchAnimationEvent(AnimationEvent.ENTER_STOP_FRAME);
+                    if (this.propagateAnimationEvents) this.event_dispatch(Event.create(AnimationEvent, AnimationEvent.ENTER_STOP_FRAME));
 
                     //达到了重复播放次数
                     this._currentRepeatCount++;
@@ -410,7 +412,7 @@ namespace lolo {
                         let handler: Handler = this.handler;
                         this.handler = null;
                         if (handler != null) handler.execute();
-                        this.dispatchAnimationEvent(AnimationEvent.ANIMATION_END);
+                        this.event_dispatch(Event.create(AnimationEvent, AnimationEvent.ANIMATION_END));
                     }
                 }
             }
@@ -473,14 +475,6 @@ namespace lolo {
         }
 
 
-        /**
-         * 抛出动画相关事件
-         */
-        private dispatchAnimationEvent(type: string): void {
-            this.event_dispatch(Event.create(AnimationEvent, type));
-        }
-
-
         //
 
 
@@ -493,6 +487,8 @@ namespace lolo {
                 this.handler = null;
             }
             this.stop();
+
+            super.destroy();
         }
 
         //

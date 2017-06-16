@@ -8,6 +8,7 @@ namespace lolo {
      *  - 上一页按钮
      *  - 下一页按钮
      *  - 页码显示文本
+     *
      * @author LOLO
      */
     export class Page extends DisplayObjectContainer {

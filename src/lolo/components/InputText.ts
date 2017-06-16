@@ -29,7 +29,7 @@ namespace lolo {
 
         // html5下使用
         private _editBoxInputMode: number;
-        private _renderCmd: {_edTxt: any, show: Function, hidden: Function};
+        private _renderCmd: {_edTxt: any, show: () => void, hidden: () => void};
 
 
         /**
@@ -51,6 +51,7 @@ namespace lolo {
             this.touchListener.onTouchEnded = InputText.onTouchEnded;
             this.touchEnabled = this.editable = true;
 
+            this.setAnchorPoint(0, 1);
             this.styleName = "textField";
         }
 
@@ -242,12 +243,12 @@ namespace lolo {
         /**
          * 宽度
          */
-        public set width(value: number) {
+        public setWidth(value: number): void {
             this._cSize.width = value;
             this.setContentSize(this._cSize);
         }
 
-        public get width(): number {
+        public getWidth(): number {
             return this._cSize.width;
         }
 
@@ -255,12 +256,12 @@ namespace lolo {
         /**
          * 高度
          */
-        public set height(value: number) {
+        public setHeight(value: number): void {
             this._cSize.height = value;
             this.setContentSize(this._cSize);
         }
 
-        public get height(): number {
+        public getHeight(): number {
             return this._cSize.height;
         }
 
@@ -281,9 +282,14 @@ namespace lolo {
          */
         private static onTouchBegan(touch: cc.Touch, event: cc.EventTouch): boolean {
             let target: InputText = <InputText>event.getCurrentTarget();
-            let hited: boolean = lolo.touchHitTest.call(target, touch.getLocation());
+            if (!target.inStageVisibled()) return false;// 当前节点不可见
+
+            let p: cc.Point = target.convertToNodeSpace(touch.getLocation());
+            lolo.temp_rect.setTo(0, 0, target.getWidth(), target.getHeight());
+            let hited: boolean = lolo.temp_rect.contains(p.x, p.y);
+
             if (hited && target.propagateTouchEvents) {
-                cc_touchDispatchEvent(TouchEvent.TOUCH_BEGIN, target, touch, event);
+                lolo.expend_touchDispatchEvent(TouchEvent.TOUCH_BEGIN, target, touch, event);
             }
             if (!hited && !isNative) target._renderCmd.hidden();
             return hited;
@@ -297,7 +303,7 @@ namespace lolo {
         private static onTouchEnded(touch: cc.Touch, event: cc.EventTouch): void {
             let target: InputText = <InputText>event.getCurrentTarget();
             if (target.propagateTouchEvents) {
-                cc_touchDispatchEvent(TouchEvent.TOUCH_MOVE, target, touch, event);
+                lolo.expend_touchDispatchEvent(TouchEvent.TOUCH_MOVE, target, touch, event);
             }
 
             if (target.editable) {

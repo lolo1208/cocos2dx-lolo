@@ -30,6 +30,7 @@ namespace lolo {
             super();
             lolo.CALL_SUPER_REPLACE_KEYWORD();
 
+            this.setAnchorPoint(0, 1);
             this.styleName = "textField";
         }
 
@@ -242,14 +243,22 @@ namespace lolo {
          * 文本宽度
          * @param value
          */
-        public set width(value: number) {
+        public setWidth(value: number): void {
             this._width = value;
             this.setDimensions(this._width, this._height);
         }
 
-        public get width(): number {
+        public getWidth(): number {
             if (this._width > 0) return this._width;
             return this.getContentSize().width;
+        }
+
+        public set width(value) {
+            this.setWidth(value);
+        }
+
+        public get width() {
+            return this.getWidth();
         }
 
 
@@ -257,14 +266,22 @@ namespace lolo {
          * 文本高度
          * @param value
          */
-        public set height(value: number) {
+        public setHeight(value: number): void {
             this._height = value;
             this.setDimensions(this._width, this._height);
         }
 
-        public get height(): number {
+        public getHeight(): number {
             if (this._height > 0) return this._height;
             return this.getContentSize().height;
+        }
+
+        public set height(value) {
+            this.setHeight(value);
+        }
+
+        public get height() {
+            return this.getHeight();
         }
 
 

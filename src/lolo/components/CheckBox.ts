@@ -44,6 +44,14 @@ namespace lolo {
             this._width = this._height = 0;
         }
 
+        public getWidth(): number {
+            return DisplayObjectContainer.prototype.getWidth.call(this);
+        }
+
+        public getHeight(): number {
+            return DisplayObjectContainer.prototype.getHeight.call(this);
+        }
+
 
         /**
          * 点击测试
@@ -51,7 +59,9 @@ namespace lolo {
          * @return {boolean}
          */
         public hitTest(worldPoint: cc.Point): boolean {
-            return DisplayObjectContainer.prototype.hitTest.call(this, worldPoint);
+            let hitted: boolean = this._labelText.hitTest(worldPoint);
+            if (hitted) return true;
+            return this._skin.hitTest(worldPoint);
         }
 
 

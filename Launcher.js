@@ -58,7 +58,7 @@ lolo.Launcher.loadModule = function () {
 lolo.Launcher.enter = function () {
 
     // 初始化，要注意代码顺序
-    lolo.cc_support();
+    lolo.extend_cc();
     var stage = new app.core.AppUIManager();
     lolo.initialize(stage, "zh_CN");
 

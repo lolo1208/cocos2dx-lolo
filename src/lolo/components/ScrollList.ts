@@ -237,13 +237,19 @@ namespace lolo {
         }
 
 
-        protected _xChanged(): void {
-            if (this._scrollBar != null) super.render();
+        public setPositionX(value: number): void {
+            super.setPositionX(value);
+            super.render();
         }
 
-        protected _yChanged(): void {
-            if (this._scrollBar != null) super.render();
+        public setPositionY(value: number): void {
+            super.setPositionY(value);
+            super.render();
         }
+
+        // protected _xChanged(): void {
+        //     if (this._scrollBar != null) super.render();
+        // }
 
 
         public set itemWidth(value: number) {
@@ -291,14 +297,14 @@ namespace lolo {
         /**
          * 通过 itemWidth 和 data.length 计算出来的宽度
          */
-        protected getWidth(): number {
+        public getWidth(): number {
             return this._width > 0 ? this._width : super.getWidth();
         }
 
         /**
          * 通过 itemHeight 和 data.length 计算出来的高度
          */
-        protected getHeight(): number {
+        public getHeight(): number {
             return this._height > 0 ? this._height : super.getHeight();
         }
 
@@ -314,7 +320,7 @@ namespace lolo {
             }
             //数据列表有变动
             else {
-                super.render();
+                super.render();// 这里改用调用 super.render()
             }
         }
 

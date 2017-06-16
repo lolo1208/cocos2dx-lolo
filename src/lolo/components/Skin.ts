@@ -33,6 +33,7 @@ namespace lolo {
             Skin.SELECTED_UP, Skin.SELECTED_OVER, Skin.SELECTED_DOWN, Skin.SELECTED_DISABLED
         ];
 
+
         /**皮肤的名称*/
         private _skinName: string;
         /**当前皮肤包含的状态列表*/
@@ -146,6 +147,7 @@ namespace lolo {
         public get state(): string {
             return this._state;
         }
+
 
         //
     }

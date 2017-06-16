@@ -33,11 +33,6 @@ namespace lolo {
         /**纹理加载完毕时的渲染回调列表（url 为 key）*/
         private static _handlers: Dictionary;
 
-
-        /**宽*/
-        private _width: number = 0;
-        /**高*/
-        private _height: number = 0;
         /**图像的源名称*/
         private _sourceName: string = "";
         /**当前图像描述信息*/
@@ -165,7 +160,6 @@ namespace lolo {
             super();
             lolo.CALL_SUPER_REPLACE_KEYWORD();
 
-            this.cascadeOpacity = true;
             this.sourceName = sourceName;
         }
 
@@ -221,6 +215,8 @@ namespace lolo {
          * 在加载完成后，显示当前图像
          */
         protected render(): void {
+            if (this.destroyed) return;
+
             let texture: cc.Texture2D;
             let info: BitmapInfo = this._info;
             let isEmpty: boolean = info == null;
@@ -285,7 +281,7 @@ namespace lolo {
         /**
          * 图像的宽
          */
-        public set width(value: number) {
+        public setWidth(value: number): number {
             this._width = value;
             if (this._info == null) return;
 
@@ -302,15 +298,11 @@ namespace lolo {
             }
         }
 
-        public get width(): number {
-            return this._width;
-        }
-
 
         /**
          * 图像的高
          */
-        public set height(value: number) {
+        public setHeight(value: number): void {
             this._height = value;
             if (this._info == null) return;
 
@@ -325,10 +317,6 @@ namespace lolo {
             else {
                 this.scaleY = value / this._info.rect.height;
             }
-        }
-
-        public get height(): number {
-            return this._height;
         }
 
 
@@ -363,11 +351,16 @@ namespace lolo {
         //
 
 
+        /**
+         * 销毁
+         */
         public destroy(): void {
             if (this._scale9Bitmap != null) {
                 Scale9Bitmap.recycle(this._scale9Bitmap);
                 this._scale9Bitmap = null;
             }
+
+            super.destroy();
         }
 
 

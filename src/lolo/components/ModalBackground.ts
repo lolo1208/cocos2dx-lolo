@@ -7,14 +7,14 @@ namespace lolo {
      */
     export class ModalBackground extends cc.Sprite {
 
-        private _textureRect: cc.Rect;
+        private _textureRect: Rectangle;
 
 
         public constructor(target?: cc.Node) {
             super();
             lolo.CALL_SUPER_REPLACE_KEYWORD();
 
-            this._textureRect = {x: 0, y: 0, width: 0, height: 0};
+            this._textureRect = CachePool.getRectangle();
             this.touchEnabled = true;
 
             this.alpha = 0.1;
@@ -64,6 +64,12 @@ namespace lolo {
          */
         public destroy(): void {
             lolo.stage.event_removeListener(Event.RESIZE, this.render, this);
+            if (this._textureRect != null) {
+                CachePool.recycle(this._textureRect);
+                this._textureRect = null;
+            }
+
+            super.destroy();
         }
 
         //

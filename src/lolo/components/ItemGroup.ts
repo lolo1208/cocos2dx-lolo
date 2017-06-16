@@ -125,10 +125,7 @@ namespace lolo {
                 if (item == this._selectedItem) this._selectedItem = null;
                 if (item.selected) item.selected = false;
                 item.group = null;
-                if (item.parent == this) {
-                    this.removeChild(item);
-                    item.destroy();
-                }
+                if (item.parent == this) item.removeFromParent();
             }
         }
 
@@ -329,10 +326,7 @@ namespace lolo {
                 item.group = null;
                 item.event_removeListener(TouchEvent.TOUCH_BEGIN, this.item_touchBegin, this);
                 item.event_removeListener(TouchEvent.TOUCH_TAP, this.item_touchTap, this);
-                if (item.parent == this) {
-                    this.removeChild(item);
-                    item.destroy();
-                }
+                if (item.parent == this) item.destroy();
             }
             this._selectedItem = null;
         }

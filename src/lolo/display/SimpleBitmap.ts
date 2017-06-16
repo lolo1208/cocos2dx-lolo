@@ -8,9 +8,6 @@ namespace lolo {
      */
     export class SimpleBitmap extends cc.Sprite {
 
-        protected _width: number;
-        protected _height: number;
-
         /**用于在 native 下调用 setTextureRect()*/
         protected _textureRect: Rectangle;
 
@@ -45,12 +42,12 @@ namespace lolo {
         /**
          * 宽度
          */
-        public set width(value: number) {
+        public setWidth(value: number): void {
             this._width = value;
             this.sizeChanged();
         }
 
-        public get width(): number {
+        public getWidth(): number {
             if (this._width > 0) return this._width;
             let texture: cc.Texture2D = this.getTexture();
             if (texture) return texture.width;
@@ -61,12 +58,12 @@ namespace lolo {
         /**
          * 高度
          */
-        public set height(value: number) {
+        public setHeight(value: number): void {
             this._height = value;
             this.sizeChanged();
         }
 
-        public get height(): number {
+        public getHeight(): number {
             if (this._height > 0) return this._height;
             let texture: cc.Texture2D = this.getTexture();
             if (texture) return texture.height;
@@ -122,6 +119,8 @@ namespace lolo {
                 CachePool.recycle(this._textureRect);
                 this._textureRect = null;
             }
+
+            super.destroy();
         }
 
 

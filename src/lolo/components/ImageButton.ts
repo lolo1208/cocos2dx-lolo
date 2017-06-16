@@ -41,7 +41,7 @@ namespace lolo {
             super();
 
             this._image = new Skin();
-            this.addChild(this._image);
+            this._bc.addChild(this._image);
         }
 
 

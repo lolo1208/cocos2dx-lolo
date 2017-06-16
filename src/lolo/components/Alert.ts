@@ -89,7 +89,7 @@ namespace lolo {
          * 显示
          */
         public show(): void {
-            this.reset();
+            this.clean();
 
             let style: any = lolo.config.getStyle(this.styleName);
 
@@ -101,7 +101,7 @@ namespace lolo {
 
             let bg: Bitmap = this._background;
             let tf: Label = this._contentText;
-            let c: DisplayObjectContainer = this._btnC;
+            let btnC: DisplayObjectContainer = this._btnC;
 
             // 背景
             bg.sourceName = style.background;
@@ -117,10 +117,10 @@ namespace lolo {
                 let item: any = this.buttons[i];
                 if (item instanceof Button) {
                     btn = item;
-                    this._btnC.addChild(btn);
+                    btnC.addChild(btn);
                 }
                 else {
-                    btn = AutoUtil.init(new Button(), this._btnC);
+                    btn = AutoUtil.init(new Button(), btnC);
                     btn.styleName = style.buttonStyleName;
                     AutoUtil.initObject(btn, style.buttonProp);
                     btn.label = item;
@@ -133,7 +133,7 @@ namespace lolo {
             }
 
             //内容、按钮等高度相加，已经超过了限制的最小高度，将以最大高度方式显示
-            if ((style.labelPaddingTop + tf.height + style.labelPaddingBottom + this._btnC.height + style.buttonPaddingBottom) > style.minHeight) {
+            if ((style.labelPaddingTop + tf.height + style.labelPaddingBottom + btnC.height + style.buttonPaddingBottom) > style.minHeight) {
                 tf.width = style.maxWidth - style.labelPaddingLeft - style.labelPaddingRight;
                 this._background.width = style.maxWidth;
                 this._background.height = style.maxHeight;
@@ -145,10 +145,10 @@ namespace lolo {
 
             //计算文本的位置
             tf.x = (this._background.width - style.labelPaddingLeft - style.labelPaddingRight - tf.width) / 2 + style.labelPaddingLeft;
-            tf.y = (this._background.height - style.labelPaddingTop - style.labelPaddingBottom - this._btnC.height - style.buttonPaddingBottom - tf.height) / 2 + style.labelPaddingTop;
+            tf.y = (this._background.height - style.labelPaddingTop - style.labelPaddingBottom - btnC.height - style.buttonPaddingBottom - tf.height) / 2 + style.labelPaddingTop;
             // 计算按钮组的位置（水平居中）
-            this._btnC.x = this._background.width - this._btnC.width >> 1;
-            this._btnC.y = this._background.height - style.buttonPaddingBottom - this._btnC.height;
+            btnC.x = this._background.width - btnC.width >> 1;
+            btnC.y = this._background.height - style.buttonPaddingBottom - btnC.height;
 
             lolo.layout.addStageLayout(this, {});
             lolo.ui.addChildToLayer(this, Constants.LAYER_NAME_ALERT);
@@ -165,22 +165,22 @@ namespace lolo {
             this.hander = null;
             if (hander != null) hander.execute(btn.label);
 
-            this.reset();
+            this.clean();
         }
 
 
-        public set width(value: number) {
+        public setWidth(value: number): void {
         }
 
-        public get width(): number {
+        public getWidth(): number {
             return this._background.width;
         }
 
 
-        public set height(value: number) {
+        public setHeight(value: number): void {
         }
 
-        public get height(): number {
+        protected getHeight(): number {
             return this._background.height;
         }
 
@@ -189,17 +189,18 @@ namespace lolo {
 
 
         /**
-         * 重置
+         * 清空
          */
-        public reset(): void {
+        public clean(): void {
             this.removeFromParent();
             lolo.layout.removeStageLayout(this);
 
             let buttons: Button[] = <Button[]>this._btnC.children;
-            for (let i = 0; i < buttons.length; i++) {
+            if (!isNative) buttons = buttons.concat();
+            let len: number = buttons.length;
+            for (let i = 0; i < len; i++) {
                 let btn: Button = buttons[i];
                 btn.event_removeListener(TouchEvent.TOUCH_TAP, this.btn_touchTap, this);
-                btn.removeFromParent();
                 btn.destroy();
             }
         }
@@ -209,7 +210,7 @@ namespace lolo {
          * 销毁
          */
         public destroy(): void {
-            this.reset();
+            this.clean();
             super.destroy();
         }
 

@@ -449,11 +449,10 @@ namespace lolo {
          * 清空子项缓存池
          */
         protected cleanItemPool(): void {
-            let item: ItemRenderer;
-            while (this._itemPool.length > 0) {
-                item = this._itemPool.pop();
-                item.destroy();
-            }
+            let len: number = this._itemPool.length;
+            for (let i = 0; i < len; i++)
+                this._itemPool[i].destroy();
+            this._itemPool.length = 0;
         }
 
 

@@ -7,13 +7,19 @@ namespace lolo {
     /**
      * 遮罩对象（native cc.ClippingNode 不能继承，所以继承至 EventDispatcher，只关注遮罩相关业务逻辑）
      *
-     * 使用 Mask 时，会改变被遮罩对象的显示层级，被遮罩对象的 parent 将会被更改为 mask.clipper
-     * 而 mask.clipper.parent 将会被设置为 被遮罩对象原本的 parent
+     * 使用 Mask 时，会改变被遮罩对象的显示层级，伪代码如下：
+     * var oldParent = mask.content.parent;
+     * mask.content.parent = mask.clipper;
+     * mask.clipper.parent = oldParent;
+     *
      * @author LOLO
      */
     export class Mask extends EventDispatcher {
 
         public touchListener: cc.TouchListener;
+
+        /**是否已经被销毁了*/
+        public destroyed: boolean = false;
 
         private _clipper: cc.ClippingNode;
         private _content: cc.Node;
@@ -26,7 +32,6 @@ namespace lolo {
             super();
 
             this._clipper = new cc.ClippingNode();
-            this._clipper.retain();
             this._clipper.setAnchorPoint(0, 1);
             this._clipper.mask = this;
             this._clipper.onEnter = Mask.clipperOnEnter;
@@ -48,11 +53,15 @@ namespace lolo {
          * html5中，onEnter 的时候，需要重新注册 touchListener
          */
         private static clipperOnEnter(): void {
-            let self: cc.ClippingNode = <cc.ClippingNode>this;
-            cc.ClippingNode.prototype.onEnter.call(self);
+            let clipper: cc.ClippingNode = <cc.ClippingNode>this;
+            cc.ClippingNode.prototype.onEnter.call(clipper);
 
-            if (!isNative && self.mask._touchEnabled && !self.mask.touchListener._registered)
-                self.mask.touchEnabled = true;
+            if (!isNative && clipper.mask._touchEnabled && !clipper.mask.touchListener._registered)
+                clipper.mask.touchEnabled = true;
+        }
+
+        public get clipper(): cc.ClippingNode {
+            return this._clipper;
         }
 
 
@@ -62,13 +71,9 @@ namespace lolo {
         public set content(value: cc.Node) {
             if (value.parent == this._clipper) return;
 
-            this._clipper.removeAllChildren();
             this._content = value;
-
-            this._clipper.removeFromParent();
             this._content.parent.addChild(this._clipper);
-
-            this._content.removeFromParent();
+            this._clipper.removeAllChildren();
             this._clipper.addChild(this._content);
         }
 
@@ -87,7 +92,6 @@ namespace lolo {
         public setRect(x: number, y: number, width: number, height: number) {
             if (this._rectStencil == null) {
                 this._rectStencil = new cc.Sprite();
-                this._rectStencil.retain();
                 this._rectStencil.setAnchorPoint(0, 1);
                 this._rectStencil.setTexture(Constants.EMPTY_TEXTURE);
 
@@ -99,7 +103,7 @@ namespace lolo {
             this._rect.setTo(0, 0, width, height);
             this._rectStencil.setTextureRect(this._rect);
             this._rectStencil.x = x;
-            this._rectStencil.y = -y;
+            this._rectStencil.y = y;
             this._clipper.stencil = this._rectStencil;
 
             this._rect.x = x;
@@ -115,7 +119,7 @@ namespace lolo {
          * 是否启用 touch
          */
         public set touchEnabled(value: boolean) {
-            if (value == this._touchEnabled) {
+            if (value && this._touchEnabled) {
                 if (isNative) return;
                 else if (this.touchListener._registered) return;
             }
@@ -137,7 +141,7 @@ namespace lolo {
          */
         private static touchBegan(touch: cc.Touch, event: cc.EventTouch): boolean {
             let target: cc.Node = event.getCurrentTarget();
-            if (!lolo.inStageVisibled.call(target["mask"].content)) return false;// 遮罩内容不可见
+            if (!lolo.expend_inStageVisibled.call(target["mask"].content)) return false;// 遮罩内容不可见
 
             let hited: boolean = Mask.hitTest(target, touch.getLocation());
             if (hited)
@@ -167,24 +171,23 @@ namespace lolo {
         }
 
 
+        /**
+         * 点击测试
+         * @param target
+         * @param worldPoint
+         * @return {boolean}
+         */
         private static hitTest(target: cc.Node, worldPoint: cc.Point): boolean {
-            if (!lolo.inStageVisibled.call(target)) return false;// 当前节点不可见
+            if (!lolo.expend_inStageVisibled.call(target)) return false;// 当前节点不可见
 
             let clipper: cc.ClippingNode = <cc.ClippingNode>target;
             let stencil: cc.Node = clipper.stencil;
             if (stencil == null) return false;// 没有遮罩模版
 
-            lolo.temp_rect.setTo(stencil.x, -stencil.y, stencil.width, stencil.height);
+            let size: cc.Size = stencil.getContentSize();
+            lolo.temp_rect.setTo(stencil.x, stencil.y, size.width, size.height);
             let p: cc.Point = clipper.convertToNodeSpace(worldPoint);
             return lolo.temp_rect.contains(p.x, -p.y);
-        }
-
-
-        //
-
-
-        public get clipper(): cc.ClippingNode {
-            return this._clipper;
         }
 
 
@@ -195,15 +198,19 @@ namespace lolo {
          * 销毁
          */
         public destroy(): void {
-            this.touchEnabled = false;
-            this.touchListener.release();
+            if (this.touchListener != null) {
+                this.touchEnabled = false;
+                this.touchListener.release();
+                this.touchListener = null
+            }
 
             if (this._clipper != null) {
                 let children: cc.Node[] = this._clipper.children;
+                if (!isNative) children = children.concat();
                 for (let i = 0; i < children.length; i++) {
                     this._clipper.parent.addChild(children[i]);// 将子节点还回 parent 中
                 }
-                this._clipper.release();
+                this._clipper.destroy();
                 this._clipper = null;
             }
 
@@ -211,7 +218,7 @@ namespace lolo {
                 this._content = null;
 
             if (this._rectStencil != null) {
-                this._rectStencil.release();
+                this._rectStencil.destroy();
                 this._rectStencil = null;
             }
 
@@ -219,6 +226,8 @@ namespace lolo {
                 lolo.CachePool.recycle(this._rect);
                 this._rect = null;
             }
+
+            this.destroyed = true;
         }
 
 

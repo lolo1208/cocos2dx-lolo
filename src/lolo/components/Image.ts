@@ -44,6 +44,7 @@ namespace lolo {
                 this._cache = new LRUCache();
                 this._cache.disposeHandler = new Handler(this.disposeCallback, this);
                 lolo.loader.event_addListener(LoadEvent.ITEM_COMPLETE, this.loadItemCompleteHandler, this);
+                lolo.loader.event_addListener(LoadEvent.ERROR, this.loadItemErrorHandler, this);
 
                 this._handlers = new LinkedList();
             }
@@ -212,20 +213,19 @@ namespace lolo {
         /**
          * 加载完成后的回调
          * @param url
-         * @param success
+         * @param successful
          */
-        private render(url: string, success: boolean): void {
-            // 加载的这段时间内，URL已经改变了
+        private render(url: string, successful: boolean): void {
             if (url != this._url) return;
 
-            if (success) {
+            if (successful) {
                 this.setTexture(Image._cache.getValue(url));
             }
             this._loaded = true;
 
             let hander: Handler = this.hander;
             this.hander = null;
-            if (hander != null) hander.execute(success);
+            if (hander != null) hander.execute(successful);
         }
 
 
@@ -237,6 +237,9 @@ namespace lolo {
         }
 
 
+        //
+
+
         /**
          * 清空，显示空纹理
          */
@@ -244,9 +247,6 @@ namespace lolo {
             this._url = null;
             this.setTexture(Constants.EMPTY_TEXTURE);
         }
-
-
-        //
 
 
         /**
@@ -258,6 +258,7 @@ namespace lolo {
                 this.hander.recycle();
                 this.hander = null;
             }
+
             super.destroy();
         }
 

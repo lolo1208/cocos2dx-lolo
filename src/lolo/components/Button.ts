@@ -41,7 +41,7 @@ namespace lolo {
         public constructor() {
             super();
             this._labelText = new LinkText(false);
-            this.addChild(this._labelText);
+            this._bc.addChild(this._labelText);
         }
 
 
@@ -83,22 +83,24 @@ namespace lolo {
          * @param event Event.ENTER_FRAME 事件
          */
         protected doRender(event?: Event): void {
-            if (this._labelText.currentText.length == 0) {
+            let label: LinkText = this._labelText;
+
+            if (label.currentText.length == 0) {
                 super.doRender();
                 return;
             }
 
             let w: number;
             if (this._autoSize) {
-                this._labelText.width = 0;// 重置宽度
+                label.width = 0;// 重置宽度
 
-                this._width = this._labelText.width + this._labelPaddingLeft + this._labelPaddingRight;
+                this._width = label.width + this._labelPaddingLeft + this._labelPaddingRight;
                 if (this._maxWidth > 0 && this._width > this._maxWidth) this._width = this._maxWidth;
                 else if (this._minWidth > 0 && this._width < this._minWidth) this._width = this._minWidth;
                 w = this._width - this._labelPaddingLeft - this._labelPaddingRight;
-                this._labelText.width = w;
+                label.width = w;
 
-                this._height = this._labelText.height + this._labelPaddingTop + this._labelPaddingBottom;
+                this._height = label.height + this._labelPaddingTop + this._labelPaddingBottom;
                 if (this._maxHeight > 0 && this._height > this._maxHeight) this._height = this._maxHeight;
                 else if (this._minHeight > 0 && this._height < this._minHeight) this._height = this._minHeight;
 
@@ -107,14 +109,14 @@ namespace lolo {
             }
             else {
                 w = this._width - this._labelPaddingLeft - this._labelPaddingRight;
-                this._labelText.width = w;
+                label.width = w;
             }
-            this._labelText.height = this._height - this._labelPaddingTop - this._labelPaddingBottom;
+            label.height = this._height - this._labelPaddingTop - this._labelPaddingBottom;
 
-            this._labelText.align = this._labelHorizontalAlign;
-            this._labelText.valign = this._labelVerticalAlign;
-            this._labelText.x = this._labelPaddingLeft - this._width / 2;
-            this._labelText.y = this._labelPaddingTop - this._height / 2;
+            label.align = this._labelHorizontalAlign;
+            label.valign = this._labelVerticalAlign;
+            label.x = this._labelPaddingLeft - this._width / 2;
+            label.y = this._labelPaddingTop - this._height / 2;
 
             super.doRender();
         }

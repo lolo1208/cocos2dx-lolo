@@ -42,56 +42,6 @@ namespace lolo {
 
             let p: any = cc.ParticleSystem.prototype;
 
-            // 重写 cc.ParticleSystem 设置和获取坐标的方法，转到屏幕坐标系
-            p._x = p._y = 0;
-
-            p._original_setPositionX = p.setPositionX;
-            p.setPositionX = function (x: number): void {
-                this._x = x;
-                this._original_setPositionX(x);
-            };
-
-            p._original_getPositionX = p.getPositionX;
-            p.getPositionX = function (): number {
-                return this._x;
-            };
-
-            Object.defineProperty(p, "x", {
-                enumerable: true, configurable: true,
-                set: p.setPositionX,
-                get: p.getPositionX
-            });
-
-
-            p._original_setPositionY = p.setPositionY;
-            p.setPositionY = function (y: number): void {
-                this._y = y;
-                this._original_setPositionY(-y);
-            };
-
-            p._original_getPositionY = p.getPositionY;
-            p.getPositionY = function (): number {
-                return this._y;
-            };
-
-            Object.defineProperty(p, "y", {
-                enumerable: true, configurable: true,
-                set: p.setPositionY,
-                get: p.getPositionY
-            });
-
-            p._original_setPosition = p.setPosition;
-            p.setPosition = function (newPosOrxValue: number|cc.Point, yValue?: number): void {
-                if (yValue == null) {
-                    this.setPositionX((<cc.Point>newPosOrxValue).x);
-                    this.setPositionY((<cc.Point>newPosOrxValue).y);
-                }
-                else {
-                    this.setPositionX(<number>newPosOrxValue);
-                    this.setPositionY(yValue);
-                }
-            };
-
 
             // 实现 cc.ParticleSystem 的 sourceName 属性
             p._sourceName = "";
@@ -137,7 +87,7 @@ namespace lolo {
              * @param url
              */
             p.render = function (url: string): void {
-                if (url != this._url) return;
+                if (url != this._url || this.destroyed) return;
 
                 // 移除当前已创建的粒子
                 this.resetSystem();

@@ -11,32 +11,13 @@ namespace lolo {
      */
     export class BaseButton extends ItemRenderer {
 
-        /**Touch时，播放的音效名称。默认值：null，表示不用播放*/
-        public static touchSoundName: string = null;
-        /**Touch时，缩放的比例。值为 1 时，表示不用缩放。默认值：0.9*/
-        public static touchZoomScale: number = 0.9;
-
         /**皮肤*/
         protected _skin: Skin;
-        /**设置的水平缩放比例*/
-        private _scale: lolo.Point;
+        /**按钮容器*/
+        protected _bc: ButtonContainer;
 
         /**在skinName改变时，是否需要自动重置宽高*/
         public autoResetSize: boolean = true;
-
-        /**
-         * Touch时，播放的音效名称。
-         * 默认将使用 BaseButton.touchSoundName 的值
-         * 值为 null 时，表示不用播放音效。
-         */
-        public touchSoundName: string;
-
-        /**
-         * Touch begin 时，缩放的比例。
-         * 默认将使用 BaseButton.touchZoomScale 的值。
-         * 值为 1 时，表示不用缩放。
-         */
-        public touchZoomScale: number;
 
 
         public constructor() {
@@ -44,16 +25,7 @@ namespace lolo {
 
             this._skin = new Skin();
             this.addChild(this._skin);
-
-            this.touchSoundName = BaseButton.touchSoundName;
-            this.touchZoomScale = BaseButton.touchZoomScale;
-            this._scale = lolo.CachePool.getPoint(1, 1);
-        }
-
-
-        public onExit(): void {
-            super.onExit();
-            this.setScale(this._scale.x, this._scale.y);
+            this._bc = new ButtonContainer(this._skin);
         }
 
 
@@ -127,13 +99,7 @@ namespace lolo {
          */
         protected doRender(event?: Event): void {
             lolo.stage.event_removeListener(Event.ENTER_FRAME, this.doRender, this);
-
-            let hw: number = this._width / 2;
-            let hh: number = this._height / 2;
-            this._original_setPositionX(this._x + hw);
-            this._original_setPositionY(-(this._y + hh));
-            this._skin.x = -hw;
-            this._skin.y = -hh;
+            this._bc.update();
         }
 
 
@@ -191,15 +157,6 @@ namespace lolo {
 
             this.event_addListener(TouchEvent.TOUCH_END, this.baseButton_touchEnd, this);
             this.state = this._selected ? Skin.SELECTED_DOWN : Skin.DOWN;
-
-            let scale: number = this.touchZoomScale;
-            if (scale != 1) {
-                this.stopAllActions();
-                this.runAction(cc.scaleTo(0.05, scale * this._scale.x, scale * this._scale.y));
-            }
-
-            // var snd:string = (this.touchSoundName != null) ? this.touchSoundName : BaseButton.touchSoundName;
-            // if(snd != null || snd != "") lolo.sound.play(snd);
         }
 
 
@@ -210,50 +167,33 @@ namespace lolo {
         private baseButton_touchEnd(event: TouchEvent): void {
             this.event_removeListener(TouchEvent.TOUCH_END, this.baseButton_touchEnd, this);
             this.state = this._selected ? Skin.SELECTED_UP : Skin.UP;
-
-            let scale: number = this.touchZoomScale;
-            if (scale != 1) {
-                this.stopAllActions();
-                this.runAction(cc.scaleTo(0.05, this._scale.x, this._scale.y));
-            }
         }
 
 
         /**
-         * 设置宽高
+         * 宽
          */
-        protected setWidth(value: number): void {
+        public setWidth(value: number): void {
             this._skin.width = this._width = value;
             this.render();
         }
 
-        protected setHeight(value: number): void {
+        public getWidth(): number {
+            if (this._width > 0) return this._width;
+            return this._skin.width;
+        }
+
+        /**
+         * 高
+         */
+        public setHeight(value: number): void {
             this._skin.height = this._height = value;
             this.render();
         }
 
-
-        protected _xChanged(): void {
-            this.render();
-        }
-
-
-        protected _yChanged(): void {
-            this.render();
-        }
-
-
-        /**
-         * 设置缩放
-         */
-        public setScaleX(value: number): void {
-            this._scale.x = value;
-            super.setScaleX(value);
-        }
-
-        public setScaleY(value: number): void {
-            this._scale.y = value;
-            super.setScaleY(value);
+        public getHeight(): number {
+            if (this._height > 0) return this._height;
+            return this._skin.height;
         }
 
 
@@ -269,29 +209,40 @@ namespace lolo {
 
 
         /**
+         * Touch Begin 时，缩放的比例。
+         * 默认将使用 BaseButton.touchZoomScale 的值。
+         * 值为 1 时，表示不用缩放。
+         */
+        public set touchZoomScale(value: number) {
+            this._bc.touchZoomScale = value;
+        }
+
+        public get touchZoomScale(): number {
+            return this._bc.touchZoomScale;
+        }
+
+
+        /**
+         * Touch时，播放的音效名称。
+         * 默认将使用 ButtonContainer.touchSoundName 的值
+         * 值为 null 时，表示不用播放音效。
+         */
+        public set touchSoundName(value: string) {
+            this._bc.touchSoundName = value;
+        }
+
+        public get touchSoundName(): string {
+            return this._bc.touchSoundName;
+        }
+
+
+        /**
          * 点击测试
          * @param worldPoint
          * @return {boolean}
          */
         public hitTest(worldPoint: cc.Point): boolean {
-            if (!this.inStageVisibled()) return false;// 当前节点不可见
-
-            // 当前scale比原始scale小，需用原始的 scale 来测试点击
-            let sx: number = this.getScaleX(), sy: number;
-            let zooming: boolean = sx < this._scale.x;
-            if (zooming) {
-                sy = this.getScaleY();
-                this.setScale(this._scale.x, this._scale.y);
-            }
-
-            let p: cc.Point = this.convertToNodeSpace(worldPoint);
-            p.y = -p.y;
-            let w: number = this.width, h: number = this.height;
-            lolo.temp_rect.setTo(-w / 2, -h / 2, w, h);
-            let hitted: boolean = lolo.temp_rect.contains(p.x, p.y);
-
-            if (zooming) this.setScale(sx, sy);
-            return hitted;
+            return this._bc.hitTest(worldPoint);
         }
 
 
@@ -310,8 +261,6 @@ namespace lolo {
          */
         public destroy(): void {
             lolo.stage.event_removeListener(Event.ENTER_FRAME, this.doRender, this);
-            lolo.CachePool.recycle(this._scale);
-            this._scale = null;
 
             super.destroy();
         }

@@ -8,21 +8,17 @@ namespace lolo {
     export class DisplayObjectContainer extends cc.Node {
 
         /**子节点是否有变化（有变化时，会重新计算宽高）*/
-        public childResized: boolean;
+        public childResized: boolean = false;
 
         /**根据子节点计算出来的宽高*/
         protected _childrenWidth: number = 0;
         protected _childrenHeight: number = 0;
-        /**设置的宽高*/
-        protected _width: number = 0;
-        protected _height: number = 0;
 
 
         public constructor() {
             super();
             lolo.CALL_SUPER_REPLACE_KEYWORD();
 
-            this.cascadeOpacity = true;
             this.event_addListener(Event.CHILD_RESIZE, this.childResizeHandler, this);
         }
 
@@ -71,21 +67,27 @@ namespace lolo {
 
 
         /**
-         * 宽度
+         * 重写从父容器移除方法
+         * - 标记子节点变化，用于计算宽度
+         * @param cleanup
          */
-        public set width(value: number) {
-            this.setWidth(value);
+        public removeFromParent(cleanup: boolean = true): void {
+            let parent: cc.Node = this.getParent();
+            if (parent == null) return;
+
+            (<DisplayObjectContainer>parent).childResized = true;
+            super.removeFromParent(cleanup);
         }
 
-        protected setWidth(value: number): void {
+
+        /**
+         * 宽度
+         */
+        public setWidth(value: number): void {
             this._width = value;
         }
 
-        public get width(): number {
-            return this.getWidth();
-        }
-
-        protected getWidth(): number {
+        public getWidth(): number {
             if (this._width > 0) return this._width;
             if (this.childResized) this.getChildrenSize();
             return this._childrenWidth;
@@ -95,19 +97,11 @@ namespace lolo {
         /**
          * 高度
          */
-        public set height(value: number) {
-            this.setHeight(value);
-        }
-
-        protected setHeight(value: number): void {
+        public setHeight(value: number): void {
             this._height = value;
         }
 
-        public get height(): number {
-            return this.getHeight();
-        }
-
-        protected getHeight(): number {
+        public getHeight(): number {
             if (this._height > 0) return this._height;
             if (this.childResized) this.getChildrenSize();
             return this._childrenHeight;
@@ -187,11 +181,11 @@ namespace lolo {
             if (!this.inStageVisibled()) return false;// 当前节点不可见
 
             let children: cc.Node[] = this.children;
-            for (let i = 0; i < children.length; i++) {
+            let len: number = children.length;
+            for (let i = 0; i < len; i++) {
                 let child: cc.Node = children[i];
-                if (child.hitTest == null) continue;// 子对象直接继承至 cc.Node 或 cc.Sprite 等基类，没有该方法
                 if (child instanceof ModalBackground) continue;// 忽略模态背景
-                if (child.hitTest(worldPoint))  return true;
+                if (child.hitTest(worldPoint)) return true;
             }
             return false;
         }
@@ -206,16 +200,7 @@ namespace lolo {
         public destroy(): void {
             this.event_removeListener(Event.CHILD_RESIZE, this.childResizeHandler, this);
 
-            // 尝试调用子节点的 destroy()
-            let children: cc.Node[] = this.children.concat();
-            for (let i = 0; i < children.length; i++) {
-                let child: cc.Node = children[i];
-                child.removeFromParent();
-                try {
-                    child.destroy();
-                } catch (error) {
-                }
-            }
+            super.destroy();
         }
 
 

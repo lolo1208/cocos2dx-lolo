@@ -144,7 +144,7 @@ namespace lolo {
         }
 
         protected getItemWidth(): number {
-            return (this._itemWidth > 0) ? this._itemWidth : this.width;
+            return (this._itemWidth > 0) ? this._itemWidth : this.getWidth();
         }
 
 
@@ -164,7 +164,7 @@ namespace lolo {
         }
 
         protected getItemHeight(): number {
-            return (this._itemHeight > 0) ? this._itemHeight : this.height;
+            return (this._itemHeight > 0) ? this._itemHeight : this.getHeight();
         }
 
 
