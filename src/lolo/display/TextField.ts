@@ -20,11 +20,6 @@ namespace lolo {
         /**文本内容在语言包的ID*/
         private _textID: string = "";
 
-        /**设置的宽度*/
-        private _width: number = 0;
-        /**设置的高度*/
-        private _height: number = 0;
-
 
         public constructor() {
             super();
@@ -240,48 +235,16 @@ namespace lolo {
 
 
         /**
-         * 文本宽度
-         * @param value
+         * 设置 宽/高
          */
         public setWidth(value: number): void {
             this._width = value;
             this.setDimensions(this._width, this._height);
         }
 
-        public getWidth(): number {
-            if (this._width > 0) return this._width;
-            return this.getContentSize().width;
-        }
-
-        public set width(value) {
-            this.setWidth(value);
-        }
-
-        public get width() {
-            return this.getWidth();
-        }
-
-
-        /**
-         * 文本高度
-         * @param value
-         */
         public setHeight(value: number): void {
             this._height = value;
             this.setDimensions(this._width, this._height);
-        }
-
-        public getHeight(): number {
-            if (this._height > 0) return this._height;
-            return this.getContentSize().height;
-        }
-
-        public set height(value) {
-            this.setHeight(value);
-        }
-
-        public get height() {
-            return this.getHeight();
         }
 
 

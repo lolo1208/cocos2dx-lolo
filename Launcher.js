@@ -28,8 +28,9 @@ lolo.Launcher.start = function (scene) {
     scene.showVersion.call(scene);
 
     if (lolo.isNative) {
-        launcher.index = parseInt(launcher.urlList.length * Math.random());
-        launcher.checkUpdate();
+        // launcher.index = parseInt(launcher.urlList.length * Math.random());
+        // launcher.checkUpdate();
+        lolo.Launcher.loadResList();
     }
     else
         launcher.loadModule();

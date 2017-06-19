@@ -7,6 +7,9 @@ namespace lolo {
      */
     export class InputText extends cc.EditBox {
 
+        /**默认宽高*/
+        public static DEFAULT_SIZE: cc.Size = cc.size(100, 100);
+
         /**是否可编辑（可输入）*/
         public editable: boolean;
 
@@ -24,25 +27,15 @@ namespace lolo {
         /**返回键类型*/
         private _returnType: number;
 
-        /**当前尺寸*/
-        private _cSize: cc.Size;
-
-        // html5下使用
-        private _editBoxInputMode: number;
-        private _renderCmd: {_edTxt: any, show: () => void, hidden: () => void};
-
 
         /**
          * 构造函数
          */
         public constructor() {
             let s9s: cc.Scale9Sprite = new cc.Scale9Sprite(lolo.getResUrl(Constants.EMPTY_S9S_URL));
-            let size: cc.Size = cc.size(100, 100);
-
-            super(size, s9s);
+            super(InputText.DEFAULT_SIZE, s9s);
             lolo.CALL_SUPER_REPLACE_KEYWORD();
 
-            this._cSize = size;
             this._inputMode = cc.EDITBOX_INPUT_MODE_ANY;
             this._inputFlag = cc.EDITBOX_INPUT_FLAG_SENSITIVE;
             this._returnType = cc.KEYBOARD_RETURNTYPE_DEFAULT;
@@ -53,6 +46,12 @@ namespace lolo {
 
             this.setAnchorPoint(0, 1);
             this.styleName = "textField";
+
+            if (!isNative) {
+                // html5环境，_textLabel 和 _placeholderLabel 的 y 不能取反
+                this._renderCmd._textLabel.setPosition = this._renderCmd._textLabel._original_setPosition;
+                this._renderCmd._placeholderLabel.setPosition = this._renderCmd._placeholderLabel._original_setPosition;
+            }
         }
 
 
@@ -241,28 +240,16 @@ namespace lolo {
 
 
         /**
-         * 宽度
+         * 设置 宽/高
          */
         public setWidth(value: number): void {
-            this._cSize.width = value;
-            this.setContentSize(this._cSize);
+            super.setWidth(value);
+            if (!isNative) this._updateEditBoxSize(this._width, this.height);
         }
 
-        public getWidth(): number {
-            return this._cSize.width;
-        }
-
-
-        /**
-         * 高度
-         */
         public setHeight(value: number): void {
-            this._cSize.height = value;
-            this.setContentSize(this._cSize);
-        }
-
-        public getHeight(): number {
-            return this._cSize.height;
+            super.setHeight(value);
+            if (!isNative) this._updateEditBoxSize(this._width, this.height);
         }
 
 
@@ -303,7 +290,7 @@ namespace lolo {
         private static onTouchEnded(touch: cc.Touch, event: cc.EventTouch): void {
             let target: InputText = <InputText>event.getCurrentTarget();
             if (target.propagateTouchEvents) {
-                lolo.expend_touchDispatchEvent(TouchEvent.TOUCH_MOVE, target, touch, event);
+                lolo.expend_touchDispatchEvent(TouchEvent.TOUCH_END, target, touch, event);
             }
 
             if (target.editable) {

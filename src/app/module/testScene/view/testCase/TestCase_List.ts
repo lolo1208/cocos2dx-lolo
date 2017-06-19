@@ -79,8 +79,10 @@ namespace app.testScene {
                 this.at.text = this._index + "-" + this._data.text;
             this.at.renderNow();
 
-            if (TestCase_ItemRenderer.labelEnabled)
+            if (TestCase_ItemRenderer.labelEnabled) {
                 this.btn.label = value.text;
+                this.btn.renderNow();
+            }
         }
 
         protected setSelected(value: boolean): void {

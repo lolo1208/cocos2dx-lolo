@@ -122,6 +122,7 @@ namespace lolo {
 
         protected setEnabled(value: boolean): void {
             super.setEnabled(value);
+            this._bc.touchEnabled = value;
             this.setEventListener();
         }
 

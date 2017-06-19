@@ -5,10 +5,6 @@
 /////////////////////////////////
 namespace lolo {
 
-    export let _original_cc_moveBy_update: Function;
-    export let _original_cc_moveBy: Function;
-    export let _original_cc_moveTo: Function;
-
 
     /**
      * 扩展 cocos 显示对象相关
@@ -27,38 +23,29 @@ namespace lolo {
 
 
         // 让 cc.ClippingNode 支持事件冒泡
-        cc.ClippingNode.prototype.event_dispatch = function (...args: any[]): void {
+        cc.ClippingNode.prototype.event_dispatch = function (): void {
             let parent: cc.Node = this.getParent();
-            if (parent != null) parent.event_dispatch.apply(parent, args);
+            if (parent != null) parent.event_dispatch.apply(parent, arguments);
         };
 
 
-        // 重写 Action 相关方法，将传入的y值取反（native），并在运行时同步位置
+        // cc.LabelTTF 属性重新定义
+        let p = cc.LabelTTF.prototype;
+        Object.defineProperty(p, "width", expend_width);
+        Object.defineProperty(p, "height", expend_height);
+
+
         if (isNative) {
+            // cc.EditBox 属性重新定义
+            let p = cc.EditBox.prototype;
+            Object.defineProperty(p, "x", expend_x);
+            Object.defineProperty(p, "y", expend_y);
+            Object.defineProperty(p, "width", expend_width);
+            Object.defineProperty(p, "height", expend_height);
+            Object.defineProperty(p, "touchEnabled", expend_touchEnabled);
 
-            _original_cc_moveBy_update = cc.MoveBy.prototype.update;
-            cc.MoveBy.prototype.update = function (dt: number): void {
-                lolo._original_cc_moveBy_update.call(this, dt);
-                let target: cc.Node = this.getTarget();
-                target._x = target._original_getPositionX();
-                target._y = -target._original_getPositionY();
-            };
-
-            _original_cc_moveBy = cc.moveBy;
-            cc.moveBy = function (...args: any[]): cc.MoveBy {
-                if (args.length == 3) args[2] = -args[2];
-                else if (args.length == 2) args[1].y = -args[1].y;
-                return lolo._original_cc_moveBy.apply(this, args);
-            };
-
-            _original_cc_moveTo = cc.moveTo;
-            cc.moveTo = function (...args: any[]): cc.MoveTo {
-                if (args.length == 3) args[2] = -args[2];
-                else if (args.length == 2) args[1].y = -args[1].y;
-                return lolo._original_cc_moveTo.apply(this, args);
-            };
+            expend_action();
         }
-
     }
 }
 
@@ -78,7 +65,7 @@ namespace lolo {
 
         Object.defineProperty(p, "alpha", expend_alpha);
         Object.defineProperty(p, "name", expend_name);
-        Object.defineProperty(p, "touchEnabled", expend_touenabled);
+        Object.defineProperty(p, "touchEnabled", expend_touchEnabled);
 
         p.destroy = expend_destroy;
         p.hitTest = expend_hitTest;
@@ -314,7 +301,7 @@ namespace lolo {
     };
 
     // touenabled
-    export let expend_touenabled: PropertyDescriptor = {
+    export let expend_touchEnabled: PropertyDescriptor = {
         enumerable: true, configurable: true,
         set: function (value: boolean): void {
             if (value && this._touchEnabled) {
@@ -337,11 +324,12 @@ namespace lolo {
     // width
     export function expend_setWidth(value: number): void {
         this._width = value;
-        this.setContentSize(this._width, this._height);
+        this._setWidth(value);
     }
 
     export function expend_getWidth(): number {
-        return this._width;
+        if (this._width > 0) return this._width;
+        return this._getWidth();
     }
 
     export let expend_width: PropertyDescriptor = {
@@ -358,11 +346,12 @@ namespace lolo {
     // height
     export function expend_setHeight(value: number): void {
         this._height = value;
-        this.setContentSize(this._width, this._height);
+        this._setHeight(value);
     }
 
     export function expend_getHeight(): number {
-        return this._height;
+        if (this._height > 0) return this._height;
+        return this._getHeight();
     }
 
     export let expend_height: PropertyDescriptor = {
@@ -501,5 +490,74 @@ namespace lolo {
 
     export function expend_event_hasListener(): boolean {
         return this._ed.event_hasListener.apply(this._ed, arguments);
+    }
+}
+
+
+namespace lolo {
+
+    export let _original_cc_moveBy_update: Function;
+    export let _original_cc_moveBy: Function;
+    export let _original_cc_moveTo: Function;
+
+    export let _original_cc_bezierBy_update: Function;
+    export let _original_cc_bezierBy: Function;
+    export let _original_cc_bezierTo: Function;
+
+
+    /**
+     * 重写 Action 相关方法，将传入的y值取反（native），并在运行时同步位置
+     */
+    export function expend_action(): void {
+
+        // move
+        _original_cc_moveBy_update = cc.MoveBy.prototype.update;
+        cc.MoveBy.prototype.update = function (dt: number): void {
+            lolo._original_cc_moveBy_update.call(this, dt);
+            lolo.expend_updatePosition.call(this.getTarget());
+        };
+
+        _original_cc_moveBy = cc.moveBy;
+        cc.moveBy = function (): cc.MoveBy {
+            if (arguments.length == 3) arguments[2] = -arguments[2];
+            else if (arguments.length == 2) arguments[1].y = -arguments[1].y;
+            return lolo._original_cc_moveBy.apply(this, arguments);
+        };
+
+        _original_cc_moveTo = cc.moveTo;
+        cc.moveTo = function (): cc.MoveTo {
+            if (arguments.length == 3) arguments[2] = -arguments[2];
+            else if (arguments.length == 2) arguments[1].y = -arguments[1].y;
+            return lolo._original_cc_moveTo.apply(this, arguments);
+        };
+
+
+        // bezier
+        _original_cc_bezierBy_update = cc.BezierBy.prototype.update;
+        cc.BezierBy.prototype.update = function (dt: number): void {
+            lolo._original_cc_bezierBy_update.call(this, dt);
+            lolo.expend_updatePosition.call(this.getTarget());
+        };
+
+        _original_cc_bezierBy = cc.bezierBy;
+        cc.bezierBy = function (t: number, c: Point[]): cc.BezierBy {
+            for (let i = 0; i < c.length; i++) c[i].y = -c[i].y;
+            return lolo._original_cc_bezierBy.call(this, t, c);
+        };
+
+        _original_cc_bezierTo = cc.bezierTo;
+        cc.bezierTo = function (t: number, c: Point[]): cc.BezierTo {
+            for (let i = 0; i < c.length; i++) c[i].y = -c[i].y;
+            return lolo._original_cc_bezierTo.call(this, t, c);
+        };
+    }
+
+
+    /**
+     * 更新 _x / _y 的值（native）
+     */
+    export function expend_updatePosition(): void {
+        this._x = this._original_getPositionX();
+        this._y = -this._original_getPositionY();
     }
 }

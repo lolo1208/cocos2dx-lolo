@@ -60,7 +60,7 @@ namespace lolo {
             //清空皮肤， _skinName=null 或 _skinName="" 的时候，啥也不显示
             if (this._skinName == null || this._skinName == "") {
                 this._stateList = null;
-                this.texture = null;
+                this.texture = Constants.EMPTY_TEXTURE;
                 return;
             }
 
@@ -82,7 +82,7 @@ namespace lolo {
             if (value == this._prefix) return;
             this._prefix = value;
 
-            this.texture = null;
+            this.texture = Constants.EMPTY_TEXTURE;
             this._stateList = {};
 
             for (let i = 0; i < Skin.STATES.length; i++) {

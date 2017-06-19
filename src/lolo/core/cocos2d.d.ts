@@ -113,6 +113,11 @@ declare namespace cc {
 
         release(): void;
 
+        _setWidth(value: number): void;//
+        _getWidth(): number;//
+        _setHeight(value: number): void;//
+        _getHeight(): number;//
+
         /////////////////////////////////
         //
         //   以下由 extend.ts 实现
@@ -331,6 +336,21 @@ declare namespace cc {
 
         /**打开键盘（native 使用）*/
         openKeyboard(): void;
+
+        // html5下使用
+        _editBoxInputMode: number;
+        _renderCmd: {
+            /**输入文本控件 document.createElement(" input / textarea ")*/
+            _edTxt: any,
+            /**输入的内容*/
+            _textLabel: LabelTTF;
+            /**提示内容*/
+            _placeholderLabel: LabelTTF,
+
+            show: () => void,
+            hidden: () => void
+        };
+        _updateEditBoxSize: (width: number, height: number) => void;
     }
 
     class ParticleSystem extends Node {
@@ -352,7 +372,7 @@ declare namespace cc {
         setTexture(texture: Texture2D): void;
     }
 
-    class Scale9Sprite extends Node {
+    class Scale9Sprite extends Node {// ccui.Scale9Sprite = cc.Scale9Sprite
         constructor(file: string, rect?: Rect, capInsets?: Rect);
     }
 
