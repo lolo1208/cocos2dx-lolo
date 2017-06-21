@@ -113,10 +113,13 @@ declare namespace cc {
 
         release(): void;
 
-        _setWidth(value: number): void;//
-        _getWidth(): number;//
-        _setHeight(value: number): void;//
-        _getHeight(): number;//
+
+        _className: string;
+        _setWidth: (value: number) => void;
+        _getWidth: () => number;
+        _setHeight: (value: number) => void;
+        _getHeight: () => number;
+
 
         /////////////////////////////////
         //
@@ -186,11 +189,16 @@ declare namespace cc {
          *  - 自己或父级的 opacity = 0
          * @return {boolean}
          */
-        inStageVisibled(): boolean;//
+        inStageVisibled(): boolean;
+
         /**点击测试函数*/
-        hitTest(worldPoint: Point): boolean;//
-        /**销毁时调用的函数*/
-        destroy();//
+        hitTest(worldPoint: Point): boolean;
+
+        /**从父节点移除，并销毁当前节点（包括所有子节点）*/
+        destroy();
+
+        /**移除并销毁所有子节点（不包括自己）*/
+        destroyAllChildren(): void;
 
         // @see lolo.IEventDispatcher
         event_addListener(type: string, listener: (event: lolo.Event, ...args: any[]) => void, caller: any, priority: number = 0, ...args: any[]): void;//
@@ -575,11 +583,27 @@ declare namespace cc {
         height: number;
     }
 
-    interface Color {
+    class Color {
+        _val: number;
+
         r: number;
         g: number;
         b: number;
         a: number;
+
+        /**
+         * 解析16进制字符串
+         * @param hex 例如："0xFF66CC"
+         */
+        parseHex(hex: string): void;
+
+        /**
+         * 获取当前颜色的16进制字符串描述
+         * @param prefix 添加的字符串前缀
+         * @param alpha 是否需要包含 alpha 值，默认：false。
+         * @return 例如：alpha = false，返回 rgb："0xFFCC33"。alpha = true，返回 rgba："0xFFCC33FF"
+         */
+        getHex(prefix: string = "0x", alpha: boolean = false): string;
     }
 
 }

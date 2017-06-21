@@ -18,6 +18,9 @@ namespace lolo {
         /**是否只执行一次，执行完毕后，将会自动回收到池中*/
         public once: boolean;
 
+        /**setTimeout() 返回的句柄。使用 lolo.delayedCall() 创建时，才会存在该属性*/
+        public dcHandle: number;
+
 
         /**
          * 创建，或从池中获取一个 Handler 对象。
@@ -70,6 +73,10 @@ namespace lolo {
          * @param args 附带的参数。在执行回调时，args的值会添加到创建时传入的args之前。args.concat(this.args)
          */
         public execute(...args: any[]): void {
+            if (this.dcHandle != null) {
+                clearTimeout(this.dcHandle);
+                this.dcHandle = null;
+            }
             if (this.callback == null) return;
             this.callback.apply(this.caller, args.concat(this.args));
             if (this.once) this.recycle();
@@ -89,6 +96,10 @@ namespace lolo {
          * 清除引用（不再执行 callback）
          */
         public clean(): void {
+            if (this.dcHandle != null) {
+                clearTimeout(this.dcHandle);
+                this.dcHandle = null;
+            }
             this.callback = null;
             this.caller = null;
             this.args = null;

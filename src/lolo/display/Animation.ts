@@ -482,11 +482,11 @@ namespace lolo {
          * 销毁
          */
         public destroy(): void {
+            this.stop();
             if (this.handler != null) {
                 this.handler.clean();
                 this.handler = null;
             }
-            this.stop();
 
             super.destroy();
         }

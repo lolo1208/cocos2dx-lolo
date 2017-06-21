@@ -25,6 +25,9 @@ namespace lolo {
             super();
             lolo.CALL_SUPER_REPLACE_KEYWORD();
 
+            this._color = cc.color();
+            this._stroke = cc.color();
+
             this.setAnchorPoint(0, 1);
             this.styleName = "textField";
         }
@@ -99,8 +102,10 @@ namespace lolo {
         }
 
         protected setColor(value: string|cc.Color): void {
-            if (typeof value === "string") value = hexToColor(<string>value);
-            this._color = <cc.Color>value;
+            let color = this._color;
+            if (color == null) return;
+            if (typeof value === "string") color.parseHex(value);
+            else color._val = value._val;
             this.setFontFillColor(this._color);
 
             if (!isNative) this._setUpdateTextureDirty();

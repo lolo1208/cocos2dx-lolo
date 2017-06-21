@@ -205,11 +205,13 @@ namespace lolo {
             }
 
             if (this._clipper != null) {
+                // 将子节点还回 parent 中
                 let children: cc.Node[] = this._clipper.children;
                 if (!isNative) children = children.concat();
-                for (let i = 0; i < children.length; i++) {
-                    this._clipper.parent.addChild(children[i]);// 将子节点还回 parent 中
-                }
+                let len: number = children.length;
+                let parent: cc.Node = this._clipper.getParent();
+                for (let i = 0; i < len; i++) parent.addChild(children[i]);
+
                 this._clipper.destroy();
                 this._clipper = null;
             }

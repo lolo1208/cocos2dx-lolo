@@ -16,7 +16,7 @@ namespace lolo.rpg {
 
         /**是否需要加载（加载中或加载完成，该值为false）*/
         public needLoad: boolean = true;
-        /**已尝试加载次数*/
+        /**已尝试加载次数（最多尝试5次）*/
         public count: number = 0;
 
         /**加载结束时的回调*/
@@ -82,27 +82,19 @@ namespace lolo.rpg {
         }
 
 
-        public set name(value: string) {
-            super.setName(value);
-        }
-
-        public get name(): string {
-            return super.getName();
-        }
-
-
         //
 
 
         /**
-         * 清理，销毁
+         * 销毁
          */
         public destroy(): void {
-            this.release();
             if (this._handler != null) {
                 this._handler.clean();
                 this._handler = null;
             }
+
+            super.destroy();
         }
 
         //

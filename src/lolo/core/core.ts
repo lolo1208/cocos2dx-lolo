@@ -89,7 +89,8 @@ namespace lolo {
     export function delayedCall(delay: number, callback: Function, caller: any = null, ...args: any[]): Handler {
         let handler: Handler = Handler.once(callback, caller);
         handler.args = args;
-        setTimeout(function () {
+        handler.dcHandle = setTimeout(function () {
+            handler.dcHandle = null;
             handler.execute.call(handler);
         }, delay);
         return handler;
@@ -133,6 +134,7 @@ namespace lolo {
             str += args[i];
         }
         Logger.addErrorLog(str);
+        if (isDebug) throw new Error(str);
     }
 
 

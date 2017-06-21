@@ -67,20 +67,6 @@ namespace lolo {
 
 
         /**
-         * 重写从父容器移除方法
-         * - 标记子节点变化，用于计算宽度
-         * @param cleanup
-         */
-        public removeFromParent(cleanup: boolean = true): void {
-            let parent: cc.Node = this.getParent();
-            if (parent == null) return;
-
-            (<DisplayObjectContainer>parent).childResized = true;
-            super.removeFromParent(cleanup);
-        }
-
-
-        /**
          * 宽度
          */
         public setWidth(value: number): void {

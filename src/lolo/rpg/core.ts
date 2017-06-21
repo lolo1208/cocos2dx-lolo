@@ -542,11 +542,9 @@ namespace lolo.rpg {
      * @return
      */
     export function isAdjacent(t1: Point, t2: Point, mapInfo: MapInfo): boolean {
-        let oa: any[];
-        if (mapInfo.staggered)
-            oa = (t1.y % 2 == 0) ? Constants.O_EVEN : Constants.O_ODD;
-        else
-            oa = Constants.O_RHO;
+        let oa: any[] = (mapInfo.staggered)
+            ? (t1.y % 2 == 0 ? Constants.O_EVEN : Constants.O_ODD)
+            : Constants.O_RHO;
 
         for (let d = 1; d < 9; d++)
             if (t2.x == t1.x + oa[d][0] && t2.y == t1.y + oa[d][1]) return true;

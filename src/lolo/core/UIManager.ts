@@ -139,40 +139,31 @@ namespace lolo {
             this._windowList = [];
 
             this._bgLayer = new DisplayObjectContainer();
-            this._bgLayer.name = Constants.LAYER_NAME_BG;
-            this.addChild(this._bgLayer);
+            this.addChild(this._bgLayer, 0, Constants.LAYER_NAME_BG);
 
             this._sceneLayer = new DisplayObjectContainer();
-            this._sceneLayer.name = Constants.LAYER_NAME_SCENE;
-            this.addChild(this._sceneLayer);
+            this.addChild(this._sceneLayer, 0, Constants.LAYER_NAME_SCENE);
 
             this._uiLayer = new DisplayObjectContainer();
-            this._uiLayer.name = Constants.LAYER_NAME_UI;
-            this.addChild(this._uiLayer);
+            this.addChild(this._uiLayer, 0, Constants.LAYER_NAME_UI);
 
             this._windowLayer = new DisplayObjectContainer();
-            this._windowLayer.name = Constants.LAYER_NAME_WINDOW;
-            this.addChild(this._windowLayer);
+            this.addChild(this._windowLayer, 0, Constants.LAYER_NAME_WINDOW);
 
             this._uiTopLayer = new DisplayObjectContainer();
-            this._uiTopLayer.name = Constants.LAYER_NAME_UI_TOP;
-            this.addChild(this._uiTopLayer);
+            this.addChild(this._uiTopLayer, 0, Constants.LAYER_NAME_UI_TOP);
 
             this._alertLayer = new DisplayObjectContainer();
-            this._alertLayer.name = Constants.LAYER_NAME_ALERT;
-            this.addChild(this._alertLayer);
+            this.addChild(this._alertLayer, 0, Constants.LAYER_NAME_ALERT);
 
             this._guideLayer = new DisplayObjectContainer();
-            this._guideLayer.name = Constants.LAYER_NAME_GUIDE;
-            this.addChild(this._guideLayer);
+            this.addChild(this._guideLayer, 0, Constants.LAYER_NAME_GUIDE);
 
             this._topLayer = new DisplayObjectContainer();
-            this._topLayer.name = Constants.LAYER_NAME_TOP;
-            this.addChild(this._topLayer);
+            this.addChild(this._topLayer, 0, Constants.LAYER_NAME_TOP);
 
             this._adornLayer = new DisplayObjectContainer();
-            this._adornLayer.name = Constants.LAYER_NAME_ADORN;
-            this.addChild(this._adornLayer);
+            this.addChild(this._adornLayer, 0, Constants.LAYER_NAME_ADORN);
 
             this._modal = new ModalBackground();
         }
@@ -418,10 +409,11 @@ namespace lolo {
          * 关闭所有窗口
          */
         public closeAllWindow(): void {
-            //拷贝是为了 window.hide() 调回 closeWindow() 时 _windowList.length=0
+            // 拷贝是为了 window.hide() 调回 closeWindow() 时 _windowList.length = 0
             let list: Window[] = this._windowList.concat();
-            this._windowList = [];
-            while (list.length > 0) list.pop().hide();
+            this._windowList.length = 0;
+            let len: number = list.length;
+            for (let i = 0; i < len; i++) list[i].hide();
         }
 
 
@@ -603,7 +595,9 @@ namespace lolo {
          * @param dt
          */
         private update(dt: number): void {
-            TimeUtil.nowTime = new Date().getTime();
+            let date = TimeUtil.nowDate = new Date();
+            TimeUtil.nowTime = date.getTime();
+
             this.event_dispatch(Event.create(Event, Event.ENTER_FRAME));
         }
 

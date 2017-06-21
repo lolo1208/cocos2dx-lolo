@@ -96,6 +96,20 @@ namespace lolo {
         }
 
 
+        /**
+         * 获取类实例对应的类名称
+         * @param target 直接创建的cc对象，只能识别显示对象。TypeScript 实现的任意类的实例
+         */
+        public static getClassName(target: any): string {
+            let str: string = Object.getPrototypeOf(target).constructor.toString();
+            let start: number = str.indexOf(" ") + 1;
+            let end: number = str.indexOf("(");
+            return (start == end)
+                ? target._className// target 是直接创建的cc对象
+                : str.substring(start, end);
+        }
+
+
         //
     }
 }

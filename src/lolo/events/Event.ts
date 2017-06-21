@@ -7,7 +7,6 @@ namespace lolo {
      */
     export class Event {
 
-
         /**
          * 事件：进入新的一帧。
          * 需要注意：该事件只会在 UIManager（lolo.ui） 上抛出！
@@ -61,12 +60,12 @@ namespace lolo {
          * @param data 附带数据
          * @return {T}
          */
-        public static create<T extends Event>(EventClass: {new (type: string): T;eventPool?: Event[]},
+        public static create<T extends Event>(EventClass: {new (type: string): T; _eventPool?: Event[]},
                                               type: string,
                                               data?: any): T {
-            let eventPool: Event[] = EventClass.eventPool;
+            let eventPool: Event[] = EventClass._eventPool;
             if (eventPool == null) {
-                eventPool = EventClass.eventPool = [];
+                eventPool = EventClass._eventPool = [];
             }
             if (eventPool.length > 0) {
                 let event: T = <T> eventPool.pop();
@@ -86,8 +85,9 @@ namespace lolo {
         public static recycle(event: Event): void {
             event.target = event.currentTarget = event.data = null;
             let EventClass: any = Object.getPrototypeOf(event).constructor;
-            EventClass.eventPool.push(event);
+            EventClass._eventPool.push(event);
         }
+
 
         //
     }

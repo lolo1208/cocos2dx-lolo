@@ -11,6 +11,19 @@ namespace lolo {
      */
     export function extend_cc(): void {
 
+        // 扩展 cc.Color
+        let p = cc.Color.prototype;
+        p.parseHex = function (hex: string): void {
+            if (hex.length == 8) hex += "FF";// alpha 默认 255
+            this._val = parseInt(hex);
+        };
+        p.getHex = function (prefix: string = "0x", alpha?: boolean): string {
+            let hex: string = this._val.toString(16);
+            if (!alpha) hex = hex.substr(0, 6);
+            return hex;
+        };
+
+
         expend_node();
         expend_ctor(UIManager);
         expend_ctor(DisplayObjectContainer);
@@ -21,13 +34,11 @@ namespace lolo {
         expend_ctor(InputText);
         expend_ctor(ModalBackground);
 
-
         // 让 cc.ClippingNode 支持事件冒泡
         cc.ClippingNode.prototype.event_dispatch = function (): void {
             let parent: cc.Node = this.getParent();
             if (parent != null) parent.event_dispatch.apply(parent, arguments);
         };
-
 
         // cc.LabelTTF 属性重新定义
         let p = cc.LabelTTF.prototype;
@@ -68,6 +79,7 @@ namespace lolo {
         Object.defineProperty(p, "touchEnabled", expend_touchEnabled);
 
         p.destroy = expend_destroy;
+        p.destroyAllChildren = expend_destroyAllChildren;
         p.hitTest = expend_hitTest;
         p.inStageVisibled = expend_inStageVisibled;
 
@@ -189,13 +201,7 @@ namespace lolo {
             this.touchListener = null;
         }
 
-        // 调用子节点的 destroy()
-        let children: cc.Node[] = this.children;
-        if (!isNative) children = children.concat();
-        let len: number = children.length;
-        for (let i = 0; i < len; i++) {
-            children[i].destroy();
-        }
+        this.destroyAllChildren();
 
         this.removeFromParent();
         if (this.notRelease) {
@@ -203,6 +209,15 @@ namespace lolo {
             this.notRelease = false;
         }
         this.destroyed = true;
+    }
+
+
+    // destroyAllChildren
+    export function expend_destroyAllChildren(): void {
+        let children: cc.Node[] = this.children;
+        if (!isNative) children = children.concat();
+        let len: number = children.length;
+        for (let i = 0; i < len; i++) children[i].destroy();
     }
 
 
@@ -239,7 +254,7 @@ namespace lolo {
             return;
         }
 
-        child.removeFromParent();
+        if (child.getParent() != null) child.removeFromParent();
         this._original_addChild.apply(this, arguments);
     }
 
@@ -540,13 +555,13 @@ namespace lolo {
         };
 
         _original_cc_bezierBy = cc.bezierBy;
-        cc.bezierBy = function (t: number, c: Point[]): cc.BezierBy {
+        cc.bezierBy = function (t: number, c: cc.Point[]): cc.BezierBy {
             for (let i = 0; i < c.length; i++) c[i].y = -c[i].y;
             return lolo._original_cc_bezierBy.call(this, t, c);
         };
 
         _original_cc_bezierTo = cc.bezierTo;
-        cc.bezierTo = function (t: number, c: Point[]): cc.BezierTo {
+        cc.bezierTo = function (t: number, c: cc.Point[]): cc.BezierTo {
             for (let i = 0; i < c.length; i++) c[i].y = -c[i].y;
             return lolo._original_cc_bezierTo.call(this, t, c);
         };

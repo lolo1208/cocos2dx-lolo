@@ -38,7 +38,9 @@ namespace lolo {
         public static sFormat: string = "v";
 
 
-        /**当前时间（自 1970 年 1 月 1 日午夜（通用时间）以来的毫秒数）。每帧更新一次*/
+        /**当前Date，每帧更新一次*/
+        public static nowDate: Date;
+        /**当前时间（基于 nowDate，自 1970 年 1 月 1 日午夜（通用时间）以来的毫秒数）。每帧更新一次*/
         public static nowTime: number = 0;
 
 
@@ -160,22 +162,13 @@ namespace lolo {
 
 
         /**
-         * 获取一个新的 Date 对象
-         * @return
-         */
-        public static getDate(): Date {
-            return new Date();
-        }
-
-
-        /**
          * 获取格式化的时间
-         * @param date 已创建的Date对象，如果该值为null，将创建一个新的Date
+         * @param date 已创建的 Date 对象，如果该值为 null，将使用 nowDate
          * @param ymdh 是否需要年、月、日和小时的值
          * @return
          */
         public static getFormatTime(date: Date = null, ymdh: boolean = false): string {
-            if (date == null) date = new Date();
+            if (date == null) date = this.nowDate;
 
             let str: string = "";
             if (ymdh) {

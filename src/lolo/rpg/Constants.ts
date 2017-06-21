@@ -68,7 +68,7 @@ namespace lolo.rpg {
 
 
         /**武器在不同方向的层叠位置（透视角度） data[direction]=depth */
-        public static WEAPON_DEPTH: any[] = [null, 3, 3, 3, 3, 0, 0, 0, 0];
+        public static WEAPON_DEPTH: any[] = [null, 5, 5, 5, 5, 1, 1, 1, 1];
 
 
         /**动作 - 出场*/
@@ -93,7 +93,9 @@ namespace lolo.rpg {
         public static is8Direction: boolean = true;
 
         /**根据角色透视深度进行排序的间隔（毫秒）*/
-        public static AVATAR_DEPTH_SORT_DELAY: number = 10;
+        public static AVATAR_DEPTH_SORT_DELAY: number = 200;
+        /**run动作结束时，启动定时器，在该延时后切换到stand动作（毫秒）*/
+        public static AVATAR_RUN_TO_STAND_DELAY: number = 100;
 
         /**帧频 - 出场*/
         public static FPS_APPEAR: number = 9;

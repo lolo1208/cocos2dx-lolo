@@ -18,6 +18,7 @@ namespace app.testScene {
     import Image = lolo.Image;
     import AppUIManager = app.core.AppUIManager;
     import RpgScene = app.rpgScene.RpgScene;
+    import Label = lolo.Label;
 
 
     /**
@@ -74,6 +75,23 @@ namespace app.testScene {
             this.backBtn.event_addListener(TouchEvent.TOUCH_TAP, this.backBtn_touchTapHandler, this);
             this.testBtn.event_addListener(TouchEvent.TOUCH_TAP, this.testBtn_touchTapHandler, this);
             this.errorBtn.event_addListener(TouchEvent.TOUCH_TAP, this.errorBtn_touchTapHandler, this);
+
+
+            let img: Image = new Image();
+            img.x = img.y = 100;
+            img.width = img.height = 300;
+            img.extension = "jpg";
+            img.directory = "background/cat";
+            img.fileName = "1";
+            this.addChild(img);
+
+            let txt: Label = new Label();
+            txt.text = "assd撒打算是的\n撒艾丝凡dd";
+            txt.x = txt.y = 150;
+            txt.size = 25;
+            txt.color = "0x00FF00";
+            txt.enableShadow(cc.color(0, 0, 255, 255), cc.p(2, -2), 1);
+            this.addChild(txt);
         }
 
 

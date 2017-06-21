@@ -2,7 +2,7 @@ namespace lolo {
 
 
     /**
-     * Rectangle 对象是按其位置（由它左上角的点 (x, y) 确定）以及宽度和高度定义的区域。<br/>
+     * Rectangle 对象是按其位置（由它左上角的点 (x, y) 确定）以及宽度和高度定义的区域。
      * Rectangle 类的 x、y、width 和 height 属性相互独立；更改一个属性的值不会影响其他属性。
      * 但是，right 和 bottom 属性与这四个属性是整体相关的。例如，如果更改 right 属性的值，则 width
      * 属性的值将发生变化；如果更改 bottom 属性，则 height 属性的值将发生变化。
@@ -10,13 +10,22 @@ namespace lolo {
      */
     export class Rectangle {
 
+        /**矩形左上角的 x 坐标*/
+        public x: number;
+        /**矩形左上角的 y 坐标*/
+        public y: number;
+        /**矩形的宽度*/
+        public width: number;
+        /**矩形的高度*/
+        public height: number;
+
 
         /**
          * 创建一个新 Rectangle 对象，其左上角由 x 和 y 参数指定，并具有指定的 width 和 height 参数。
          * @param x 矩形左上角的 x 坐标。
          * @param y 矩形左上角的 y 坐标。
-         * @param width 矩形的宽度（以像素为单位）。
-         * @param height 矩形的高度（以像素为单位）。
+         * @param width 矩形的宽度
+         * @param height 矩形的高度
          */
         public constructor(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
             this.x = x;
@@ -24,35 +33,6 @@ namespace lolo {
             this.width = width;
             this.height = height;
         }
-
-
-        /**
-         * 矩形左上角的 x 坐标。
-         * @default 0
-         */
-        public x: number;
-
-
-        /**
-         * 矩形左上角的 y 坐标。
-         * @default 0
-         */
-        public y: number;
-
-
-        /**
-         * 矩形的宽度（以像素为单位）。
-         * @default 0
-         */
-        public width: number;
-
-
-        /**
-         * 矩形的高度（以像素为单位）。
-         * @default 0
-         */
-        public height: number;
-
 
         /**
          * x 和 width 属性的和。
@@ -79,7 +59,8 @@ namespace lolo {
 
 
         /**
-         * 矩形左上角的 x 坐标。更改 Rectangle 对象的 left 属性对 y 和 height 属性没有影响。但是，它会影响 width 属性，而更改 x 值不会影响 width 属性。
+         * 矩形左上角的 x 坐标。更改 Rectangle 对象的 left 属性对 y 和 height 属性没有影响。
+         * 但是，它会影响 width 属性，而更改 x 值不会影响 width 属性。
          * left 属性的值等于 x 属性的值。
          */
         public get left(): number {
@@ -93,7 +74,8 @@ namespace lolo {
 
 
         /**
-         * 矩形左上角的 y 坐标。更改 Rectangle 对象的 top 属性对 x 和 width 属性没有影响。但是，它会影响 height 属性，而更改 y 值不会影响 height 属性。<br/>
+         * 矩形左上角的 y 坐标。更改 Rectangle 对象的 top 属性对 x 和 width 属性没有影响。
+         * 但是，它会影响 height 属性，而更改 y 值不会影响 height 属性。
          * top 属性的值等于 y 属性的值。
          */
         public get top(): number {
@@ -110,7 +92,7 @@ namespace lolo {
          * 由该点的 x 和 y 坐标确定的 Rectangle 对象左上角的位置。
          */
         public get topLeft(): Point {
-            return new Point(this.left, this.top);
+            return CachePool.getPoint(this.left, this.top);
         }
 
         public set topLeft(value: Point) {
@@ -123,7 +105,7 @@ namespace lolo {
          * 由 right 和 bottom 属性的值确定的 Rectangle 对象的右下角的位置。
          */
         public get bottomRight(): Point {
-            return new Point(this.right, this.bottom);
+            return CachePool.getPoint(this.right, this.bottom);
         }
 
         public set bottomRight(value: Point) {
@@ -168,22 +150,42 @@ namespace lolo {
          * @returns 如果检测点位于矩形内，返回true，否则，返回false
          */
         public contains(x: number, y: number): boolean {
-            return this.x <= x &&
-                this.x + this.width >= x &&
-                this.y <= y &&
-                this.y + this.height >= y;
+            return this.x <= x
+                && this.x + this.width >= x
+                && this.y <= y
+                && this.y + this.height >= y;
         }
 
 
         /**
-         * 如果在 toIntersect 参数中指定的 Rectangle 对象与此 Rectangle 对象相交，则返回交集区域作为 Rectangle 对象。如果矩形不相交，
-         * 则此方法返回一个空的 Rectangle 对象，其属性设置为 0。
-         * @param toIntersect 要对照比较以查看其是否与此 Rectangle 对象相交的 Rectangle 对象。
-         * @returns 等于交集区域的 Rectangle 对象。如果该矩形不相交，则此方法返回一个空的 Rectangle 对象；即，其 x、y、width 和
-         * height 属性均设置为 0 的矩形。
+         * 如果 toIntersect 与此 Rectangle 对象相交，则返回交集区域。
+         * 如果矩形不相交，则此方法返回一个空的 Rectangle 对象（x、y、width、height 属性均为 0）
+         * @param toIntersect 用来比较相交的区域
+         * @param update 值为：true，更新传入的 toIntersect，并返回该对象。值为：false，将返回新创建的 Rectangle 对象
+         * @returns
          */
-        public intersection(toIntersect: Rectangle): Rectangle {
-            return this.clone().$intersectInPlace(toIntersect);
+        public intersection(toIntersect: Rectangle, update: boolean = true): Rectangle {
+            let rect: Rectangle = update ? toIntersect : CachePool.getRectangle();
+
+            let x0 = this.x;
+            let y0 = this.y;
+            let x1 = toIntersect.x;
+            let y1 = toIntersect.y;
+            let w1 = toIntersect.width;
+            let h1 = toIntersect.height;
+            let l = Math.max(x0, x1);
+            let r = Math.min(x0 + this.width, x1 + w1);
+            if (l <= r) {
+                let t = Math.max(y0, y1);
+                let b = Math.min(y0 + this.height, y1 + h1);
+                if (t <= b) {
+                    rect.setTo(l, t, r - l, b - t);
+                    return rect;
+                }
+            }
+
+            rect.setEmpty();
+            return rect;
         }
 
 
@@ -193,33 +195,21 @@ namespace lolo {
          * @param dx Rectangle 对象横向增加的值。
          * @param dy Rectangle 对象纵向增加的值。
          */
-        public inflate(dx: number, dy: number): void {
+        public inflate(dx: number, dy: number): Rectangle {
             this.x -= dx;
             this.width += 2 * dx;
             this.y -= dy;
             this.height += 2 * dy;
+            return this;
         }
 
+
         /**
-         * @private
+         * 增加 Rectangle 对象的大小。此方法与 Rectangle.inflate() 方法类似，只不过它采用 Point 对象作为参数。
+         * @param point
          */
-        $intersectInPlace(clipRect: Rectangle): Rectangle {
-            let x0 = this.x;
-            let y0 = this.y;
-            let x1 = clipRect.x;
-            let y1 = clipRect.y;
-            let l = Math.max(x0, x1);
-            let r = Math.min(x0 + this.width, x1 + clipRect.width);
-            if (l <= r) {
-                let t = Math.max(y0, y1);
-                let b = Math.min(y0 + this.height, y1 + clipRect.height);
-                if (t <= b) {
-                    this.setTo(l, t, r - l, b - t);
-                    return this;
-                }
-            }
-            this.setEmpty();
-            return this;
+        public inflatePoint(point: Point): void {
+            this.inflate(point.x, point.y);
         }
 
 
@@ -260,7 +250,7 @@ namespace lolo {
          * @returns 新的 Rectangle 对象，其 x、y、width 和 height 属性的值与原始 Rectangle 对象的对应值相同。
          */
         public clone(): Rectangle {
-            return new Rectangle(this.x, this.y, this.width, this.height);
+            return CachePool.getRectangle(this.x, this.y, this.width, this.height);
         }
 
 
@@ -271,13 +261,10 @@ namespace lolo {
          * @returns 如果包含，返回true，否则返回false
          */
         public containsPoint(point: Point): boolean {
-            if (this.x < point.x
+            return this.x < point.x
                 && this.x + this.width > point.x
                 && this.y < point.y
-                && this.y + this.height > point.y) {
-                return true;
-            }
-            return false;
+                && this.y + this.height > point.y;
         }
 
 
@@ -292,7 +279,14 @@ namespace lolo {
             let b1 = rect.y + rect.height;
             let r2 = this.x + this.width;
             let b2 = this.y + this.height;
-            return (rect.x >= this.x) && (rect.x < r2) && (rect.y >= this.y) && (rect.y < b2) && (r1 > this.x) && (r1 <= r2) && (b1 > this.y) && (b1 <= b2);
+            return rect.x >= this.x
+                && rect.x < r2
+                && rect.y >= this.y
+                && rect.y < b2
+                && r1 > this.x
+                && r1 <= r2
+                && b1 > this.y
+                && b1 <= b2;
         }
 
 
@@ -306,17 +300,10 @@ namespace lolo {
             if (this === toCompare) {
                 return true;
             }
-            return this.x === toCompare.x && this.y === toCompare.y
-                && this.width === toCompare.width && this.height === toCompare.height;
-        }
-
-
-        /**
-         * 增加 Rectangle 对象的大小。此方法与 Rectangle.inflate() 方法类似，只不过它采用 Point 对象作为参数。
-         * @param point The x property of this Point object is used to increase the horizontal dimension of the Rectangle object. The y property is used to increase the vertical dimension of the Rectangle object.
-         */
-        public inflatePoint(point: Point): void {
-            this.inflate(point.x, point.y);
+            return this.x === toCompare.x
+                && this.y === toCompare.y
+                && this.width === toCompare.width
+                && this.height === toCompare.height;
         }
 
 

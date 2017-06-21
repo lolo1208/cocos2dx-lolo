@@ -231,27 +231,11 @@ namespace lolo {
         }
 
 
-        public static event_addListener(type: string, listener: Function, caller: any, priority: number = 0, ...args: any[]): void {
-            if (args.length == 0) {
-                this._ed.event_addListener(type, listener, caller, priority);
-            }
-            else {
-                args = [type, listener, caller, priority].concat(args);
-                this._ed.event_addListener.apply(this._ed, args);
-            }
-        }
+        public static event_addListener: (type: string, listener: Function, caller: any, priority: number = 0, ...args: any[]) => void = expend_event_addListener;
+        public static event_removeListener: (type: string, listener: Function, caller: any) => void = expend_event_removeListener;
+        public static event_dispatch: (event: Event, bubbles: boolean = false, recycle: boolean = true) => void = expend_event_dispatch;
+        public static event_hasListener: (type: string) => boolean = expend_event_hasListener;
 
-        public static event_removeListener(type: string, listener: Function, caller: any): void {
-            this._ed.event_removeListener(type, listener, caller);
-        }
-
-        public static event_dispatch(event: Event, bubbles: boolean = false, release: boolean = true): void {
-            this._ed.event_dispatch(event, bubbles, release);
-        }
-
-        public static event_hasListener(type: string): boolean {
-            return this._ed.event_hasListener(type);
-        }
 
         //
     }

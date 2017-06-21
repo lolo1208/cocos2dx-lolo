@@ -8,7 +8,7 @@ namespace lolo {
     export class Gesture extends EventDispatcher {
 
         /**上次发生 TouchEvent 时所在的舞台坐标*/
-        public touchPoint: Point;
+        public touchPoint: Point = new Point();
         /**上次发生 TouchEvent 时所在的 cocos 世界坐标（可用于 cc.node.convertToNodeSpace()）*/
         public worldPoint: cc.Point;
 
@@ -20,8 +20,6 @@ namespace lolo {
 
         public constructor() {
             super();
-
-            this.touchPoint = new Point();
 
             this._touchEvent = new TouchEvent("");
             this._touchListener = <cc.TouchListener>cc.EventListener.create({

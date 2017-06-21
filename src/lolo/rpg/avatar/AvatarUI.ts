@@ -33,11 +33,11 @@ namespace lolo.rpg {
 
 
         /**
-         * 清除，销毁，释放
+         * 销毁
          */
         public destroy(): void {
-            super.destroy();
             this._avatar = null;
+            super.destroy();
         }
 
 

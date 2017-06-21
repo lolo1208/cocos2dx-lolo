@@ -108,7 +108,7 @@ namespace lolo {
                 CachePool.recycle(p);
             }
             else {
-                // Logger.addLog("[LFW] 指定的target: " + target.toString() + " 并没有在 LayoutManager 中注册", Logger.LOG_TYPE_WARN);
+                Logger.addLog("[LFW] 指定的target: " + target.toString() + " 并没有在 LayoutManager 中注册", Logger.LOG_TYPE_WARN);
             }
         }
 

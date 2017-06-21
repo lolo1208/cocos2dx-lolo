@@ -9,7 +9,8 @@ namespace app.core {
      * 由 main.js 调用
      */
     export function enter(): void {
-        lolo.TimeUtil.nowTime = new Date().getTime();
+        lolo.TimeUtil.nowDate = new Date();
+        lolo.TimeUtil.nowTime = lolo.TimeUtil.nowDate.getTime();
 
         _loading = new Loading();
         lolo.stage.addChild(_loading);

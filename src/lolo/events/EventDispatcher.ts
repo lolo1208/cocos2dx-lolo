@@ -92,7 +92,8 @@ namespace lolo {
             let list: EventListenerInfo[] = this._eventMap[event.type];
             if (list != null && list.length > 0) {
                 list = list.concat();
-                for (let i = 0; i < list.length; i++) {
+                let len: number = list.length;
+                for (let i = 0; i < len; i++) {
                     let info: EventListenerInfo = list[i];
                     if (info.args.length > 0) {
                         let args: any[] = info.args.concat();

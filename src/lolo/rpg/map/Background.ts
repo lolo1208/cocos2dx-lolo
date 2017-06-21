@@ -173,7 +173,7 @@ namespace lolo.rpg {
             this._touchAni.y = p.y;
 
             if (this._touchAni.parent == null) this.addChild(this._touchAni);
-            this._touchAni.play(1, 1, 0, Handler.once(this._touchAni.destroy, this._touchAni));
+            this._touchAni.play(1, 1, 0, Handler.once(this._touchAni.removeFromParent, this._touchAni));
         }
 
 
@@ -192,24 +192,20 @@ namespace lolo.rpg {
             }
 
             if (this._thumbnail != null) {
-                this._thumbnail.removeFromParent();
+                this._thumbnail.destroy();
                 this._thumbnail = null;
             }
 
-            let children: cc.Node[] = this.children.concat();
-            for (let i = 0; i < children.length; i++) {
-                try {
-                    children[i].destroy();
-                }
-                catch (error) {
-                }
-            }
+            this.destroyAllChildren();
+        }
 
-            if (this._loaderList != null) {
-                while (this._loaderList.length > 0)
-                    this.removeChunkLoader(this._loaderList[0]);
-                this._loaderList = null;
-            }
+
+        /**
+         * 销毁
+         */
+        public destroy(): void {
+            this.clean();
+            super.destroy();
         }
 
         //

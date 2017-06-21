@@ -7,6 +7,39 @@ namespace lolo {
      */
     export class Point {
 
+        /**该点的水平坐标*/
+        public x: number;
+        /**该点的垂直坐标*/
+        public y: number;
+
+
+        /**
+         * 返回 pt1 和 pt2 之间的距离。
+         * @param p1 第一个点
+         * @param p2 第二个点
+         * @returns 第一个点和第二个点之间的距离。
+         */
+        public static distance(p1: Point, p2: Point): number {
+            return Math.sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
+        }
+
+
+        /**
+         * 确定两个指定点之间的点。
+         * 参数 f 确定新的内插点相对于参数 pt1 和 pt2 指定的两个端点所处的位置。参数 f 的值越接近 1.0，则内插点就越接近第一个点（参数 pt1）。参数 f 的值越接近 0，则内插点就越接近第二个点（参数 pt2）。
+         * @param pt1 第一个点。
+         * @param pt2 第二个点。
+         * @param f 两个点之间的内插级别。表示新点将位于 pt1 和 pt2 连成的直线上的什么位置。如果 f=1，则返回 pt1；如果 f=0，则返回 pt2。
+         * @returns 新的内插点。
+         */
+        public static interpolate(pt1: Point, pt2: Point, f: number): Point {
+            let f1: number = 1 - f;
+            return CachePool.getPoint(pt1.x * f + pt2.x * f1, pt1.y * f + pt2.y * f1);
+        }
+
+
+        //
+
 
         /**
          * 创建一个 Point 对象.若不传入任何参数，将会创建一个位于（0，0）位置的点。
@@ -17,20 +50,6 @@ namespace lolo {
             this.x = x;
             this.y = y;
         }
-
-
-        /**
-         * 该点的水平坐标。
-         * @default 0
-         */
-        public x: number;
-
-
-        /**
-         * 该点的垂直坐标。
-         * @default 0
-         */
-        public y: number;
 
 
         /**
@@ -57,7 +76,7 @@ namespace lolo {
          * 克隆点对象
          */
         public clone(): Point {
-            return new Point(this.x, this.y);
+            return CachePool.getPoint(this.x, this.y);
         }
 
 
@@ -68,17 +87,6 @@ namespace lolo {
          */
         public equals(toCompare: Point): boolean {
             return this.x == toCompare.x && this.y == toCompare.y;
-        }
-
-
-        /**
-         * 返回 pt1 和 pt2 之间的距离。
-         * @param p1 第一个点
-         * @param p2 第二个点
-         * @returns 第一个点和第二个点之间的距离。
-         */
-        public static distance(p1: Point, p2: Point): number {
-            return Math.sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
         }
 
 
@@ -98,21 +106,7 @@ namespace lolo {
          * @returns 新点。
          */
         public add(v: Point): Point {
-            return new Point(this.x + v.x, this.y + v.y);
-        }
-
-
-        /**
-         * 确定两个指定点之间的点。
-         * 参数 f 确定新的内插点相对于参数 pt1 和 pt2 指定的两个端点所处的位置。参数 f 的值越接近 1.0，则内插点就越接近第一个点（参数 pt1）。参数 f 的值越接近 0，则内插点就越接近第二个点（参数 pt2）。
-         * @param pt1 第一个点。
-         * @param pt2 第二个点。
-         * @param f 两个点之间的内插级别。表示新点将位于 pt1 和 pt2 连成的直线上的什么位置。如果 f=1，则返回 pt1；如果 f=0，则返回 pt2。
-         * @returns 新的内插点。
-         */
-        public static interpolate(pt1: Point, pt2: Point, f: number): Point {
-            let f1: number = 1 - f;
-            return new Point(pt1.x * f + pt2.x * f1, pt1.y * f + pt2.y * f1);
+            return CachePool.getPoint(this.x + v.x, this.y + v.y);
         }
 
 
@@ -141,12 +135,20 @@ namespace lolo {
 
 
         /**
-         * 从此点的坐标中减去另一个点的坐标以创建一个新点。
+         * 从此点的坐标中减去另一个点的坐标。根据 update 参数，返回当前 Point 对象，或新创建的 Point 对象
          * @param v 要减去的点。
-         * @returns 新点。
+         * @param update 值为：true，更新当前 Point 对象，并返回该对象。值为：false，将返回新创建的 Point 对象
+         * @returns
          */
-        public subtract(v: Point): Point {
-            return new Point(this.x - v.x, this.y - v.y);
+        public subtract(v: Point, update: boolean = true): Point {
+            if (update) {
+                this.x -= v.x;
+                this.y -= v.y;
+                return this;
+            }
+            else {
+                return CachePool.getPoint(this.x - v.x, this.y - v.y);
+            }
         }
 
 
