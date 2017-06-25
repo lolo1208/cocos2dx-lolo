@@ -15,10 +15,10 @@ namespace lolo {
 
         private _font: string;
         private _size: number;
-        private _color: cc.Color;
+        private _color: cc.Color = new cc.Color();
         private _placeholderFont: string;
         private _placeholderSize: number;
-        private _placeholderColor: cc.Color;
+        private _placeholderColor: cc.Color = new cc.Color();
 
         /**输入模式*/
         private _inputMode: number;
@@ -32,8 +32,7 @@ namespace lolo {
          * 构造函数
          */
         public constructor() {
-            let s9s: cc.Scale9Sprite = new cc.Scale9Sprite(lolo.getResUrl(Constants.EMPTY_S9S_URL));
-            super(InputText.DEFAULT_SIZE, s9s);
+            super(InputText.DEFAULT_SIZE, new cc.Scale9Sprite(lolo.getResUrl(Constants.EMPTY_S9S_URL)));
             lolo.CALL_SUPER_REPLACE_KEYWORD();
 
             this._inputMode = cc.EDITBOX_INPUT_MODE_ANY;
@@ -133,13 +132,13 @@ namespace lolo {
         /**
          * 文本颜色
          */
-        public set color(value: string|cc.Color) {
-            if (typeof value === "string") value = hexToColor(<string>value);
-            this._color = <cc.Color>value;
+        public set color(value: string | cc.Color) {
+            if (typeof value === "string") this._color.parseHex(value);
+            else this._color._val = value._val;
             this.setFontColor(this._color);
         }
 
-        public get color(): string|cc.Color {
+        public get color(): string | cc.Color {
             return this._color;
         }
 
@@ -174,13 +173,13 @@ namespace lolo {
         /**
          * （占位符）文本颜色
          */
-        public set placeholderColor(value: string|cc.Color) {
-            if (typeof value === "string") value = hexToColor(<string>value);
-            this._color = <cc.Color>value;
+        public set placeholderColor(value: string | cc.Color) {
+            if (typeof value === "string") this._placeholderColor.parseHex(value);
+            else this._placeholderColor._val = value._val;
             this.setPlaceholderFontColor(this._color);
         }
 
-        public get placeholderColor(): string|cc.Color {
+        public get placeholderColor(): string | cc.Color {
             return this._placeholderColor;
         }
 

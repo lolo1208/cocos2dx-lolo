@@ -33,9 +33,9 @@ declare namespace cc {
         childrenCount: number;
 
 
-        setAnchorPoint(point: number|Point, y?: number): void;
+        setAnchorPoint(point: number | Point, y?: number): void;
 
-        setPosition(newPosOrxValue: number|Point, yValue?: number): void;
+        setPosition(newPosOrxValue: number | Point, yValue?: number): void;
 
         setPositionX(X: number): void;
 
@@ -45,7 +45,7 @@ declare namespace cc {
 
         getPositionY(): number;
 
-        setContentSize(size: number|Size, height?: number): void;
+        setContentSize(size: number | Size, height?: number): void;
 
         getContentSize(): Size;
 
@@ -67,7 +67,7 @@ declare namespace cc {
 
         isVisible(): boolean;
 
-        addChild(child: Node, localZOrder?: number, tagOrName?: number|string): void;
+        addChild(child: Node, localZOrder?: number, tagOrName?: number | string): void;
 
         removeChild(child: Node, cleanup: boolean = true): void;
 
@@ -128,9 +128,9 @@ declare namespace cc {
         /////////////////////////////////
         _original_ctor: (...args: any[]) => void;
         _original_onEnter: () => void;
-        _original_addChild: (child: Node, localZOrder?: number, tagOrName?: number|string) => void;
+        _original_addChild: (child: Node, localZOrder?: number, tagOrName?: number | string) => void;
 
-        _original_setPosition: (newPosOrxValue: Point|number, yValue: number) => void;
+        _original_setPosition: (newPosOrxValue: Point | number, yValue: number) => void;
         _original_setPositionX: (value: number) => void;
         _original_getPositionX: () => number;
         _original_setPositionY: (value: number) => void;
@@ -164,7 +164,7 @@ declare namespace cc {
         /**touch事件侦听器*/
         touchListener: TouchListener;
 
-        setPosition(newPosOrxValue: number|Point, yValue?: number): void;//
+        setPosition(newPosOrxValue: number | Point, yValue?: number): void;//
         setPositionX(value: number): void;//
         getPositionX(): number;//
         setPositionY(value: number): void;//
@@ -235,7 +235,7 @@ declare namespace cc {
 
         getFontFillColor(): Color;
 
-        setDimensions(dim: number|Size, height: number): void;
+        setDimensions(dim: number | Size, height: number): void;
 
         getDimensions(): Size;
 
@@ -299,7 +299,7 @@ declare namespace cc {
     class SpriteBatchNode extends Node {
         texture: Texture2D;
 
-        constructor(fileImage: Texture2D|string, capacity?: number);
+        constructor(fileImage: Texture2D | string, capacity?: number);
     }
 
 
@@ -434,7 +434,7 @@ declare namespace cc {
     }
 
     class EventManager extends Class {
-        addListener(listener: EventListener, nodeOrPriority: Node|number): void;
+        addListener(listener: EventListener, nodeOrPriority: Node | number): void;
 
         removeListener(listener: EventListener): void;
 
@@ -547,7 +547,7 @@ declare namespace cc {
     function log(str: string): void;
 
     /**返回一个新的 cc.Color 对象*/
-    function color(r?: number|Color, g?: number, b?: number, a?: number = 255): Color;
+    function color(r?: number | string | Color, g?: number, b?: number, a?: number = 255): Color;
 
     /**返回一个新的 cc.Color 对象*/
     function hexToColor(hex: string): Color;
@@ -591,11 +591,13 @@ declare namespace cc {
         b: number;
         a: number;
 
+        constructor(r?: number | string | Color, g?: number, b?: number, a?: number);
+
         /**
          * 解析16进制字符串
          * @param hex 例如："0xFF66CC"
          */
-        parseHex(hex: string): void;
+        parseHex(hex: string): Color;
 
         /**
          * 获取当前颜色的16进制字符串描述
@@ -638,7 +640,7 @@ declare namespace cc.sys {
 
 
 declare namespace cc.loader {
-    function load(resources: any|any[], optionOrCB?: any, cb?: Function): void;
+    function load(resources: any | any[], optionOrCB?: any, cb?: Function): void;
 
     function loadImg(url: string, option: any, cb: Function): void;
 
@@ -646,7 +648,7 @@ declare namespace cc.loader {
 
     function loadTxt(url: string, cb: Function): void;
 
-    function loadJs(url: string|string[], cb: Function): void;
+    function loadJs(url: string | string[], cb: Function): void;
 
     function getXMLHttpRequest(): XMLHttpRequest;
 }
@@ -735,9 +737,9 @@ declare namespace cc {
 
     /** 立即设置 x / y 坐标 */
     class Place extends ActionInstant {
-        constructor(pos: Point|number, y?: number);
+        constructor(pos: Point | number, y?: number);
     }
-    function place(pos: Point|number, y?: number): Place;
+    function place(pos: Point | number, y?: number): Place;
 
     /** 立即从父级容器中移除自己 */
     class RemoveSelf extends ActionInstant {
@@ -837,22 +839,22 @@ declare namespace cc {
     class JumpBy extends ActionInterval {
         constructor(duration: number);
     }
-    function jumpBy(duration: number, position: Point|number, y: number, height: number, jumps?: number): JumpBy;
+    function jumpBy(duration: number, position: Point | number, y: number, height: number, jumps?: number): JumpBy;
 
     class JumpTo extends JumpBy {
         constructor(duration: number);
     }
-    function jumpTo(duration: number, position: Point|number, y: number, height: number, jumps?: number): JumpTo;
+    function jumpTo(duration: number, position: Point | number, y: number, height: number, jumps?: number): JumpTo;
 
     class MoveBy extends ActionInterval {
-        constructor(duration: number, deltaPos: number|Point, deltaY?: number);
+        constructor(duration: number, deltaPos: number | Point, deltaY?: number);
     }
-    function moveBy(duration: number, deltaPos: number|Point, deltaY?: number): MoveBy;
+    function moveBy(duration: number, deltaPos: number | Point, deltaY?: number): MoveBy;
 
     class MoveTo extends MoveBy {
-        constructor(duration: number, position: number|Point, y?: number);
+        constructor(duration: number, position: number | Point, y?: number);
     }
-    function moveTo(duration: number, position: number|Point, y?: number): MoveTo;
+    function moveTo(duration: number, position: number | Point, y?: number): MoveTo;
 
     class RotateBy extends ActionInterval {
         constructor(duration: number, deltaAngleX: number, deltaAngleY?: number);

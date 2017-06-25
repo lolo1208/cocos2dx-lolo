@@ -14,11 +14,11 @@ namespace lolo {
         public handler: Handler;
 
         /**文本正常的颜色*/
-        private _normalColor: cc.Color;
+        private _normalColor: cc.Color = new cc.Color();
         /**值增加时，切换的颜色*/
-        private _upColor: cc.Color;
+        private _upColor: cc.Color = new cc.Color();
         /**值减少时，切换的颜色*/
-        private _downColor: cc.Color;
+        private _downColor: cc.Color = new cc.Color();
 
         /**当前值*/
         private _value: number;
@@ -38,7 +38,7 @@ namespace lolo {
         protected setStyle(value: any): void {
             super.setStyle(value);
 
-            if (value.color != null) this.color = this._normalColor = value.color;
+            if (value.color != null) this.color = value.color;
             if (value.upColor != null) this.upColor = value.upColor;
             if (value.downColor != null) this.downColor = value.downColor;
             if (value.delay != null) this.delay = value.delay;
@@ -111,22 +111,22 @@ namespace lolo {
          * 设置颜色值
          * @param value
          */
-        protected setColor(value: string|cc.Color): void {
-            if (typeof value === "string") value = hexToColor(<string>value);
-            this._normalColor = <cc.Color>value;
+        protected setColor(value: string | cc.Color): void {
             super.setColor(value);
+            if (this._color == null || this._normalColor == null)return;
+            this._normalColor._val = this._color._val;
         }
 
 
         /**
          * 值增加时，切换的颜色
          */
-        public set upColor(value: string|cc.Color) {
-            if (typeof value === "string") value = hexToColor(<string>value);
-            this._upColor = <cc.Color>value;
+        public set upColor(value: string | cc.Color) {
+            if (typeof value === "string") this._upColor.parseHex(value);
+            else this._upColor._val = value._val;
         }
 
-        public get upColor(): string|cc.Color {
+        public get upColor(): string | cc.Color {
             return this._upColor;
         }
 
@@ -134,12 +134,12 @@ namespace lolo {
         /**
          * 值减少时，切换的颜色
          */
-        public set downColor(value: string|cc.Color) {
-            if (typeof value === "string") value = hexToColor(<string>value);
-            this._downColor = <cc.Color>value;
+        public set downColor(value: string | cc.Color) {
+            if (typeof value === "string") this._downColor.parseHex(value);
+            else this._downColor._val = value._val;
         }
 
-        public get downColor(): string|cc.Color {
+        public get downColor(): string | cc.Color {
             return this._downColor;
         }
 

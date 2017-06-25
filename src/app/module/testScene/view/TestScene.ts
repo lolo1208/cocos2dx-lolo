@@ -1,3 +1,5 @@
+/// <reference path="./rpg/RpgScene.ts"/>
+
 namespace app.testScene {
 
 
@@ -89,8 +91,8 @@ namespace app.testScene {
             txt.text = "assd撒打算是的\n撒艾丝凡dd";
             txt.x = txt.y = 150;
             txt.size = 25;
-            txt.color = "0x00FF00";
-            txt.enableShadow(cc.color(0, 0, 255, 255), cc.p(2, -2), 1);
+            txt.color = "0x0000FF";
+            // txt.enableShadow(cc.color(0, 0, 255, 255), cc.p(2, -2), 1);
             this.addChild(txt);
         }
 
@@ -147,7 +149,7 @@ namespace app.testScene {
 
         private testTouch(): void {
             for (let i = 1; i < 5; i++) {
-                let bmp: Bitmap|Animation = (i > 3)
+                let bmp: Bitmap | Animation = (i > 3)
                     ? new Bitmap("mainUI.loadBar.bg")
                     : new Animation("avatar.banShouRen.run3");
                 bmp.x = 200 + (i * 80);

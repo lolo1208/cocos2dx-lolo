@@ -11,18 +11,7 @@ namespace lolo {
      */
     export function extend_cc(): void {
 
-        // 扩展 cc.Color
-        let p = cc.Color.prototype;
-        p.parseHex = function (hex: string): void {
-            if (hex.length == 8) hex += "FF";// alpha 默认 255
-            this._val = parseInt(hex);
-        };
-        p.getHex = function (prefix: string = "0x", alpha?: boolean): string {
-            let hex: string = this._val.toString(16);
-            if (!alpha) hex = hex.substr(0, 6);
-            return hex;
-        };
-
+        expend_color();
 
         expend_node();
         expend_ctor(UIManager);
@@ -34,8 +23,10 @@ namespace lolo {
         expend_ctor(InputText);
         expend_ctor(ModalBackground);
 
+
         // 让 cc.ClippingNode 支持事件冒泡
-        cc.ClippingNode.prototype.event_dispatch = function (): void {
+        let p = cc.ClippingNode.prototype;
+        p.event_dispatch = function (): void {
             let parent: cc.Node = this.getParent();
             if (parent != null) parent.event_dispatch.apply(parent, arguments);
         };
@@ -381,7 +372,7 @@ namespace lolo {
 
 
     // position
-    export function expend_setPosition(newPosOrxValue: number|cc.Point, yValue?: number): void {
+    export function expend_setPosition(newPosOrxValue: number | cc.Point, yValue?: number): void {
         if (yValue == null) {
             this.setPositionX((<cc.Point>newPosOrxValue).x);
             this.setPositionY((<cc.Point>newPosOrxValue).y);
@@ -574,5 +565,53 @@ namespace lolo {
     export function expend_updatePosition(): void {
         this._x = this._original_getPositionX();
         this._y = -this._original_getPositionY();
+    }
+}
+
+
+namespace lolo {
+
+    /**
+     * 扩展 cc.Color
+     */
+    export function expend_color(): void {
+        let p = cc.Color.prototype;
+
+        p.parseHex = function (hex: string): cc.Color {
+            if (hex.length == 8) hex += "FF";// alpha 默认 255
+            this._val = parseInt(hex);
+            return this;
+        };
+        p.getHex = function (prefix: string = "0x", alpha?: boolean): string {
+            let hex: string = this._val.toString(16);
+            if (!alpha) hex = hex.substr(0, 6);
+            return prefix + hex;
+        };
+
+
+        if (isNative) {
+            Object.defineProperty(p, "_val", {
+                enumerable: true, configurable: true,
+                set: function (value) {
+                    this.r = (value & 0xff000000) >>> 24;
+                    this.g = (value & 0x00ff0000) >> 16;
+                    this.b = (value & 0x0000ff00) >> 8;
+                    this.a = value & 0x000000ff;
+                },
+                get: function () {
+                    return ((this.r << 24) >>> 0) + (this.g << 16) + (this.b << 8) + this.a;
+                }
+            });
+
+            cc.color = function (r, g, b, a): cc.Color {
+                if (r === undefined)
+                    return new cc.Color(0, 0, 0, 255);
+                if (typeof r === 'object')
+                    return new cc.Color(r.r, r.g, r.b, (r.a == null) ? 255 : r.a);
+                if (typeof r === 'string')
+                    return new cc.Color().parseHex(r);
+                return new cc.Color(r, g, b, (a == null ? 255 : a));
+            };
+        }
     }
 }

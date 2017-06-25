@@ -7,13 +7,13 @@ namespace lolo {
      */
     export class TextField extends cc.LabelTTF {
 
-        private _font: string;
-        private _size: number;
-        private _color: cc.Color;
-        private _align: number;
-        private _valign: number;
-        private _stroke: cc.Color;
-        private _strokeSize: number = 0;
+        protected _font: string;
+        protected _size: number;
+        protected _color: cc.Color = new cc.Color();
+        protected _align: number;
+        protected _valign: number;
+        protected _stroke: cc.Color = new cc.Color();
+        protected _strokeSize: number = 0;
 
         /**当前显示的文本*/
         private _currentText: string = "";
@@ -24,9 +24,6 @@ namespace lolo {
         public constructor() {
             super();
             lolo.CALL_SUPER_REPLACE_KEYWORD();
-
-            this._color = cc.color();
-            this._stroke = cc.color();
 
             this.setAnchorPoint(0, 1);
             this.styleName = "textField";
@@ -97,11 +94,11 @@ namespace lolo {
         /**
          * 文本颜色
          */
-        public set color(value: string|cc.Color) {
+        public set color(value: string | cc.Color) {
             this.setColor(value);
         }
 
-        protected setColor(value: string|cc.Color): void {
+        protected setColor(value: string | cc.Color): void {
             let color = this._color;
             if (color == null) return;
             if (typeof value === "string") color.parseHex(value);
@@ -111,7 +108,7 @@ namespace lolo {
             if (!isNative) this._setUpdateTextureDirty();
         }
 
-        public get color(): string|cc.Color {
+        public get color(): string | cc.Color {
             return this._color;
         }
 
@@ -119,18 +116,18 @@ namespace lolo {
         /**
          * 水平对齐方式，可选值[ "left"|0, "center"|1, "right"|2 ]
          */
-        public set align(value: string|number) {
+        public set align(value: string | number) {
             this.setAlign(value);
         }
 
-        protected setAlign(value: string|number): void {
+        protected setAlign(value: string | number): void {
             if (value == null) return;
             if (typeof value === "string") value = Constants.ALIGN_LOLO_TO_COCOS[value];
             this._align = <number>value;
             this.setHorizontalAlignment(this._align);
         }
 
-        public get align(): string|number {
+        public get align(): string | number {
             return this._align;
         }
 
@@ -138,18 +135,18 @@ namespace lolo {
         /**
          * 垂直对齐方式，可选值[ "top"|0, "middle"|1, "bottom"|2 ]
          */
-        public set valign(value: string|number) {
+        public set valign(value: string | number) {
             this.setValign(value);
         }
 
-        protected setValign(value: string|number): void {
+        protected setValign(value: string | number): void {
             if (value == null) return;
             if (typeof value === "string") value = Constants.VALIGN_LOLO_TO_COCOS[value];
             this._valign = <number>value;
             this.setVerticalAlignment(this._valign);
         }
 
-        public get valign(): string|number {
+        public get valign(): string | number {
             return this._valign;
         }
 
@@ -157,23 +154,23 @@ namespace lolo {
         /**
          * 描边颜色
          */
-        public set stroke(value: string|cc.Color) {
+        public set stroke(value: string | cc.Color) {
             this.setStroke(value);
         }
 
-        protected setStroke(value: string|cc.Color): void {
+        protected setStroke(value: string | cc.Color): void {
             // 取消描边
             if (value == "none") {
                 this.disableStroke();
             }
             else {
-                if (typeof value === "string") value = hexToColor(<string>value);
-                this._stroke = <cc.Color>value;
+                if (typeof value === "string") this._stroke.parseHex(value);
+                else this._stroke._val = value._val;
                 this.enableStroke(this._stroke, this._strokeSize);
             }
         }
 
-        public get stroke(): string|cc.Color {
+        public get stroke(): string | cc.Color {
             return this._stroke;
         }
 
