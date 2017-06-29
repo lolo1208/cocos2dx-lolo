@@ -182,6 +182,7 @@ namespace lolo {
          * @param index
          */
         public selectItemByIndex(index: number): void {
+            if (this._itemList.length == 0)return;
             index = Math.floor(index);
             if (index < 0) index = 0;
             else if (index >= this._itemList.length) index = this._itemList.length - 1;

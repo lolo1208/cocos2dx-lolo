@@ -11,10 +11,6 @@ namespace lolo {
      */
     export class Constants {
 
-
-        /**后台服务类型 - WebSocket*/
-        public static SERVICE_TYPE_WEB_SOCKET: string = "webSocket";
-
         /**图片类型的资源*/
         public static RES_TYPE_IMG: string = "image";
         /**json类型的资源*/
@@ -27,8 +23,6 @@ namespace lolo {
         public static RES_TYPE_PARTICLE: string = "particle";
 
 
-        /**后缀名 - 自定义数据*/
-        public static EXTENSION_LD: string = "ast";
         /**扩展名 - UI界面*/
         public static EXTENSION_UI: string = "ui";
         /**扩展名 - 动画*/
@@ -84,8 +78,8 @@ namespace lolo {
 
 
         /**对齐方式转换 lolo -> cocos*/
-        public static ALIGN_LOLO_TO_COCOS: {left: number, center: number, right: number};
-        public static VALIGN_LOLO_TO_COCOS: {top: number, middle: number, bottom: number};
+        public static ALIGN_LOLO_TO_COCOS: { left: number, center: number, right: number };
+        public static VALIGN_LOLO_TO_COCOS: { top: number, middle: number, bottom: number };
         /**对齐方式转换 cocos -> lolo*/
         public static ALIGN_COCOS_TO_LOLO: string[];
         public static VALIGN_COCOS_TO_LOLO: string[];

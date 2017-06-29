@@ -7,13 +7,26 @@ namespace lolo {
      */
     export class TextField extends cc.LabelTTF {
 
+        /**该常量用于禁用 描边(stroke) 或 投影(shadow) 效果*/
+        public static EFFECT_DISABLED: string = "none";
+
         protected _font: string;
         protected _size: number;
         protected _color: cc.Color = new cc.Color();
         protected _align: number;
         protected _valign: number;
-        protected _stroke: cc.Color = new cc.Color();
+
+        /**当前是否启用了描边*/
+        protected _strokeEnabled: boolean = false;
+        protected _strokeColor: cc.Color = new cc.Color();
         protected _strokeSize: number = 0;
+
+        /**当前是否启用了投影*/
+        protected _shadowEnabled: boolean = false;
+        protected _shadowColor: cc.Color = new cc.Color();
+        protected _shadowOffset: cc.Point = new cc.Point(2, -2);
+        protected _shadowOpacity: number = 255;
+        protected _shadowBlur: number = 0;
 
         /**当前显示的文本*/
         private _currentText: string = "";
@@ -151,6 +164,9 @@ namespace lolo {
         }
 
 
+        //
+
+
         /**
          * 描边颜色
          */
@@ -159,19 +175,19 @@ namespace lolo {
         }
 
         protected setStroke(value: string | cc.Color): void {
-            // 取消描边
-            if (value == "none") {
-                this.disableStroke();
+            this._strokeEnabled = value != TextField.EFFECT_DISABLED;
+            if (this._strokeEnabled) {
+                if (typeof value === "string") this._strokeColor.parseHex(value);
+                else this._strokeColor._val = value._val;
+                this.enableStroke(this._strokeColor, this._strokeSize);
             }
             else {
-                if (typeof value === "string") this._stroke.parseHex(value);
-                else this._stroke._val = value._val;
-                this.enableStroke(this._stroke, this._strokeSize);
+                this.disableStroke();
             }
         }
 
         public get stroke(): string | cc.Color {
-            return this._stroke;
+            return this._strokeColor;
         }
 
 
@@ -184,11 +200,34 @@ namespace lolo {
 
         protected setStrokeSize(value: number): void {
             this._strokeSize = value;
-            if (this._stroke != null) this.enableStroke(this._stroke, this._strokeSize);
+            if (this._strokeEnabled) this.enableStroke(this._strokeColor, this._strokeSize);
         }
 
         public get strokeSize(): number {
             return this._strokeSize;
+        }
+
+
+        //
+
+
+        /**
+         * 投影颜色
+         */
+        public set shadow(value: string | cc.Color) {
+            this._shadowEnabled = value != TextField.EFFECT_DISABLED;
+            if (this._shadowEnabled) {
+                if (typeof value === "string") this._shadowColor.parseHex(value);
+                else this._shadowColor._val = value._val;
+                this.enableShadow(this._strokeColor, this._strokeSize, this._shadowOpacity, this._shadowBlur);
+            }
+            else {
+                this.disableShadow();
+            }
+        }
+
+        public get shadow(): string | cc.Color {
+            return this._shadowColor;
         }
 
 

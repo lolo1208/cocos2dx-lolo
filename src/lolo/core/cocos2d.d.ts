@@ -251,6 +251,17 @@ declare namespace cc {
 
         disableStroke(): void;
 
+        /**
+         * 设置并启用投影效果
+         * @param a offsetX 或 颜色
+         * @param b offsetY 或 offset
+         * @param c 透明度：0~1
+         * @param d 模糊范围
+         */
+        enableShadow(a: cc.Color | number, b: cc.Point | number, c: number = 0.5, d: number = 0): void;
+
+        disableShadow(): void;
+
         setString(text: string): void;
 
         getString(): string;
@@ -546,6 +557,12 @@ declare namespace cc {
 
     function log(str: string): void;
 
+    function p(x: number | Point = 0, y: number = 0): Point;
+
+    function size(w: number | Size = 0, h: number = 0): Size;
+
+    function rect(x: number | Rect = 0, y: number = 0, w: number = 0, h: number = 0): Rect;
+
     /**返回一个新的 cc.Color 对象*/
     function color(r?: number | string | Color, g?: number, b?: number, a?: number = 255): Color;
 
@@ -554,33 +571,33 @@ declare namespace cc {
 
     function colorToHex(color: Color): string;
 
-    function p(x?: number, y?: number): Point;
-
-    function size(w?: number, h?: number): Size;
-
-    function rect(x?: number, y?: number, w?: number, h?: number): Rect;
-
 }
 
 
 // 数据类型
 declare namespace cc {
 
-    interface Size {
+    class Size {
         width: number;
         height: number;
+
+        constructor(width: number = 0, height: number = 0);
     }
 
-    interface Point {
+    class Point {
         x: number;
         y: number;
+
+        constructor(x: number = 0, y: number = 0);
     }
 
-    interface Rect {
+    class Rect {
         x: number;
         y: number;
         width: number;
         height: number;
+
+        constructor(x: number = 0, y: number = 0, w: number = 0, h: number = 0);
     }
 
     class Color {
