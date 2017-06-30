@@ -97,14 +97,12 @@ namespace app.testScene {
 
 
         private testBtn_touchTapHandler(event: TouchEvent): void {
-            (<AppUIManager>lolo.ui).loadRpgMap(RpgScene.TEST_MAP_ID, lolo.handler(() => {
-                this.rpgScene.show();
-            }, this));
+            // (<AppUIManager>lolo.ui).loadRpgMap(RpgScene.TEST_MAP_ID, lolo.handler(() => {
+            //     this.rpgScene.show();
+            // }, this));
+            // return;
 
-
-            return;
             let t: number = new Date().getTime();
-
             let n1: number = 999;
             let n2: number = 888;
             let n3: number = 0;
@@ -114,7 +112,6 @@ namespace app.testScene {
                 n3 = n1 * n2 * i;
                 n3 = n1 / n2 / i;
             }
-
             console.log("test:::" + (new Date().getTime() - t));
         }
 
