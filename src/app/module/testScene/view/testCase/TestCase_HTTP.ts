@@ -52,6 +52,19 @@ namespace app.testScene {
             this.contentText.text = str;
             this.contentVSB.render();
             lolo.layout.stageLayout(this);
+
+
+            let t: number = new Date().getTime();
+            let n1: number = 999;
+            let n2: number = 888;
+            let n3: number = 0;
+            for (let i = 1; i < 1234567; i++) {
+                n3 = n1 + n2 + i;
+                n3 = n1 - n2 - i;
+                n3 = n1 * n2 * i;
+                n3 = n1 / n2 / i;
+            }
+            console.log("test:::" + (new Date().getTime() - t));
         }
 
 

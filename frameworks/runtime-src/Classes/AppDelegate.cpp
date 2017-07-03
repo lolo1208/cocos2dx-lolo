@@ -47,6 +47,12 @@
 #include "cocos/scripting/js-bindings/manual/platform/ios/JavaScriptObjCBridge.h"
 #endif
 
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#include <unistd.h>
+#endif
+
+
 USING_NS_CC;
 using namespace CocosDenshion;
 
@@ -169,6 +175,10 @@ bool AppDelegate::applicationDidFinishLaunching()
     ScriptEngineManager::getInstance()->setScriptEngine(engine);
     ScriptingCore::getInstance()->runScript("main.js");
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+	CCLOG("[LOLO PID]d%", getpid());
+#endif
+	CCLOG("[LOLO PID]d%", 123456);
     return true;
 }
 
