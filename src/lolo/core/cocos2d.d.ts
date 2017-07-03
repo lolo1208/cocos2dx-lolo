@@ -251,14 +251,7 @@ declare namespace cc {
 
         disableStroke(): void;
 
-        /**
-         * 设置并启用投影效果
-         * @param a offsetX 或 颜色
-         * @param b offsetY 或 offset
-         * @param c 透明度：0~1
-         * @param d 模糊范围
-         */
-        enableShadow(a: cc.Color | number, b: cc.Point | number, c: number = 0.5, d: number = 0): void;
+        enableShadow(color: Color, offset: Point | Size, blur: number): void;
 
         disableShadow(): void;
 
@@ -577,27 +570,21 @@ declare namespace cc {
 // 数据类型
 declare namespace cc {
 
-    class Size {
+    interface Size {
         width: number;
         height: number;
-
-        constructor(width: number = 0, height: number = 0);
     }
 
-    class Point {
+    interface Point {
         x: number;
         y: number;
-
-        constructor(x: number = 0, y: number = 0);
     }
 
-    class Rect {
+    interface Rect {
         x: number;
         y: number;
         width: number;
         height: number;
-
-        constructor(x: number = 0, y: number = 0, w: number = 0, h: number = 0);
     }
 
     class Color {

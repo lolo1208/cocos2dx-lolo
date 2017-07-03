@@ -24,8 +24,7 @@ namespace lolo {
         /**当前是否启用了投影*/
         protected _shadowEnabled: boolean = false;
         protected _shadowColor: cc.Color = new cc.Color();
-        protected _shadowOffset: cc.Point = new cc.Point(2, -2);
-        protected _shadowOpacity: number = 255;
+        protected _shadowOffset: cc.Point = new cc.p(2, -2);
         protected _shadowBlur: number = 0;
 
         /**当前显示的文本*/
@@ -212,14 +211,36 @@ namespace lolo {
 
 
         /**
+         * 启用投影
+         * @param color
+         * @param offset
+         * @param blur
+         */
+        public enableShadow(color: cc.Color, offset: cc.Point | cc.Size, blur: number): void {
+            if (isNative) {
+                offset["width"] = offset["x"];// native 只支持 cc.Size
+                offset["height"] = offset["y"];
+                this.children[0]["enableShadow"](color, offset, blur);// CCLabel
+            }
+            else {
+                super.enableShadow(color, offset, blur);
+            }
+        }
+
+
+        /**
          * 投影颜色
          */
         public set shadow(value: string | cc.Color) {
+            this.setShadow(value);
+        }
+
+        protected setShadow(value: string | cc.Color): void {
             this._shadowEnabled = value != TextField.EFFECT_DISABLED;
             if (this._shadowEnabled) {
                 if (typeof value === "string") this._shadowColor.parseHex(value);
                 else this._shadowColor._val = value._val;
-                this.enableShadow(this._strokeColor, this._strokeSize, this._shadowOpacity, this._shadowBlur);
+                this.enableShadow(this._shadowColor, this._shadowOffset, this._shadowBlur);
             }
             else {
                 this.disableShadow();
@@ -229,6 +250,46 @@ namespace lolo {
         public get shadow(): string | cc.Color {
             return this._shadowColor;
         }
+
+
+        /**
+         * 投影偏移
+         */
+        public set shadowOffset(value: cc.Point) {
+            this.setShadowOffset(value.x, value.y);
+        }
+
+        public setShadowOffset(xOrPoint: number | cc.Point, y?: number): void {
+            if (y != null) {
+                this._shadowOffset.x = <number>xOrPoint;
+                this._shadowOffset.y = y;
+            }
+            else {
+                this._shadowOffset.x = (<cc.Point>xOrPoint).x;
+                this._shadowOffset.y = (<cc.Point>xOrPoint).y;
+            }
+            if (this._shadowEnabled) this.enableShadow(this._shadowColor, this._shadowOffset, this._shadowBlur);
+        }
+
+        public get shadowOffset(): cc.Point {
+            return this._shadowOffset;
+        }
+
+
+        /**
+         * 投影模糊范围（native 无效）
+         */
+        public set shadowBlur(value: number) {
+            this._shadowBlur = value;
+            if (this._shadowEnabled) this.enableShadow(this._shadowColor, this._shadowOffset, this._shadowBlur);
+        }
+
+        public get shadowBlur(): number {
+            return this._shadowBlur;
+        }
+
+
+        //
 
 
         /**
