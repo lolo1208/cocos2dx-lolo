@@ -32,6 +32,7 @@ namespace lolo {
             super();
 
             this.style = lolo.config.getStyle("numberText");
+            this._normalColor._val = this._color._val;
         }
 
 
@@ -78,7 +79,9 @@ namespace lolo {
          */
         private playEffect(color: cc.Color, count: number): void {
             count++;
-            super.setColor((count % 2) == 1 ? color : this._normalColor);
+
+            this.setFontFillColor((count % 2) == 1 ? color : this._normalColor);
+            if (!isNative) this._setUpdateTextureDirty();
 
             if (count < 10) {
                 this._effectHandler = lolo.delayedCall(this.delay, this.playEffect, this, color, count);
@@ -113,8 +116,8 @@ namespace lolo {
          */
         protected setColor(value: string | cc.Color): void {
             super.setColor(value);
-            if (this._color == null || this._normalColor == null)return;
-            this._normalColor._val = this._color._val;
+            if (this._color != null && this._normalColor != null)
+                this._normalColor._val = this._color._val;
         }
 
 
