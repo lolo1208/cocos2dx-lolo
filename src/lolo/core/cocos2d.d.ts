@@ -187,9 +187,9 @@ declare namespace cc {
          *  - 不在显示列表中
          *  - 自己或父级的 visible = false
          *  - 自己或父级的 opacity = 0
-         * @return {boolean}
+         *  @param worldPoint 需要检测该点是否在显示范围内（cc.ClippingNode）
          */
-        inStageVisibled(): boolean;
+        inStageVisibled(worldPoint: Point): boolean;
 
         /**点击测试函数*/
         hitTest(worldPoint: Point): boolean;
@@ -297,6 +297,8 @@ declare namespace cc {
         alphaThreshold: number;
         inverted: boolean;
         mask: lolo.Mask;// 对应的mask。cc.ClippingNode 不能继承，lolo.Mask 需要绕开写
+        /**显示范围是否包含传入的 worldPoint*/
+        contains(worldPoint: Point): boolean;
     }
 
 

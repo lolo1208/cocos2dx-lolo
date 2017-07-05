@@ -268,9 +268,10 @@ namespace lolo {
          */
         private static onTouchBegan(touch: cc.Touch, event: cc.EventTouch): boolean {
             let target: InputText = <InputText>event.getCurrentTarget();
-            if (!target.inStageVisibled()) return false;// 当前节点不可见
+            let worldPoint: cc.Point = touch.getLocation();
+            if (!target.inStageVisibled(worldPoint)) return false;// 当前节点不可见
 
-            let p: cc.Point = target.convertToNodeSpace(touch.getLocation());
+            let p: cc.Point = target.convertToNodeSpace(worldPoint);
             lolo.temp_rect.setTo(0, 0, target.getWidth(), target.getHeight());
             let hited: boolean = lolo.temp_rect.contains(p.x, p.y);
 

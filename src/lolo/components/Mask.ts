@@ -34,7 +34,6 @@ namespace lolo {
             this._clipper = new cc.ClippingNode();
             this._clipper.setAnchorPoint(0, 1);
             this._clipper.mask = this;
-            this._clipper.onEnter = Mask.clipperOnEnter;
 
             this.touchListener = <cc.TouchListener>cc.EventListener.create({
                 event: cc.EventListener.TOUCH_ONE_BY_ONE,
@@ -47,18 +46,6 @@ namespace lolo {
             this.touchListener.retain();
         }
 
-
-        /**
-         * clipper.onEnter()，this=clipper
-         * html5中，onEnter 的时候，需要重新注册 touchListener
-         */
-        private static clipperOnEnter(): void {
-            let clipper: cc.ClippingNode = <cc.ClippingNode>this;
-            cc.ClippingNode.prototype.onEnter.call(clipper);
-
-            if (!isNative && clipper.mask._touchEnabled && !clipper.mask.touchListener._registered)
-                clipper.mask.touchEnabled = true;
-        }
 
         public get clipper(): cc.ClippingNode {
             return this._clipper;
@@ -140,12 +127,13 @@ namespace lolo {
          * touch 相关
          */
         private static touchBegan(touch: cc.Touch, event: cc.EventTouch): boolean {
-            let target: cc.Node = event.getCurrentTarget();
-            if (!lolo.expend_inStageVisibled.call(target["mask"].content)) return false;// 遮罩内容不可见
+            let clipper: cc.ClippingNode = <cc.ClippingNode>event.getCurrentTarget();
+            let worldPoint: cc.Point = touch.getLocation();
+            if (!lolo.expend_inStageVisibled.call(clipper.mask.content, worldPoint)) return false;// 遮罩内容不可见
 
-            let hited: boolean = Mask.hitTest(target, touch.getLocation());
+            let hited: boolean = Mask.hitTest(clipper, worldPoint);
             if (hited)
-                Mask.touchDispatchEvent(TouchEvent.TOUCH_BEGIN, target, touch, event);
+                Mask.touchDispatchEvent(TouchEvent.TOUCH_BEGIN, clipper, touch, event);
             return hited;
         }
 
@@ -178,16 +166,17 @@ namespace lolo {
          * @return {boolean}
          */
         private static hitTest(target: cc.Node, worldPoint: cc.Point): boolean {
-            if (!lolo.expend_inStageVisibled.call(target)) return false;// 当前节点不可见
+            if (!lolo.expend_inStageVisibled.call(target, worldPoint)) return false;// 当前节点不可见
 
             let clipper: cc.ClippingNode = <cc.ClippingNode>target;
             let stencil: cc.Node = clipper.stencil;
             if (stencil == null) return false;// 没有遮罩模版
 
-            let size: cc.Size = stencil.getContentSize();
-            lolo.temp_rect.setTo(stencil.x, stencil.y, size.width, size.height);
+            // let size: cc.Size = stencil.getContentSize();
+            // lolo.temp_rect.setTo(stencil.x, stencil.y, size.width, size.height);
             let p: cc.Point = clipper.convertToNodeSpace(worldPoint);
-            return lolo.temp_rect.contains(p.x, -p.y);
+            // return lolo.temp_rect.contains(p.x, -p.y);
+            return clipper.mask._rect.contains(p.x, -p.y);
         }
 
 

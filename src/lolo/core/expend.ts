@@ -5,6 +5,8 @@
 /////////////////////////////////
 namespace lolo {
 
+    export let _original_cc_ClippingNode_onEnter: Function;
+
 
     /**
      * 扩展 cocos 显示对象相关
@@ -30,6 +32,11 @@ namespace lolo {
             let parent: cc.Node = this.getParent();
             if (parent != null) parent.event_dispatch.apply(parent, arguments);
         };
+
+        _original_cc_ClippingNode_onEnter = p.onEnter;
+        p.onEnter = expend_clippingNode_onEnter;
+        p.contains = expend_clippingNode_contains;
+
 
         // cc.LabelTTF 属性重新定义
         let p = cc.LabelTTF.prototype;
@@ -213,12 +220,13 @@ namespace lolo {
 
 
     // inStageVisibled
-    export function expend_inStageVisibled(): boolean {
+    export function expend_inStageVisibled(worldPoint: cc.Point): boolean {
         let node: cc.Node = this;
         while (node != null) {
             if (node == lolo.stage) return true;// 已经找到舞台了
             if (!node.isVisible()) return false;
             if (node.getOpacity() <= 0) return false;
+            if (node instanceof cc.ClippingNode && !node.contains(worldPoint)) return false;
             node = node.parent;
         }
         return false;
@@ -231,10 +239,11 @@ namespace lolo {
         for (let i = 0; i < children.length; i++) {
             let child: cc.Node = children[i];
             if (child instanceof ModalBackground) continue;// 忽略模态背景
-            if (child.hitTest(worldPoint))  return true;
+            if (child.hitTest(worldPoint)) return true;
         }
         return false;
     }
+
 
     // addChild
     export function expend_addChild(): void {
@@ -497,6 +506,23 @@ namespace lolo {
     export function expend_event_hasListener(): boolean {
         return this._ed.event_hasListener.apply(this._ed, arguments);
     }
+
+
+    // clippingNode.onEnter
+    export function expend_clippingNode_onEnter(): void {
+        let clipper: cc.ClippingNode = <cc.ClippingNode>this;
+        _original_cc_ClippingNode_onEnter.call(clipper);
+        if (!isNative && clipper.mask.touchEnabled && !clipper.mask.touchListener._registered)
+            clipper.mask.touchEnabled = true;
+    }
+
+    // clippingNode.contains
+    export function expend_clippingNode_contains(worldPoint: Point): boolean {
+        let clipper: cc.ClippingNode = <cc.ClippingNode>this;
+        let p = this.convertToNodeSpace(worldPoint);
+        return clipper.mask.getRect().contains(p.x, -p.y);
+    }
+
 }
 
 

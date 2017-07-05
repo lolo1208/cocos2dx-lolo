@@ -95,7 +95,7 @@ namespace lolo {
          * @return {boolean}
          */
         public hitTest(worldPoint: cc.Point): boolean {
-            if (!this.inStageVisibled()) return false;// 当前节点不可见
+            if (!this.inStageVisibled(worldPoint)) return false;// 当前节点不可见
 
             let p: cc.Point = this.convertToNodeSpace(worldPoint);
             if (isNative) {

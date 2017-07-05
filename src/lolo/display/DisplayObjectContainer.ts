@@ -164,7 +164,7 @@ namespace lolo {
          * @return {boolean}
          */
         public hitTest(worldPoint: cc.Point): boolean {
-            if (!this.inStageVisibled()) return false;// 当前节点不可见
+            if (!this.inStageVisibled(worldPoint)) return false;// 当前节点不可见
 
             let children: cc.Node[] = this.children;
             let len: number = children.length;

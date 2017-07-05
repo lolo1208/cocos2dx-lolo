@@ -21,6 +21,7 @@ namespace app.testScene {
     import AppUIManager = app.core.AppUIManager;
     import RpgScene = app.rpgScene.RpgScene;
     import Label = lolo.Label;
+    import Mask = lolo.Mask;
 
 
     /**
@@ -81,10 +82,10 @@ namespace app.testScene {
 
 
         private testBtn_touchTapHandler(event: TouchEvent): void {
-            // (<AppUIManager>lolo.ui).loadRpgMap(RpgScene.TEST_MAP_ID, lolo.handler(() => {
-            //     this.rpgScene.show();
-            // }, this));
-            // return;
+            (<AppUIManager>lolo.ui).loadRpgMap(RpgScene.TEST_MAP_ID, lolo.handler(() => {
+                this.rpgScene.show();
+            }, this));
+            return;
 
             let t: number = new Date().getTime();
             let n1: number = 999;

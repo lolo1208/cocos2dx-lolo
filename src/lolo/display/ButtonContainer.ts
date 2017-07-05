@@ -169,7 +169,7 @@ namespace lolo {
          * @return {boolean}
          */
         public hitTest(worldPoint: cc.Point): boolean {
-            if (!this.inStageVisibled()) return false;// 当前节点不可见
+            if (!this.inStageVisibled(worldPoint)) return false;// 当前节点不可见
 
             // 当前scale比原始scale小，需用原始的 scale 来测试点击
             let sx: number = this._original_getScaleX(), sy: number;
