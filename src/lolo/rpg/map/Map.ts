@@ -390,7 +390,8 @@ namespace lolo.rpg {
          * @return
          */
         public getScreenAvatars(): Avatar[] {
-            let v: number, h: number, vNum: number, hNum: number, hh: number, lt: Point, ld: Point, rt: Point, rd: Point;
+            let v: number, h: number, vNum: number, hNum: number, hh: number, lt: Point, ld: Point, rt: Point,
+                rd: Point;
             let avts: Avatar[], i: number;
             let rect: Rectangle = this.getScreenArea(30);
             let avatars: Avatar[] = [];
@@ -531,6 +532,14 @@ namespace lolo.rpg {
          */
         public get info(): MapInfo {
             return this._info;
+        }
+
+
+        /**
+         * 背景
+         */
+        public get background(): Background {
+            return this._background;
         }
 
 

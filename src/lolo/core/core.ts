@@ -158,51 +158,6 @@ namespace lolo {
 }
 
 
-namespace lolo {
-
-    /**
-     * 将16进制字符串转换成 cc.Color
-     * @param hex 如："0xFF66CC"
-     * @return {Color}
-     */
-    export function hexToColor(hex: string): cc.Color {
-        let c = parseInt(hex);
-        return cc.color(
-            c >> 16,
-            (c >> 8) % 256,
-            c % 256
-        );
-    }
-
-
-    /**
-     * 将16进制数字转换成 cc.Color
-     * @param c 如：16737996（0xFF66CC）
-     * @return {Color}
-     */
-    export function numToColor(c: number): cc.Color {
-        return cc.color(
-            c >> 16,
-            (c >> 8) % 256,
-            c % 256
-        );
-    }
-
-
-    /**
-     * 将 cc.Color 转换成16进制字符串
-     * @param color
-     * @param prefix 添加的字符串前缀
-     * @return {string}
-     */
-    export function colorToHex(color: cc.Color, prefix: string = "0x") {
-        let hR = color.r.toString(16), hG = color.g.toString(16), hB = color.b.toString(16);
-        return prefix + (color.r < 16 ? ("0" + hR) : hR) + (color.g < 16 ? ("0" + hG) : hG) + (color.b < 16 ? ("0" + hB) : hB);
-    }
-
-}
-
-
 // 临时对象
 namespace lolo {
     export let temp_rect: Rectangle = new Rectangle();

@@ -58,7 +58,7 @@ namespace lolo.rpg {
         private _priority: number = 0;
 
         /**当前执行的动作*/
-        private _actionInfo: {action: string, replay: boolean, endIdle: boolean};
+        private _actionInfo: { action: string, replay: boolean, endIdle: boolean };
 
         /**正在移动的（剩余）路径*/
         private _road: any[] = [];
@@ -70,11 +70,11 @@ namespace lolo.rpg {
         private _realPixel: Point;
 
         /**角色的附属物列表*/
-        private _adjuncts: {type: string, pic: string, ani: Animation}[] = [];
+        private _adjuncts: { type: string, pic: string, ani: Animation }[] = [];
 
-        /**是否为8方向素材，默认值为：Constants.DIRECTION_8*/
-        private _is8Direction: boolean;
-        /**根据 当前方向 和 素材是否为8方向，得出的素材应该使用的方向*/
+        /**图素类型，默认值为：Constants.AVATAR_ASSETS_TYPE*/
+        private _assetsType: number;
+        /**根据 当前方向 和 图素类型，得出的图素应该使用的方向*/
         private _assetDirection: number;
 
         /**移动时，用于记录上次移动（上一帧）的时间*/
@@ -83,7 +83,7 @@ namespace lolo.rpg {
 
         public constructor() {
             super();
-            this._is8Direction = Constants.is8Direction;
+            this._assetsType = Constants.AVATAR_ASSETS_TYPE;
             this._loadingClass = Avatar.defaultAvatarLoadingClass;
             this._moveAction = Constants.A_RUN;
             this._moveAddPixel = CachePool.getPoint();
@@ -396,21 +396,43 @@ namespace lolo.rpg {
             // 5方向时，右侧的动画，直接用左侧的图像，并翻转
             this._assetDirection = this._direction;
             let assetScaleX: number = 1;
-            if (!this._is8Direction) {
-                switch (this._direction) {
-                    case Constants.D_LEFT:
-                        this._assetDirection = Constants.D_RIGHT;
-                        assetScaleX = -1;
-                        break;
-                    case Constants.D_LEFT_UP:
-                        this._assetDirection = Constants.D_RIGHT_UP;
-                        assetScaleX = -1;
-                        break;
-                    case Constants.D_LEFT_DOWN:
-                        this._assetDirection = Constants.D_RIGHT_DOWN;
-                        assetScaleX = -1;
-                        break;
-                }
+            switch (this._assetsType) {
+
+                // 五方向朝右
+                case 2:
+                    switch (this._direction) {
+                        case Constants.D_LEFT:
+                            this._assetDirection = Constants.D_RIGHT;
+                            assetScaleX = -1;
+                            break;
+                        case Constants.D_LEFT_UP:
+                            this._assetDirection = Constants.D_RIGHT_UP;
+                            assetScaleX = -1;
+                            break;
+                        case Constants.D_LEFT_DOWN:
+                            this._assetDirection = Constants.D_RIGHT_DOWN;
+                            assetScaleX = -1;
+                            break;
+                    }
+                    break;
+
+                // 五方向朝左
+                case 3:
+                    switch (this._direction) {
+                        case Constants.D_RIGHT:
+                            this._assetDirection = Constants.D_LEFT;
+                            assetScaleX = -1;
+                            break;
+                        case Constants.D_RIGHT_UP:
+                            this._assetDirection = Constants.D_LEFT_UP;
+                            assetScaleX = -1;
+                            break;
+                        case Constants.D_RIGHT_DOWN:
+                            this._assetDirection = Constants.D_LEFT_DOWN;
+                            assetScaleX = -1;
+                            break;
+                    }
+                    break;
             }
             let scaleXChanged: boolean = this._shapeC.scaleX != assetScaleX;
             this._shapeC.scaleX = assetScaleX;
@@ -704,14 +726,14 @@ namespace lolo.rpg {
 
 
         /**
-         * 是否为8方向素材，默认值为：Constants.IS_8_DIRECTION
+         * 图素类型，默认值为：Constants.AVATAR_ASSETS_TYPE
          */
-        public set is8Direction(value: boolean) {
-            this._is8Direction = value;
+        public set assetsType(value: number) {
+            this._assetsType = value;
         }
 
-        public get is8Direction(): boolean {
-            return this._is8Direction;
+        public get assetsType(): number {
+            return this._assetsType;
         }
 
 

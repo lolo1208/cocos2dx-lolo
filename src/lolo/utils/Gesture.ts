@@ -10,7 +10,7 @@ namespace lolo {
         /**上次发生 TouchEvent 时所在的舞台坐标*/
         public touchPoint: Point = new Point();
         /**上次发生 TouchEvent 时所在的 cocos 世界坐标（可用于 cc.node.convertToNodeSpace()）*/
-        public worldPoint: cc.Point;
+        public worldPoint: cc.Point = cc.p();
 
         private _enabled: boolean;
         private _touchEvent: TouchEvent;
