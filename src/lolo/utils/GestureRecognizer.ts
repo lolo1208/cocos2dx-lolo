@@ -5,17 +5,15 @@ namespace lolo {
      * 手势识别，广播相关事件
      * @author LOLO
      */
-    export class Gesture extends EventDispatcher {
+    export class GestureRecognizer extends EventDispatcher {
 
         /**上次发生 TouchEvent 时所在的舞台坐标*/
         public touchPoint: Point = new Point();
         /**上次发生 TouchEvent 时所在的 cocos 世界坐标（可用于 cc.node.convertToNodeSpace()）*/
         public worldPoint: cc.Point = cc.p();
 
-        private _enabled: boolean;
         private _touchEvent: TouchEvent;
         private _touchListener: cc.TouchListener;
-        // private _multitouchListener: cc.TouchListener;
 
 
         public constructor() {
@@ -29,19 +27,21 @@ namespace lolo {
                 onTouchMoved: this.touchHandler.bind(this),
                 onTouchEnded: this.touchHandler.bind(this)
             });
-            this.enabled = true;
+            cc.eventManager.addListener(this._touchListener, -100);
+
         }
 
 
         /**
-         * TOUCH_ONE_BY_ONE 事件处理
+         * 单点触控事件处理
          * @param touch
          * @param event
          * @return {boolean}
          */
         private touchHandler(touch: cc.Touch, event: cc.EventTouch): boolean {
             let e: TouchEvent = this._touchEvent;
-            switch (event.getEventCode()) {
+            let eventCode: number = event.getEventCode();
+            switch (eventCode) {
                 case 0:
                     e.type = TouchEvent.TOUCH_BEGIN;
                     break;
@@ -66,24 +66,6 @@ namespace lolo {
             return true;
         }
 
-
-        /**
-         * 是否启用
-         * @param value
-         */
-        public set enabled(value: boolean) {
-            this._enabled = value;
-            if (value) {
-                cc.eventManager.addListener(this._touchListener, -100);
-            }
-            else {
-                cc.eventManager.removeListener(this._touchListener);
-            }
-        }
-
-        public get enabled(): boolean {
-            return this._enabled;
-        }
 
         //
     }

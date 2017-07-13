@@ -39,7 +39,7 @@ namespace app.rpgScene {
 
         private touchMap(event: MapEvent): void {
             let role: Avatar = this._role;
-            let tile: Point = closestCanPassTile(role.tile, event.tile, this._map.info);
+            let tile: Point = closestCanPassTile(role.tile, this._map.touchTile, this._map.info);
             role.moveToTile(tile);
         }
 
@@ -58,6 +58,6 @@ namespace app.rpgScene {
             super.reset();
         }
 
-
+        //
     }
 }

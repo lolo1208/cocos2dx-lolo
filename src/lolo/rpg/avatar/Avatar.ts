@@ -72,10 +72,12 @@ namespace lolo.rpg {
         /**角色的附属物列表*/
         private _adjuncts: { type: string, pic: string, ani: Animation }[] = [];
 
-        /**图素类型，默认值为：Constants.AVATAR_ASSETS_TYPE*/
+        /**图素类型，默认值：Constants.AVATAR_ASSETS_TYPE*/
         private _assetsType: number;
         /**根据 当前方向 和 图素类型，得出的图素应该使用的方向*/
         private _assetDirection: number;
+        /**是否需要加载第二个图素包，默认值：Constants.AVATAR_ASSETS_2*/
+        private _assets2: boolean;
 
         /**移动时，用于记录上次移动（上一帧）的时间*/
         private _lastMoveTime: number;
@@ -84,6 +86,7 @@ namespace lolo.rpg {
         public constructor() {
             super();
             this._assetsType = Constants.AVATAR_ASSETS_TYPE;
+            this._assets2 = Constants.AVATAR_ASSETS_2;
             this._loadingClass = Avatar.defaultAvatarLoadingClass;
             this._moveAction = Constants.A_RUN;
             this._moveAddPixel = CachePool.getPoint();
@@ -597,11 +600,12 @@ namespace lolo.rpg {
          * @param name UI的名称
          * @param zIndex UI层叠的位置
          */
-        public addUI(ui: AvatarUI, name: string = "basic", zIndex: number = 0): void {
+        public addUI(ui: AvatarUI, name: string = "base", zIndex: number = 0): void {
             let oldUI: AvatarUI = <AvatarUI>this.getChildByName(name);
             if (oldUI != null && oldUI != ui) oldUI.destroy();// 已存在该名称的UI，先销毁
-            ui.avatar = this;
+
             this.addChild(ui, zIndex, name);
+            ui.avatar = this;
         }
 
 
@@ -610,7 +614,7 @@ namespace lolo.rpg {
          * @param name
          * @return
          */
-        public removeUI(name: string = "basic"): AvatarUI {
+        public removeUI(name: string = "base"): AvatarUI {
             let ui: AvatarUI = <AvatarUI>this.getChildByName(name);
             if (ui != null) ui.destroy();
             return ui;
@@ -622,7 +626,7 @@ namespace lolo.rpg {
          * @param name
          * @return
          */
-        public getUI(name: string = "basic"): AvatarUI {
+        public getUI(name: string = "base"): AvatarUI {
             return <AvatarUI>this.getChildByName(name);
         }
 
@@ -684,6 +688,7 @@ namespace lolo.rpg {
             // 还没加载好所有的动画资源
             if (!lolo.loader.hasLoaded(url1) && !lolo.loader.hasLoaded(url2)) {
                 let priority: number = (this._priority != 0) ? this._priority : Constants.PRIORITY_AVATAR;
+
                 // 加载角色外形，第1部分，基础资源，站立行走等
                 let lii: LoadItemInfo = new LoadItemInfo();
                 lii.isSecretly = true;
@@ -693,12 +698,14 @@ namespace lolo.rpg {
                 lolo.loader.add(lii);
 
                 // 第2部分，战斗相关动画等
-                lii = new LoadItemInfo();
-                lii.isSecretly = true;
-                lii.priority = priority;
-                lii.type = lolo.Constants.RES_TYPE_IMG;
-                lii.url = url2;
-                lolo.loader.add(lii);
+                if (this._assets2) {
+                    lii = new LoadItemInfo();
+                    lii.isSecretly = true;
+                    lii.priority = priority;
+                    lii.type = lolo.Constants.RES_TYPE_IMG;
+                    lii.url = url2;
+                    lolo.loader.add(lii);
+                }
 
                 lolo.loader.start();
             }
@@ -734,6 +741,16 @@ namespace lolo.rpg {
 
         public get assetsType(): number {
             return this._assetsType;
+        }
+
+
+        /**是否需要加载第二个图素包，默认值：Constants.AVATAR_ASSETS_2*/
+        public set assets2(value: boolean) {
+            this._assets2 = value;
+        }
+
+        public get assets2(): boolean {
+            return this._assets2;
         }
 
 

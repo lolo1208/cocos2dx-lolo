@@ -34,9 +34,9 @@ namespace lolo.rpg {
         vChunkCount: number;
 
         /**地图数据，二维数组 data[y][x] */
-        data: {x: number, y: number, cover: boolean, canPass: boolean}[][];
+        data: { x: number, y: number, cover: boolean, canPass: boolean }[][];
         /**遮挡物列表 covers[{id:遮挡物的id, point:遮挡物的像素位置)}]*/
-        covers: {id: string, point: {x: number, y: number}}[];
+        covers: { id: string, point: { x: number, y: number } }[];
     }
 
 
@@ -46,8 +46,8 @@ namespace lolo.rpg {
     /**
      * RPG地图寻路（AStar）
      * 根据传入的地图信息，查找出起点和重点间的最佳路径。
-     * 如果无法到达终点，将返回[]。
-     * 如果起点和终点相同，将返回[]
+     * 如果无法到达终点，返回 null。
+     * 如果起点和终点相同，返回 []。
      * @param mapInfo 地图信息
      * @param startP 开始点
      * @param endP 结束点
@@ -470,14 +470,13 @@ namespace lolo.rpg {
      * @return
      */
     export function getRandomCanPassTile(mapInfo: MapInfo): Point {
-        let p: Point = CachePool.getPoint(
-            Math.floor(mapInfo.data[0].length * Math.random()),
-            Math.floor(mapInfo.data.length * Math.random())
-        );
-        if (mapInfo.data[p.y][p.x].canPass) return p;
-
-        CachePool.recycle(p);
-        return getRandomCanPassTile(mapInfo);
+        let x: number = Math.floor(mapInfo.data[0].length * Math.random());
+        let y: number = Math.floor(mapInfo.data.length * Math.random());
+        while (!mapInfo.data[y][x].canPass) {
+            x = Math.floor(mapInfo.data[0].length * Math.random());
+            y = Math.floor(mapInfo.data.length * Math.random());
+        }
+        return CachePool.getPoint(x, y);
     }
 
 

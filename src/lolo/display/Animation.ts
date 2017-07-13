@@ -39,14 +39,6 @@ namespace lolo {
      */
     export class Animation extends cc.Sprite {
 
-        /**当配置信息中没有sourceName对应的动画时，防止后续报错，将使用该空帧列表*/
-        private static EMPTY_ANIMATION_INFO: AnimationInfo = {
-            sn: "", url: "", fps: 60, frames: [{
-                rect: Constants.EMPTY_TEXTURE_RECT,
-                anchor: Constants.EMPTY_TEXTURE_ANCHOR
-            }]
-        };
-
         /**配置信息列表（通过 sn 获取 AnimationInfo）*/
         private static _config: Dictionary;
         /**LRU缓存（通过 url 获取 cc.Texture2D）*/
@@ -171,7 +163,8 @@ namespace lolo {
          * @return
          */
         public static hasAnimation(sourceName: string): boolean {
-            return this._cache.contains(this._config.getItem(sourceName).url);
+            let info: AnimationInfo = this._config.getItem(sourceName);
+            return this._cache.contains(info.url);
         }
 
 
@@ -264,22 +257,16 @@ namespace lolo {
         private render(): void {
             if (this.destroyed) return;
 
-            let texture: cc.Texture2D = Constants.EMPTY_TEXTURE;
-            let fps: number = 60;
             let info: AnimationInfo = this._info;
-
             if (info != null) {
-                fps = info.fps;
-                texture = Animation._cache.getValue(info.url);
-                if (texture == null) texture = Constants.EMPTY_TEXTURE;// 空帧动画
+                let texture: cc.Texture2D = Animation._cache.getValue(info.url);
+                if (texture == null) texture = Constants.EMPTY_TEXTURE;
+                this.setTexture(texture);
+                this.showFrame(this._currentFrame);
             }
             else {
-                // 空帧动画
-                info = Animation.EMPTY_ANIMATION_INFO;
+                this.setTexture(Constants.EMPTY_TEXTURE);
             }
-
-            this.setTexture(texture);
-            this.showFrame(this._currentFrame);
         }
 
 
@@ -378,7 +365,7 @@ namespace lolo {
          */
         private timerHandler(): void {
             let frame: number;
-            let totalFrames: number = this._info.frames.length;
+            let totalFrames: number = (this._info == null) ? 0 : this._info.frames.length;
 
             if (this.reverse) {
                 frame = (this._currentFrame == 1) ? totalFrames : this._currentFrame - 1;
@@ -472,6 +459,20 @@ namespace lolo {
          */
         public get currentRepeatCount(): number {
             return this._currentRepeatCount;
+        }
+
+
+        /**
+         * 点击测试
+         * @param worldPoint
+         * @return {boolean}
+         */
+        public hitTest(worldPoint: cc.Point): boolean {
+            if (!this.inStageVisibled(worldPoint)) return false;// 当前节点不可见
+
+            let p: cc.Point = this.convertToNodeSpace(worldPoint);
+            lolo.temp_rect.setTo(0, 0, this.width, this.height);
+            return lolo.temp_rect.contains(p.x, p.y);
         }
 
 

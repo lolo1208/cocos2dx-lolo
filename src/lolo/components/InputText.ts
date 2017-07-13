@@ -176,7 +176,7 @@ namespace lolo {
         public set placeholderColor(value: string | cc.Color) {
             if (typeof value === "string") this._placeholderColor.parseHex(value);
             else this._placeholderColor._val = value._val;
-            this.setPlaceholderFontColor(this._color);
+            this.setPlaceholderFontColor(this._placeholderColor);
         }
 
         public get placeholderColor(): string | cc.Color {

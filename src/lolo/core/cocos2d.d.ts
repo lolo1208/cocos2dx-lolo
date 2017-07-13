@@ -164,18 +164,6 @@ declare namespace cc {
         /**touch事件侦听器*/
         touchListener: TouchListener;
 
-        setPosition(newPosOrxValue: number | Point, yValue?: number): void;//
-        setPositionX(value: number): void;//
-        getPositionX(): number;//
-        setPositionY(value: number): void;//
-        getPositionY(): number;//
-
-        setScale(scale: number, scaleY?: number): void;//
-        setScaleX(newScaleX: number): void;//
-        getScaleX(): number;//
-        setScaleY(newScaleY: number): void;//
-        getScaleY(): number;//
-
         setWidth(value: number): void;//
         getWidth(): number;//
         setHeight(value: number): void;//
@@ -449,6 +437,7 @@ declare namespace cc {
 
     class EventListener extends Class {
         static TOUCH_ONE_BY_ONE: number;
+        static TOUCH_ALL_AT_ONCE: number;
 
         static create(argObj: any): EventListener;
 

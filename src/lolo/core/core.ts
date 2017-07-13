@@ -15,7 +15,7 @@ namespace lolo {
     /**控制台界面*/
     // export var consoleView:Console;
     /**手势管理*/
-    export let gesture: Gesture;
+    export let gesture: GestureRecognizer;
 
     /**核心框架版本号，修改该值，在动更时会强制重新下载APP。定义在 project.json 中*/
     export let coreVersion: string;
@@ -54,7 +54,7 @@ namespace lolo {
         lolo.language = new LanguageManager();
         lolo.loader = new LoadManager();
         lolo.layout = new LayoutManager();
-        lolo.gesture = new Gesture();
+        lolo.gesture = new GestureRecognizer();
         // consoleView = new Console();
 
         if (!isNative && !isDebug) window["onerror"] = Logger.uncaughtErrorHandler;// native 无效

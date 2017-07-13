@@ -22,6 +22,7 @@ namespace app.testScene {
     import RpgScene = app.rpgScene.RpgScene;
     import Label = lolo.Label;
     import Mask = lolo.Mask;
+    import TouchEvent = lolo.TouchEvent;
 
 
     /**

@@ -75,6 +75,8 @@ namespace lolo {
         private _lastPosition: number;
         /**是否已经开始滚动了*/
         private _scrolling: boolean = false;
+        /**当前触发滚动的 touchID*/
+        private _touchID: number = null;
 
         /**最小滚动值*/
         private _min: number;
@@ -167,6 +169,9 @@ namespace lolo {
          * 开始拖动内容
          */
         private mask_touchBegin(event: TouchEvent): void {
+            if (this._touchID != null) return;
+            this._touchID = event.touch.getID();
+
             this._content.stopAllActions();
             let scrolls: TouchScrollBar[] = this._content[TouchScrollBar.SCROLLS];
             for (let i = 0; i < scrolls.length; i++)
@@ -187,6 +192,8 @@ namespace lolo {
          * 拖动更新
          */
         private mask_touchMove(event: TouchEvent): void {
+            if (event.touch.getID() != this._touchID) return;
+
             // 还没开始滚动，检查位置是否已达到开始滚动的阈值
             let curPosition: number = (this._direction == Constants.HORIZONTAL)
                 ? lolo.gesture.touchPoint.x
@@ -236,6 +243,9 @@ namespace lolo {
          * 拖动结束
          */
         private mask_touchEnd(event: TouchEvent): void {
+            if (event.touch.getID() != this._touchID) return;
+            this._touchID = null;
+
             this._mask.event_removeListener(TouchEvent.TOUCH_MOVE, this.mask_touchMove, this);
             this._mask.event_removeListener(TouchEvent.TOUCH_END, this.mask_touchEnd, this);
             if (!this._scrolling) {
@@ -548,12 +558,12 @@ namespace lolo {
         }
 
 
-        public set viewableArea(value: {x: number, y: number, width: number, height: number}) {
+        public set viewableArea(value: { x: number, y: number, width: number, height: number }) {
             this._viewableArea.setTo(value.x, value.y, value.width, value.height);
             this.initialize();
         }
 
-        public get viewableArea(): {x: number, y: number, width: number, height: number} {
+        public get viewableArea(): { x: number, y: number, width: number, height: number } {
             return this._viewableArea;
         }
 

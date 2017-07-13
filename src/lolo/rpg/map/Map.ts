@@ -229,10 +229,10 @@ namespace lolo.rpg {
             this._sortTimer.stop();
 
             let avatars: Avatar[] = this.getScreenAvatars();
-            avatars = avatars.sort(this.sortAvatar);
+            avatars = avatars.sort(this.sortAvatar.bind(this));
 
             let len: number = avatars.length;
-            for (let i = 0; i < len; i++) avatars[i].setLocalZOrder(i);
+            for (let i = 0; i < len; i++) avatars[i].setLocalZOrder(i + 1);
         }
 
         /**
@@ -338,9 +338,9 @@ namespace lolo.rpg {
          * 滚动地图
          * @param position 目标像素位置（屏幕中心）
          * @param now 是否立即滚动到该位置
-         * @param duration 缓动持续时间
+         * @param duration 缓动持续时间（秒）
          */
-        public scroll(position: Point, now: boolean = false, duration: number = 500): void {
+        public scroll(position: Point, now: boolean = false, duration: number = 0.5): void {
             let info: any = this._scrollInfo;
             let x: number = -(position.x - info.hsw);
             let y: number = -(position.y - info.hsh);
@@ -366,7 +366,7 @@ namespace lolo.rpg {
                 this.runAction(cc.moveTo(duration, x, y));
             }
 
-            this.dispatchMapEvent(MapEvent.SCREEN_CENTER_CHANGED);
+            this.event_dispatch(Event.create(MapEvent, MapEvent.SCREEN_CENTER_CHANGED));
         }
 
 
@@ -488,34 +488,27 @@ namespace lolo.rpg {
          */
         private background_touchBegin(event: TouchEvent): void {
             if (this._avatarTouchEnabled) {
-                // let sx: number = lolo.gesture.touchPoint.x;
-                // let sy: number = lolo.gesture.touchPoint.y;
-                let pLocal: cc.Point = this._background.convertToNodeSpace(lolo.gesture.touchPoint);
-                let lx: number = pLocal.x;
-                let ly: number = pLocal.y;
-                let rect: Rectangle = lolo.temp_rect;
-
-                let c: DisplayObjectContainer = this._avatarC;
+                let worldPoint: cc.Point = event.touch.getLocation();
                 let avatar: Avatar;
+                let rect: Rectangle = lolo.temp_rect;
                 // 从上往下循环搜索
-                let children: cc.Node[] = c.children;
+                let children: cc.Node[] = this._avatarC.children;
                 for (let i = children.length - 1; i >= 0; i--) {
                     avatar = <Avatar>children[i];
-                    rect.setTo(avatar.x, avatar.y, avatar.width, avatar.height);
-                    // 在该Avatar的范围内
-                    if (rect.contains(lx, ly)) {
-                        // 并且点到了像素上
-                        // TODO 像素检测还未实现
-                        // if (avatar.hitTestPoint(sx, sy, true)) {
+                    if (!avatar.isVisible() || avatar.getOpacity() <= 0) continue;
+                    // 用 avatarAni 做检测
+                    let avatarAni: Animation = avatar.avatarAni;
+                    let p: cc.Point = avatarAni.convertToNodeSpace(worldPoint);
+                    rect.setTo(0, 0, avatarAni.getWidth(), avatarAni.getHeight());
+                    if (rect.contains(p.x, p.y)) {
                         avatar.event_dispatch(Event.create(AvatarEvent, AvatarEvent.TOUCH), true);
                         return;
-                        // }
                     }
                 }
             }
 
             if (this._autoPlayTouchAnimation) this._background.playTouchAnimation();
-            this.dispatchMapEvent(MapEvent.TOUCH);
+            this.event_dispatch(Event.create(MapEvent, MapEvent.TOUCH));
         }
 
 
@@ -552,16 +545,6 @@ namespace lolo.rpg {
             let p3: Point = getTile(p2, this._info);
             CachePool.recycle(p2);
             return p3;
-        }
-
-
-        /**
-         * 抛出地图相关事件
-         */
-        public dispatchMapEvent(type: string): void {
-            let event: MapEvent = Event.create(MapEvent, type);
-            event.tile = this.touchTile;
-            this.event_dispatch(event);
         }
 
 

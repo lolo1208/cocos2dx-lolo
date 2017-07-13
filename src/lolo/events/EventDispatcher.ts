@@ -6,8 +6,8 @@ namespace lolo {
      * @author LOLO
      */
     export interface IEventDispatcher {
-        event_addListener(type: string, listener: Function, caller: any, priority: number = 0, ...args: any[]): void;
-        event_removeListener(type: string, listener: Function, caller: any): void;
+        event_addListener(type: string, listener: (event: lolo.Event, ...args: any[]) => void, caller: any, priority: number = 0, ...args: any[]): void;
+        event_removeListener(type: string, listener: (event: lolo.Event, ...args: any[]) => void, caller: any): void;
         event_dispatch(event: Event, bubbles: boolean = false, recycle: boolean = true): void;
         event_hasListener(type: string): boolean;
     }
@@ -31,10 +31,10 @@ namespace lolo {
      */
     export class EventDispatcher implements IEventDispatcher {
 
-        private _eventMap: any;
+        protected _eventMap: any;
 
         /**事件派发器对应的目标（组合模式下）*/
-        private _target: IEventDispatcher;
+        protected _target: IEventDispatcher;
 
 
         public constructor(target?: IEventDispatcher) {
@@ -43,7 +43,7 @@ namespace lolo {
         }
 
 
-        public event_addListener(type: string, listener: Function, caller: any, priority: number = 0, ...args: any[]): void {
+        public event_addListener(type: string, listener: (event: lolo.Event, ...args: any[]) => void, caller: any, priority: number = 0, ...args: any[]): void {
             if (this._eventMap[type] == null) this._eventMap[type] = [];
             let list: EventListenerInfo[] = this._eventMap[type];
 
@@ -68,7 +68,7 @@ namespace lolo {
         }
 
 
-        public event_removeListener(type: string, listener: Function, caller: any): void {
+        public event_removeListener(type: string, listener: (event: lolo.Event, ...args: any[]) => void, caller: any): void {
             let list: EventListenerInfo[] = this._eventMap[type];
             if (list == null || list.length == 0) return;
 

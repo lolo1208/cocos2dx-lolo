@@ -13,10 +13,6 @@ namespace lolo.rpg {
         public static SCREEN_CENTER_CHANGED: string = "map_screenCenterChanged";
 
 
-        /**事件发生的区块点*/
-        public tile: Point;
-
-
         public constructor(type: string, data?: any) {
             super(type, data);
         }
