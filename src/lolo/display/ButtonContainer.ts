@@ -33,16 +33,15 @@ namespace lolo {
          */
         public touchZoomScale: number;
 
-
-        /**设置的缩放比例*/
-        private _scale: Point;
         /**效果应用的目标*/
         private _target: cc.Node;
+        private _target_setPositionX: Function;
+        private _target_setPositionY: Function;
+        private _target_hitTest: Function;
 
 
         public constructor(target: cc.Node) {
             super();
-            this._scale = CachePool.getPoint(1, 1);
             this.touchZoomScale = ButtonContainer.touchZoomScale;
             this.touchSoundName = ButtonContainer.touchSoundName;
             this.target = target;
@@ -55,26 +54,29 @@ namespace lolo {
 
         public onExit(): void {
             super.onExit();
-            this.setScale(this._scale.x, this._scale.y);
+            this.setScale(1);
         }
 
 
         /**
-         * 更新 position 和 scale
+         * 更新 position 和 scale。
+         * 在 target 的 width / height / x / y / scaleX / scaleY 有变化时，请调用该方法
          */
         public update(): void {
+            this.childResizeHandler();
+        }
+
+        protected childResizeHandler(event?: Event): void {
+            this.childResized = true;
+
             let target: cc.Node = this._target;
             let hw: number = target.width / 2;
             let hh: number = target.height / 2;
-            target.setPosition(-hw, -hh);
+            target._original_setPosition(-hw, hh);
 
-            let x = this._x, y = this._y;
-            super.setPositionX(x + hw);
-            super.setPositionY(y + hh);
-            this._x = x;
-            this._y = y;
+            console.log(target.anchorX, target.anchorY);
 
-            this._scale.setTo(target._scaleX, target._scaleY);
+            this._original_setPosition(this._x + hw, -(this._y + hh));
         }
 
 
@@ -91,7 +93,14 @@ namespace lolo {
 
             this._x = target.x;
             this._y = target.y;
-            this.update();
+            this.childResizeHandler();
+
+            this._target_setPositionX = target.setPositionX;
+            this._target_setPositionY = target.setPositionY;
+            this._target_hitTest = target.hitTest;
+            target.setPositionX = this.target_setPositionX;
+            target.setPositionY = this.target_setPositionY;
+            target.hitTest = this.target_hitTest;
         }
 
         public get target(): cc.Node {
@@ -105,9 +114,28 @@ namespace lolo {
                 this.parent.addChild(target);
                 this.removeFromParent();
 
-                target.setScale(this._scale.x, this._scale.y);
+                target.setPositionX = this._target_setPositionX;
+                target.setPositionY = this._target_setPositionY;
+                target.hitTest = this._target_hitTest;
                 target.setPosition(this._x, this._y);
+                this._target_setPositionX = this._target_setPositionY = this._target_hitTest = null;
             }
+        }
+
+        private target_setPositionX(value: number): void {
+            let bc: ButtonContainer = <ButtonContainer>this.parent;
+            bc._x = value;
+            bc.update();
+        }
+
+        private target_setPositionY(value: number): void {
+            let bc: ButtonContainer = <ButtonContainer>this.parent;
+            bc._y = value;
+            bc.update();
+        }
+
+        private target_hitTest(worldPoint: cc.Point): boolean {
+            return (<ButtonContainer>this.parent).hitTest(worldPoint);
         }
 
 
@@ -121,7 +149,7 @@ namespace lolo {
             let scale: number = this.touchZoomScale;
             if (scale != 1) {
                 this.stopAllActions();
-                this.runAction(cc.scaleTo(0.05, scale * this._scale.x, scale * this._scale.y));
+                this.runAction(cc.scaleTo(0.05, scale));
             }
 
             // var snd:string = (this.touchSoundName != null) ? this.touchSoundName : BaseButton.touchSoundName;
@@ -138,28 +166,8 @@ namespace lolo {
             let scale: number = this.touchZoomScale;
             if (scale != 1) {
                 this.stopAllActions();
-                this.runAction(cc.scaleTo(0.05, this._scale.x, this._scale.y));
+                this.runAction(cc.scaleTo(0.05, 1));
             }
-        }
-
-        //
-
-        public setPositionX(value: number): void {
-            this._x = value;
-            this.update();
-        }
-
-        public setPositionY(value: number): void {
-            this._y = value;
-            this.update();
-        }
-
-
-        /**
-         * 通过 scale 属性来设置 scaleX / scaleY
-         */
-        public get scale(): Point {
-            return this._scale;
         }
 
 
@@ -171,39 +179,13 @@ namespace lolo {
         public hitTest(worldPoint: cc.Point): boolean {
             if (!this.inStageVisibled(worldPoint)) return false;// 当前节点不可见
 
-            // 当前scale比原始scale小，需用原始的 scale 来测试点击
-            let sx: number = this._original_getScaleX(), sy: number;
-            let zooming: boolean = sx < this._scale.x;
-            if (zooming) {
-                sy = this._original_getScaleY();
-                this.setScale(this._scale.x, this._scale.y);
-            }
-
-            let p: cc.Point = this.convertToNodeSpace(worldPoint);
-            p.y = -p.y;
-            let w: number = this._target.getWidth(), h: number = this._target.getHeight();
-            lolo.temp_rect.setTo(-w / 2, -h / 2, w, h);
-            let hitted: boolean = lolo.temp_rect.contains(p.x, p.y);
-
-            if (zooming) this.setScale(sx, sy);
+            // 当前缩小了，先还原 scale，再测试点击
+            let scale: number = this.getScaleX();
+            let zooming: boolean = scale < 1;
+            if (zooming) this.setScale(1);
+            let hitted: boolean = this._target_hitTest.call(this._target, worldPoint);
+            if (zooming) this.setScale(scale);
             return hitted;
-        }
-
-
-        //
-
-
-        /**
-         * 销毁
-         */
-        public destroy(): void {
-            this.removeTarget();
-            if (this._scale != null) {
-                CachePool.recycle(this._scale);
-                this._scale = null;
-            }
-
-            super.destroy();
         }
 
 

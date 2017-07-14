@@ -40,8 +40,9 @@ namespace lolo {
 
         public constructor() {
             super();
-            this._labelText = new LinkText(false);
-            this._bc.addChild(this._labelText);
+
+            let label = this._labelText = new LinkText(false);
+            this._skin.addChild(label, 1);
         }
 
 
@@ -115,8 +116,12 @@ namespace lolo {
 
             label.align = this._labelHorizontalAlign;
             label.valign = this._labelVerticalAlign;
-            label.x = this._labelPaddingLeft - this._width / 2;
-            label.y = this._labelPaddingTop - this._height / 2;
+            // label.x = this._labelPaddingLeft - this._width / 2;
+            // label.y = this._labelPaddingTop - this._height / 2;
+            label.setPosition(
+                this._labelPaddingLeft,
+                -this._height + this._labelPaddingTop
+            );
 
             super.doRender();
         }

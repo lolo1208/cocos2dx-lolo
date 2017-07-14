@@ -443,7 +443,7 @@ namespace lolo.rpg {
             if (this._pic == null) return;// 还没设置过角色外形
 
             let avatarAni: Animation = this._avatarAni;
-            let sn: string = "avatar." + this._pic + "." + action + this._assetDirection;
+            let sn: string = "avatar." + this._pic + "." + action + "." + this._assetDirection;
             // 动画有改变，或者动画没在播放
             if (avatarAni.sourceName != sn || !avatarAni.playing || scaleXChanged) {
                 avatarAni.sourceName = sn;

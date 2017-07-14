@@ -99,8 +99,7 @@ namespace lolo {
 
             let p: cc.Point = this.convertToNodeSpace(worldPoint);
             if (isNative) {
-                lolo.temp_rect.setTo(0, 0, this.width, this.height);
-                return lolo.temp_rect.contains(p.x, p.y);
+                return lolo.temp_rect.setTo(0, 0, this.getWidth(), this.getHeight()).contains(p.x, p.y);
             }
             else {
                 return this._textureRect.contains(p.x, p.y);

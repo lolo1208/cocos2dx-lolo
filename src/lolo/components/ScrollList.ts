@@ -97,7 +97,7 @@ namespace lolo {
 
             // 只用显示该范围内的item
             let isVertical: boolean = this._scrollBar.direction == Constants.VERTICAL;
-            let viewableArea: {x: number, y: number, width: number, height: number} = this._scrollBar.viewableArea;
+            let viewableArea: { x: number, y: number, width: number, height: number } = this._scrollBar.viewableArea;
             let p: number, minP: number, maxP: number, minI: number, maxI: number;
             if (isVertical) {
                 p = (this.y > viewableArea.y) ? viewableArea.y : this.y;
@@ -246,10 +246,6 @@ namespace lolo {
             super.setPositionY(value);
             super.render();
         }
-
-        // protected _xChanged(): void {
-        //     if (this._scrollBar != null) super.render();
-        // }
 
 
         public set itemWidth(value: number) {

@@ -258,13 +258,14 @@ namespace lolo {
                         this._scale9Bitmap = null;
                     }
                 }
-
             }
             else {
                 this.setScale(1, 1);
                 this.setTexture(Constants.EMPTY_TEXTURE);
                 this.setTextureRect(Constants.EMPTY_TEXTURE_RECT);
             }
+
+            this.event_dispatch(new Event(Event.CHILD_RESIZE), true);
         }
 
 
@@ -335,15 +336,15 @@ namespace lolo {
          */
         public hitTest(worldPoint: cc.Point): boolean {
             if (!this.inStageVisibled(worldPoint)) return false;// 当前节点不可见
-
-            let p: cc.Point = this.convertToNodeSpace(worldPoint);
             if (this._info == null) return false;
 
+            let rect: Rectangle = lolo.temp_rect;
             if (this._info.scale9Grid != null)
-                lolo.temp_rect.setTo(0, 0, this._width, this._height);
+                rect.setTo(0, 0, this.getWidth(), this.getHeight());
             else
-                lolo.temp_rect.setTo(0, 0, this._info.rect.width, this._info.rect.height);
+                rect.setTo(0, 0, this._info.rect.width, this._info.rect.height);
 
+            let p: cc.Point = this.convertToNodeSpace(worldPoint);
             return lolo.temp_rect.contains(p.x, p.y);
         }
 

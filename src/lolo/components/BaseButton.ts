@@ -237,16 +237,6 @@ namespace lolo {
         }
 
 
-        /**
-         * 点击测试
-         * @param worldPoint
-         * @return {boolean}
-         */
-        public hitTest(worldPoint: cc.Point): boolean {
-            return this._bc.hitTest(worldPoint);
-        }
-
-
         //
 
 

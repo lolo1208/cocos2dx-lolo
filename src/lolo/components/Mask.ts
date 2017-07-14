@@ -172,10 +172,7 @@ namespace lolo {
             let stencil: cc.Node = clipper.stencil;
             if (stencil == null) return false;// 没有遮罩模版
 
-            // let size: cc.Size = stencil.getContentSize();
-            // lolo.temp_rect.setTo(stencil.x, stencil.y, size.width, size.height);
             let p: cc.Point = clipper.convertToNodeSpace(worldPoint);
-            // return lolo.temp_rect.contains(p.x, -p.y);
             return clipper.mask._rect.contains(p.x, -p.y);
         }
 

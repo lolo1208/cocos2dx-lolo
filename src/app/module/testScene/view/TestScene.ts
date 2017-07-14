@@ -23,6 +23,8 @@ namespace app.testScene {
     import Label = lolo.Label;
     import Mask = lolo.Mask;
     import TouchEvent = lolo.TouchEvent;
+    import ButtonContainer = lolo.ButtonContainer;
+    import CheckBox = lolo.CheckBox;
 
 
     /**
@@ -79,6 +81,39 @@ namespace app.testScene {
             this.backBtn.event_addListener(TouchEvent.TOUCH_TAP, this.backBtn_touchTapHandler, this);
             this.testBtn.event_addListener(TouchEvent.TOUCH_TAP, this.testBtn_touchTapHandler, this);
             this.errorBtn.event_addListener(TouchEvent.TOUCH_TAP, this.errorBtn_touchTapHandler, this);
+
+            // this.c.visible = false;
+
+            let img: Image = new Image();
+            img.directory = "skillIcon";
+            img.fileName = "fengBao";
+            this.addChild(img);
+            img.x = img.y = img.width = img.height = 100;
+            new ButtonContainer(img);
+
+
+            let bmp: Bitmap = new Bitmap("skin.button.1.up");
+            this.addChild(bmp);
+            bmp.x = bmp.y = 200;
+            bmp.width = bmp.height = 100;
+            new ButtonContainer(bmp);
+
+
+            let ani: Animation = new Animation("avatar.female.attack5");
+            this.addChild(ani);
+            ani.x = 200;
+            ani.y = 350;
+            ani.setScale(2);
+            ani.play();
+            new ButtonContainer(ani);
+
+            img.x = 300;
+
+            let cb: CheckBox = new CheckBox();
+            cb.styleName = "checkBox1";
+            cb.label = "asdasdasd";
+            this.addChild(cb);
+            cb.x = cb.y = 100;
         }
 
 

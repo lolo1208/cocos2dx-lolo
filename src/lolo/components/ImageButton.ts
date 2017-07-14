@@ -64,7 +64,6 @@ namespace lolo {
             if (value.imageVerticalAlign != null) this._imageVerticalAlign = value.imageVerticalAlign;
 
             if (value.imagePrefix != null) this.imagePrefix = value.imagePrefix;
-
             this.render();
         }
 

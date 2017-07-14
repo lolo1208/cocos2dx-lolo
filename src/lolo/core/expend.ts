@@ -343,8 +343,10 @@ namespace lolo {
     }
 
     export function expend_getWidth(): number {
-        if (this._width > 0) return this._width;
-        return this._getWidth();
+        let w: number = (this._width > 0) ? this._width : this._getWidth();
+        return w * this._scaleX;
+        // if (this._width > 0) return this._width;
+        // return this._getWidth();
     }
 
     export let expend_width: PropertyDescriptor = {
@@ -365,8 +367,10 @@ namespace lolo {
     }
 
     export function expend_getHeight(): number {
-        if (this._height > 0) return this._height;
-        return this._getHeight();
+        let h: number = (this._height > 0) ? this._height : this._getHeight();
+        return h * this._scaleY;
+        // if (this._height > 0) return this._height;
+        // return this._getHeight();
     }
 
     export let expend_height: PropertyDescriptor = {

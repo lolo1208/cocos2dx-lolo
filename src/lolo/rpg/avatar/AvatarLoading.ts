@@ -36,7 +36,7 @@ namespace lolo.rpg {
 
         protected setProgress(value: number): void {
             this._progress = value;
-            this.progressText.text = Math.floor(value * 100) + "%";
+            if (this.progressText != null) this.progressText.text = Math.floor(value * 100) + "%";
         }
 
         public get progress(): number {

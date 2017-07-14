@@ -7,6 +7,7 @@
 declare namespace cc {
 
     class Class {
+        __instanceId:number;// html5 才有该值
         static extend(props: any): void;
 
         ctor(...args: any[]): void;

@@ -56,6 +56,20 @@ namespace lolo {
         }
 
 
+        /**
+         * 点击测试
+         * @param worldPoint
+         * @return {boolean}
+         */
+        public hitTest(worldPoint: cc.Point): boolean {
+            if (!this.inStageVisibled(worldPoint)) return false;// 当前节点不可见
+
+            let p: cc.Point = this.convertToNodeSpace(worldPoint);
+            lolo.temp_rect.setTo(0, 0, this.getWidth(), this.getHeight());
+            return lolo.temp_rect.contains(p.x, p.y);
+        }
+
+
         //
 
 

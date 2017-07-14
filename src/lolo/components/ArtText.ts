@@ -175,15 +175,6 @@ namespace lolo {
         }
 
 
-        protected _xChanged(): void {
-            this.render();
-        }
-
-        protected _yChanged(): void {
-            this.render();
-        }
-
-
         //
 
 

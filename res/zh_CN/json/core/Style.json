@@ -59,8 +59,8 @@
 
 "checkBox1" : {
 	"skinName"			: "checkBox1",
-	"labelPaddingTop"	: 1,
-	"labelPaddingLeft"	: 30,
+	"labelPaddingLeft"	: 32,
+	"labelPaddingTop"	: -24,
 	"labelStyle"	: {
 		"color"	: "0x666666",
 		"selectedStyle"	: { "color":"0x999999" },
@@ -70,8 +70,8 @@
 	
 "radioButton1" : {
 	"skinName"	: "radioButton1",
-	"labelPaddingTop"	: 1,
-	"labelPaddingLeft"	: 30,
+	"labelPaddingLeft"	: 32,
+	"labelPaddingTop"	: -24,
 	"labelStyle"	: {
 		"color"	: "0x666666",
 		"selectedStyle"	: { "color":"0x999999" },

@@ -220,6 +220,7 @@ namespace lolo {
 
             if (successful) {
                 this.setTexture(Image._cache.getValue(url));
+                this.event_dispatch(new Event(Event.CHILD_RESIZE), true);
             }
             this._loaded = true;
 

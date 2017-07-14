@@ -344,9 +344,19 @@ namespace lolo {
             this.setDimensions(this._width, this._height);
         }
 
+        public getWidth(): number {
+            let value: number = super.getWidth();
+            return lolo.isMobileWeb ? value * 2 : value;
+        }
+
         public setHeight(value: number): void {
             this._height = value;
             this.setDimensions(this._width, this._height);
+        }
+
+        public getHeight(): number {
+            let value: number = super.getHeight();
+            return lolo.isMobileWeb ? value * 2 : value;
         }
 
 
@@ -359,12 +369,11 @@ namespace lolo {
             if (!this.inStageVisibled(worldPoint)) return false;// 当前节点不可见
 
             let p: cc.Point = this.convertToNodeSpace(worldPoint);
-            // 在手机端，不是 native，坐标值需要减一半
-            if (!lolo.isNative && lolo.isMobile) {
+            if (lolo.isMobileWeb) {
                 p.x *= 0.5;
                 p.y *= 0.5;
             }
-            lolo.temp_rect.setTo(0, 0, this.width, this.height);
+            lolo.temp_rect.setTo(0, 0, this.getWidth(), this.getHeight());
             return lolo.temp_rect.contains(p.x, p.y);
         }
 
