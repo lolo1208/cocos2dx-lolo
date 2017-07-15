@@ -91,29 +91,21 @@ namespace app.testScene {
             img.x = img.y = img.width = img.height = 100;
             new ButtonContainer(img);
 
-
-            let bmp: Bitmap = new Bitmap("skin.button.1.up");
+            let bmp: Bitmap = new Bitmap("test.rpgScene.joystick.bg");
             this.addChild(bmp);
-            bmp.x = bmp.y = 200;
+            bmp.x = 400;
+            bmp.y = 200;
             bmp.width = bmp.height = 100;
             new ButtonContainer(bmp);
 
 
-            let ani: Animation = new Animation("avatar.female.attack5");
+            let ani: Animation = new Animation("avatar.female.attack1");
             this.addChild(ani);
             ani.x = 200;
             ani.y = 350;
             ani.setScale(2);
             ani.play();
             new ButtonContainer(ani);
-
-            img.x = 300;
-
-            let cb: CheckBox = new CheckBox();
-            cb.styleName = "checkBox1";
-            cb.label = "asdasdasd";
-            this.addChild(cb);
-            cb.x = cb.y = 100;
         }
 
 

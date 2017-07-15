@@ -373,7 +373,7 @@ namespace lolo {
                 p.x *= 0.5;
                 p.y *= 0.5;
             }
-            lolo.temp_rect.setTo(0, 0, this.getWidth(), this.getHeight());
+            lolo.temp_rect.setTo(0, 0, this._getWidth(), this._getHeight());
             return lolo.temp_rect.contains(p.x, p.y);
         }
 

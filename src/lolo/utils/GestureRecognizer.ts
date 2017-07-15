@@ -113,8 +113,10 @@ namespace lolo {
                 this.label = new Label();
                 this.label.width = 0;
                 lolo.stage.addChild(this.label);
+                this.label.setScale(2);
+                this.label.touchEnabled = true;
             }
-            this.label.text = (str + "|" + this.label.width);
+            this.label.text = (str + "|");
 
             return true;
         }

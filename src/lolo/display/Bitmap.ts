@@ -340,7 +340,7 @@ namespace lolo {
 
             let rect: Rectangle = lolo.temp_rect;
             if (this._info.scale9Grid != null)
-                rect.setTo(0, 0, this.getWidth(), this.getHeight());
+                rect.setTo(0, 0, this._getWidth(), this._getHeight());
             else
                 rect.setTo(0, 0, this._info.rect.width, this._info.rect.height);
 

@@ -74,7 +74,7 @@ namespace lolo {
             let hh: number = target.height / 2;
             target._original_setPosition(-hw, hh);
 
-            console.log(target.anchorX, target.anchorY);
+            console.log(target.sourceName,target.anchorX, target.anchorY, target.width, target.height);
 
             this._original_setPosition(this._x + hw, -(this._y + hh));
         }
