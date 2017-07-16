@@ -13,7 +13,7 @@ namespace lolo {
      */
     export function extend_cc(): void {
 
-        expend_color();
+        expend_other();
 
         expend_node();
         expend_ctor(UIManager);
@@ -235,6 +235,7 @@ namespace lolo {
 
     // hitTest
     export function expend_hitTest(worldPoint: cc.Point): boolean {
+        if (!this.inStageVisibled(worldPoint)) return false;// 当前节点不可见
         let children: cc.Node[] = this.children;
         for (let i = 0; i < children.length; i++) {
             let child: cc.Node = children[i];
@@ -345,8 +346,6 @@ namespace lolo {
     export function expend_getWidth(): number {
         let w: number = (this._width > 0) ? this._width : this._getWidth();
         return w * this._scaleX;
-        // if (this._width > 0) return this._width;
-        // return this._getWidth();
     }
 
     export let expend_width: PropertyDescriptor = {
@@ -369,8 +368,6 @@ namespace lolo {
     export function expend_getHeight(): number {
         let h: number = (this._height > 0) ? this._height : this._getHeight();
         return h * this._scaleY;
-        // if (this._height > 0) return this._height;
-        // return this._getHeight();
     }
 
     export let expend_height: PropertyDescriptor = {
@@ -602,9 +599,11 @@ namespace lolo {
 namespace lolo {
 
     /**
-     * 扩展 cc.Color
+     * 扩展其他
      */
-    export function expend_color(): void {
+    export function expend_other(): void {
+
+        // 扩展 cc.Color
         let p = cc.Color.prototype;
 
         p.parseHex = function (hex: string): cc.Color {
@@ -617,7 +616,6 @@ namespace lolo {
             if (!alpha) hex = hex.substr(0, 6);
             return prefix + hex;
         };
-
 
         if (isNative) {
             Object.defineProperty(p, "_val", {
@@ -643,5 +641,6 @@ namespace lolo {
                 return new cc.Color(r, g, b, (a == null ? 255 : a));
             };
         }
+
     }
 }

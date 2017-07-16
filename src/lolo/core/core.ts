@@ -34,6 +34,8 @@ namespace lolo {
     export let isMobile: boolean;
     /**当前是否在 手机端浏览器 环境中*/
     export let isMobileWeb: boolean;
+    /**当前是否在 PC端浏览器 环境中*/
+    export let isPCWeb: boolean;
 
     /**资源映射列表（在打包时会自动生成）*/
     export let resList: any;

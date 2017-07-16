@@ -9,6 +9,8 @@ namespace lolo {
      * target.parent = buttonContainer;
      * buttonContainer.parent = oldParent;
      *
+     * 会将 target.touchListener.swallowTouches 设置为：false，以便事件的传递，
+     * 当 touch 事件传递到该按钮容器时，再将事件吞噬
      * @author LOLO
      */
     export class ButtonContainer extends DisplayObjectContainer {
@@ -40,14 +42,14 @@ namespace lolo {
         private _target_hitTest: Function;
 
 
-        public constructor(target: cc.Node) {
+        public constructor(target: cc.Node, swallowTouches: boolean = true) {
             super();
             this.touchZoomScale = ButtonContainer.touchZoomScale;
             this.touchSoundName = ButtonContainer.touchSoundName;
             this.target = target;
 
             this.touchEnabled = true;
-            this.touchListener.swallowTouches = false;
+            this.touchListener.swallowTouches = swallowTouches;
             this.event_addListener(TouchEvent.TOUCH_BEGIN, this.bc_touchBegin, this);
         }
 
@@ -70,13 +72,12 @@ namespace lolo {
             this.childResized = true;
 
             let target: cc.Node = this._target;
-            let hw: number = target.width / 2;
-            let hh: number = target.height / 2;
-            target._original_setPosition(-hw, hh);
+            let w = target.getWidth(), h = target.getHeight();
+            let hw = w / 2, hh = h / 2;
+            let ox = target.anchorX * w, oy = (1 - target.anchorY) * h;
+            target._original_setPosition(-hw + ox, hh - oy);
 
-            console.log(target.sourceName,target.anchorX, target.anchorY, target.width, target.height);
-
-            this._original_setPosition(this._x + hw, -(this._y + hh));
+            this._original_setPosition(this._x + hw - ox, -(this._y + hh - oy));
         }
 
 
@@ -87,6 +88,8 @@ namespace lolo {
             this.removeTarget();
             this._target = target;
             if (target == null) return;
+
+            target.touchListener.swallowTouches = false;
 
             target.parent.addChild(this);
             this.addChild(target);
@@ -113,6 +116,8 @@ namespace lolo {
                 this._target = null;
                 this.parent.addChild(target);
                 this.removeFromParent();
+
+                target.touchListener.swallowTouches = true;
 
                 target.setPositionX = this._target_setPositionX;
                 target.setPositionY = this._target_setPositionY;

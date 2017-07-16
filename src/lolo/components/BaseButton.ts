@@ -25,7 +25,7 @@ namespace lolo {
 
             this._skin = new Skin();
             this.addChild(this._skin);
-            this._bc = new ButtonContainer(this._skin);
+            this._bc = new ButtonContainer(this._skin, false);
         }
 
 

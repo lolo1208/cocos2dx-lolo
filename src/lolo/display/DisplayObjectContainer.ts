@@ -158,25 +158,6 @@ namespace lolo {
         }
 
 
-        /**
-         * 点击测试
-         * @param worldPoint
-         * @return {boolean}
-         */
-        public hitTest(worldPoint: cc.Point): boolean {
-            if (!this.inStageVisibled(worldPoint)) return false;// 当前节点不可见
-
-            let children: cc.Node[] = this.children;
-            let len: number = children.length;
-            for (let i = 0; i < len; i++) {
-                let child: cc.Node = children[i];
-                if (child instanceof ModalBackground) continue;// 忽略模态背景
-                if (child.hitTest(worldPoint)) return true;
-            }
-            return false;
-        }
-
-
         //
 
 

@@ -40,7 +40,7 @@ namespace lolo {
 
 
         /**
-         * 宽度
+         * width
          */
         public setWidth(value: number): void {
             this._width = value;
@@ -48,15 +48,11 @@ namespace lolo {
         }
 
         public getWidth(): number {
-            if (this._width > 0) return this._width;
-            let texture: cc.Texture2D = this.getTexture();
-            if (texture) return texture.width;
-            return 0;
+            return (this._width > 0) ? this._width : this._textureRect.width;
         }
 
-
         /**
-         * 高度
+         * height
          */
         public setHeight(value: number): void {
             this._height = value;
@@ -64,10 +60,33 @@ namespace lolo {
         }
 
         public getHeight(): number {
-            if (this._height > 0) return this._height;
-            let texture: cc.Texture2D = this.getTexture();
-            if (texture) return texture.height;
-            return 0;
+            return (this._height > 0) ? this._height : this._textureRect.height;
+        }
+
+
+        /**
+         * scale
+         */
+        public setScale(scale: number, scaleY?: number): void {
+            this._width = this._textureRect.width * scale;
+            this._height = this._textureRect.height * (scaleY == null ? scale : scaleY);
+            this.sizeChanged();
+        }
+
+        /**
+         * scaleX
+         */
+        public setScaleX(newScaleX: number): void {
+            this._width = this._textureRect.width * newScaleX;
+            this.sizeChanged();
+        }
+
+        /**
+         * scaleY
+         */
+        public setScaleY(newScaleY: number): void {
+            this._height = this._textureRect.height * newScaleY;
+            this.sizeChanged();
         }
 
 
@@ -75,16 +94,15 @@ namespace lolo {
          * 尺寸（宽高）有变化
          */
         protected sizeChanged(): void {
-            let texture: cc.Texture2D = this.getTexture();
-            if (texture == null) return;
+            if (this.getTexture() == null) return;
 
-            let w: number = this._width > 0 ? this._width : texture.width;
-            let h: number = this._height > 0 ? this._height : texture.height;
+            let w: number = this._width > 0 ? this._width : this._textureRect.width;
+            let h: number = this._height > 0 ? this._height : this._textureRect.height;
             if (isNative) {
                 this.setContentSize(w, h);
             }
             else {
-                this.setScale(w / this._textureRect.width, h / this._textureRect.height);
+                this._original_setScale(w / this._textureRect.width, h / this._textureRect.height);
             }
         }
 
@@ -99,7 +117,8 @@ namespace lolo {
 
             let p: cc.Point = this.convertToNodeSpace(worldPoint);
             if (isNative) {
-                return lolo.temp_rect.setTo(0, 0, this.getWidth(), this.getHeight()).contains(p.x, p.y);
+                lolo.temp_rect.setTo(0, 0, this.getWidth(), this.getHeight());
+                return lolo.temp_rect.contains(p.x, p.y);
             }
             else {
                 return this._textureRect.contains(p.x, p.y);

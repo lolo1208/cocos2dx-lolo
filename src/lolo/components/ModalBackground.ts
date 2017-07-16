@@ -65,7 +65,7 @@ namespace lolo {
             if (!this.inStageVisibled(worldPoint)) return false;// 当前节点不可见
 
             let p: cc.Point = this.convertToNodeSpace(worldPoint);
-            lolo.temp_rect.setTo(0, 0, this.getWidth(), this.getHeight());
+            lolo.temp_rect.setTo(0, 0, this._getWidth(), this._getHeight());
             return lolo.temp_rect.contains(p.x, p.y);
         }
 

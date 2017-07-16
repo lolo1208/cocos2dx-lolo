@@ -272,7 +272,7 @@ namespace lolo {
             if (!target.inStageVisibled(worldPoint)) return false;// 当前节点不可见
 
             let p: cc.Point = target.convertToNodeSpace(worldPoint);
-            lolo.temp_rect.setTo(0, 0, target.getWidth(), target.getHeight());
+            lolo.temp_rect.setTo(0, 0, target._getWidth(), target._getHeight());
             let hited: boolean = lolo.temp_rect.contains(p.x, p.y);
 
             if (hited && target.propagateTouchEvents) {

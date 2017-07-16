@@ -25,6 +25,9 @@ namespace app.testScene {
     import TouchEvent = lolo.TouchEvent;
     import ButtonContainer = lolo.ButtonContainer;
     import CheckBox = lolo.CheckBox;
+    import InputText = lolo.InputText;
+    import SimpleBitmap = lolo.SimpleBitmap;
+    import GestureEvent = lolo.GestureEvent;
 
 
     /**
@@ -82,30 +85,54 @@ namespace app.testScene {
             this.testBtn.event_addListener(TouchEvent.TOUCH_TAP, this.testBtn_touchTapHandler, this);
             this.errorBtn.event_addListener(TouchEvent.TOUCH_TAP, this.errorBtn_touchTapHandler, this);
 
+
+            lolo.gesture.event_addListener(GestureEvent.PINCH_ZOOM, function (event: GestureEvent): void {
+                console.log(event);
+            }, this);
+
+
             // this.c.visible = false;
 
-            let img: Image = new Image();
-            img.directory = "skillIcon";
-            img.fileName = "fengBao";
-            this.addChild(img);
-            img.x = img.y = img.width = img.height = 100;
-            new ButtonContainer(img);
+            // let bmp: Bitmap = new Bitmap("skin.button.1.up");
+            // this.addChild(bmp);
+            // bmp.x = bmp.y = bmp.width = bmp.height = 300;
+            // new ButtonContainer(bmp);
 
-            let bmp: Bitmap = new Bitmap("test.rpgScene.joystick.bg");
-            this.addChild(bmp);
-            bmp.x = 400;
-            bmp.y = 200;
-            bmp.width = bmp.height = 100;
-            new ButtonContainer(bmp);
+            // let img: Image = new Image();
+            // img.directory = "skillIcon";
+            // img.fileName = "gongJi";
+            // this.addChild(img);
+            // img.x = img.y = 100;
+            // // img.width = img.height = 300;
+            // new ButtonContainer(img);
 
 
-            let ani: Animation = new Animation("avatar.female.attack1");
-            this.addChild(ani);
-            ani.x = 200;
-            ani.y = 350;
-            ani.setScale(2);
-            ani.play();
-            new ButtonContainer(ani);
+            // let ani: Animation = new Animation("avatar.female.run2");
+            // this.addChild(ani);
+            // ani.x = ani.y = 300;
+            // ani.setScale(2);
+            // ani.play();
+            // new ButtonContainer(ani);
+
+
+            // let sb: SimpleBitmap = new SimpleBitmap();
+            // cc.loader.loadImg(lolo.getResUrl("ui/skin/default.ui"), {}, function (err, data) {
+            //     let texture2d;
+            //     if (lolo.isNative) {
+            //         texture2d = data;
+            //     }
+            //     else {
+            //         texture2d = new cc.Texture2D();
+            //         texture2d.initWithElement(data);
+            //         texture2d.handleLoadedTexture();
+            //     }
+            //     sb.texture = texture2d;
+            //     sb.setScale(3);
+            //     it.placeholder = sb.width.toFixed(1) + "," + sb.height.toFixed(1);
+            //     new ButtonContainer(sb);
+            // });
+            // sb.x = sb.y = 300;
+            // this.addChild(sb);
         }
 
 

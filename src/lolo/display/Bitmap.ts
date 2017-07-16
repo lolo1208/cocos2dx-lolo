@@ -299,6 +299,10 @@ namespace lolo {
             }
         }
 
+        public getWidth(): number {
+            return this._width;
+        }
+
 
         /**
          * 图像的高
@@ -318,6 +322,10 @@ namespace lolo {
             else {
                 this.scaleY = value / this._info.rect.height;
             }
+        }
+
+        public getHeight(): number {
+            return this._height;
         }
 
 

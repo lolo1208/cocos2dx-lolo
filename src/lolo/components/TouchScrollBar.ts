@@ -558,12 +558,12 @@ namespace lolo {
         }
 
 
-        public set viewableArea(value: { x: number, y: number, width: number, height: number }) {
+        public set viewableArea(value: {x: number, y: number, width: number, height: number}) {
             this._viewableArea.setTo(value.x, value.y, value.width, value.height);
             this.initialize();
         }
 
-        public get viewableArea(): { x: number, y: number, width: number, height: number } {
+        public get viewableArea(): {x: number, y: number, width: number, height: number} {
             return this._viewableArea;
         }
 

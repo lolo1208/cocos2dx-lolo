@@ -7,7 +7,7 @@
 declare namespace cc {
 
     class Class {
-        __instanceId:number;// html5 才有该值
+        __instanceId: number;// html5 才有该值
         static extend(props: any): void;
 
         ctor(...args: any[]): void;
@@ -431,6 +431,8 @@ declare namespace cc {
     class EventManager extends Class {
         addListener(listener: EventListener, nodeOrPriority: Node | number): void;
 
+        addCustomListener(eventName: string, callback: Function): EventListener;
+
         removeListener(listener: EventListener): void;
 
         setPriority(listener: EventListener, fixedPriority: number): void;
@@ -472,8 +474,9 @@ declare namespace cc {
 
 declare namespace cc {
 
-    interface Game {
-        config: any;
+    class Game {
+        EVENT_HIDE: string;
+        EVENT_SHOW: string;
         CONFIG_KEY: {
             engineDir: string,
             dependencies: string,
@@ -486,7 +489,10 @@ declare namespace cc {
             classReleaseMode: string
         };
 
+        config: any;
+
         setFrameRate(frameRate: number): void;
+
         run(id?: string): void;
     }
 
