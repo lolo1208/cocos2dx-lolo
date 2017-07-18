@@ -9,13 +9,25 @@ namespace lolo {
 
         /**
          * 事件：进入新的一帧。
-         * 需要注意：该事件只会在 UIManager（lolo.ui） 上抛出！
+         * 需要注意：该事件只会在 UIManager（lolo.ui / lolo.stage） 上抛出！
          */
         public static ENTER_FRAME: string = "enterFrame";
 
         /**
+         * 事件：APP 获得焦点（切换回前台）。
+         * 需要注意：该事件只会在 UIManager（lolo.ui / lolo.stage） 上抛出！
+         */
+        public static ACTIVATE: string = "activate";
+
+        /**
+         * 事件：APP 失去焦点（切换到后台）。
+         * 需要注意：该事件只会在 UIManager（lolo.ui / lolo.stage） 上抛出！
+         */
+        public static DEACTIVATE: string = "deactivate";
+
+        /**
          * 事件：舞台尺寸有改变。
-         * 需要注意：该事件只会在 UIManager 上抛出！
+         * 需要注意：该事件只会在 UIManager（lolo.ui / lolo.stage） 上抛出！
          */
         public static RESIZE: string = "stageResize";
 
@@ -60,7 +72,7 @@ namespace lolo {
          * @param data 附带数据
          * @return {T}
          */
-        public static create<T extends Event>(EventClass: {new (type: string): T; _eventPool?: Event[]},
+        public static create<T extends Event>(EventClass: { new (type: string): T; _eventPool?: Event[] },
                                               type: string,
                                               data?: any): T {
             let eventPool: Event[] = EventClass._eventPool;

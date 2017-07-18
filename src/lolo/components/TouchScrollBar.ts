@@ -100,10 +100,11 @@ namespace lolo {
 
         public onExit(): void {
             super.onExit();
+            this.mask_touchEnd();
             // 在滚动过程中将滚动条或所在父节点移除舞台时，会stopAllAction，导致滚动条不消失
             if (this.scrollPolicy != Constants.POLICY_ON) {
                 this.setOpacity(0);
-                this.visible = false;
+                this.setVisible(false);
             }
         }
 
@@ -185,6 +186,7 @@ namespace lolo {
 
             this._mask.event_addListener(TouchEvent.TOUCH_MOVE, this.mask_touchMove, this);
             this._mask.event_addListener(TouchEvent.TOUCH_END, this.mask_touchEnd, this);
+            lolo.stage.event_addListener(Event.DEACTIVATE, this.mask_touchEnd, this);
         }
 
 
@@ -242,12 +244,14 @@ namespace lolo {
         /**
          * 拖动结束
          */
-        private mask_touchEnd(event: TouchEvent): void {
-            if (event.touch.getID() != this._touchID) return;
+        private mask_touchEnd(event?: TouchEvent): void {
+            if (event instanceof TouchEvent && event.touch.getID() != this._touchID) return;
             this._touchID = null;
 
             this._mask.event_removeListener(TouchEvent.TOUCH_MOVE, this.mask_touchMove, this);
             this._mask.event_removeListener(TouchEvent.TOUCH_END, this.mask_touchEnd, this);
+            lolo.stage.event_removeListener(Event.DEACTIVATE, this.mask_touchEnd, this);
+
             if (!this._scrolling) {
                 this.tweenContentEnd();
                 return;
@@ -558,12 +562,12 @@ namespace lolo {
         }
 
 
-        public set viewableArea(value: {x: number, y: number, width: number, height: number}) {
+        public set viewableArea(value: { x: number, y: number, width: number, height: number }) {
             this._viewableArea.setTo(value.x, value.y, value.width, value.height);
             this.initialize();
         }
 
-        public get viewableArea(): {x: number, y: number, width: number, height: number} {
+        public get viewableArea(): { x: number, y: number, width: number, height: number } {
             return this._viewableArea;
         }
 
@@ -642,6 +646,7 @@ namespace lolo {
         public destroy(): void {
             lolo.stage.event_removeListener(Event.ENTER_FRAME, this.doRender, this);
             lolo.stage.event_removeListener(Event.ENTER_FRAME, this.tweenContentUpdate, this);
+            lolo.stage.event_removeListener(Event.DEACTIVATE, this.mask_touchEnd, this);
             this.content = null;
 
             super.destroy();

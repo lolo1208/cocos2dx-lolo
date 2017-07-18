@@ -46,12 +46,7 @@ namespace lolo {
             });
             cc.eventManager.addListener(this._touchListener, -100);
 
-            cc.eventManager.addCustomListener(cc.game.EVENT_HIDE, this.deactivateHandler.bind(this));
-        }
-
-        private deactivateHandler(): void {
-            this._touchInfoList = {};
-            this._pinch_touchIDs = {};
+            lolo.stage.event_addListener(Event.DEACTIVATE, this.deactivateHandler, this);
         }
 
 
@@ -70,7 +65,7 @@ namespace lolo {
             let eventCode: number = event.getEventCode();
             let touchID: number = isPCWeb ? touch.__instanceId : touch.getID();
             let infoList = this._touchInfoList;
-            let info: TouchInfo;
+            let info: TouchInfo = infoList[touchID];
 
             switch (eventCode) {
                 case 0:
@@ -88,24 +83,25 @@ namespace lolo {
                     info.beginWorldPoint.y = this.worldPoint.y;
                     info.lastPoint.x = info.currentPoint.x = this.touchPoint.x;
                     info.lastPoint.y = info.currentPoint.y = this.touchPoint.y;
-
-                    this.stage_enterFrame();
                     break;
 
                 case 1:
                     e.type = TouchEvent.TOUCH_MOVE;
 
-                    info = infoList[touchID];
-                    info.currentPoint.x = this.touchPoint.x;
-                    info.currentPoint.y = this.touchPoint.y;
+                    if (info != null) {
+                        info.currentPoint.x = this.touchPoint.x;
+                        info.currentPoint.y = this.touchPoint.y;
+                    }
                     break;
 
                 case 2:
                     e.type = TouchEvent.TOUCH_END;
 
-                    GestureRecognizer._infoPool.push(infoList[touchID]);
-                    delete infoList[touchID];
-                    if (this._pinch_touchIDs[touchID] != null) delete this._pinch_touchIDs[touchID];
+                    if (info != null) {
+                        GestureRecognizer._infoPool.push(info);
+                        delete infoList[touchID];
+                        delete this._pinch_touchIDs[touchID];
+                    }
                     break;
             }
 
@@ -113,7 +109,7 @@ namespace lolo {
             e.event = event;
             this.event_dispatch(e, false, false);
 
-            lolo.stage.event_addListener(Event.ENTER_FRAME, this.stage_enterFrame, this);
+            // lolo.stage.event_addListener(Event.ENTER_FRAME, this.stage_enterFrame, this);
 
             return true;
         }
@@ -205,5 +201,12 @@ namespace lolo {
 
         private label: Label;
 
+
+        private deactivateHandler(event: Event): void {
+            this._touchInfoList = {};
+            this._pinch_touchIDs = {};
+        }
+
+        //
     }
 }

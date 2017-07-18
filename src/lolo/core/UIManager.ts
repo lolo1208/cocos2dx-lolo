@@ -128,6 +128,8 @@ namespace lolo {
 
             this.stage_resizeHandler();
             this.scheduleUpdate();
+            cc.eventManager.addCustomListener(cc.game.EVENT_SHOW, this.activateHandler.bind(this));
+            cc.eventManager.addCustomListener(cc.game.EVENT_HIDE, this.deactivateHandler.bind(this));
         }
 
 
@@ -599,6 +601,15 @@ namespace lolo {
             TimeUtil.nowTime = date.getTime();
 
             this.event_dispatch(Event.create(Event, Event.ENTER_FRAME));
+        }
+
+
+        private activateHandler(): void {
+            this.event_dispatch(Event.create(Event, Event.ACTIVATE));
+        }
+
+        private deactivateHandler(): void {
+            this.event_dispatch(Event.create(Event, Event.DEACTIVATE));
         }
 
         //

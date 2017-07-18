@@ -60,6 +60,10 @@ declare namespace cc {
 
         getScaleY(): number;
 
+        setRotation(newRotaion: number): void;
+
+        getRotation(): number;
+
         setOpacity(opacity: number): void;
 
         getOpacity(): number;

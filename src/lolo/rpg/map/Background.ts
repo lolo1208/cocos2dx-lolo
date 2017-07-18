@@ -76,6 +76,7 @@ namespace lolo.rpg {
             for (; y < maxY; y++) {
                 for (let x = startX; x < maxX; x++) {
                     //最多2个图块同时加载
+                    if (this._loaderList == null) return;
                     if (this._loaderList.length >= 2) return;
                     let chunk: Chunk = <Chunk>this._chunkC.getChildByName(x + "_" + y);
                     if (chunk == null) {
@@ -116,7 +117,7 @@ namespace lolo.rpg {
                 this.loadChunk(true);
             }
             //全部加载完毕了
-            else if (this._loaderList.length == 0) {
+            else if (this._loaderList != null && this._loaderList.length == 0) {
                 this._thumbnail.destroy();
                 this._thumbnail = null;
                 this._loaderList = null;

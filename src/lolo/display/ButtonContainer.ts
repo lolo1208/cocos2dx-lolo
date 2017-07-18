@@ -42,7 +42,7 @@ namespace lolo {
         private _target_hitTest: Function;
 
 
-        public constructor(target: cc.Node, swallowTouches: boolean = true) {
+        public constructor(target?: cc.Node, swallowTouches: boolean = true) {
             super();
             this.touchZoomScale = ButtonContainer.touchZoomScale;
             this.touchSoundName = ButtonContainer.touchSoundName;
@@ -129,13 +129,13 @@ namespace lolo {
 
         private target_setPositionX(value: number): void {
             let bc: ButtonContainer = <ButtonContainer>this.parent;
-            bc._x = value;
+            bc._x = this._x = value;
             bc.update();
         }
 
         private target_setPositionY(value: number): void {
             let bc: ButtonContainer = <ButtonContainer>this.parent;
-            bc._y = value;
+            bc._y = this._y = value;
             bc.update();
         }
 
@@ -150,6 +150,7 @@ namespace lolo {
          */
         private bc_touchBegin(event: TouchEvent): void {
             this.event_addListener(TouchEvent.TOUCH_END, this.bc_touchEnd, this);
+            lolo.stage.event_addListener(Event.DEACTIVATE, this.bc_touchEnd, this);
 
             let scale: number = this.touchZoomScale;
             if (scale != 1) {
@@ -167,6 +168,7 @@ namespace lolo {
          */
         private bc_touchEnd(event: TouchEvent): void {
             this.event_removeListener(TouchEvent.TOUCH_END, this.bc_touchEnd, this);
+            lolo.stage.event_removeListener(Event.DEACTIVATE, this.bc_touchEnd, this);
 
             let scale: number = this.touchZoomScale;
             if (scale != 1) {
@@ -191,6 +193,16 @@ namespace lolo {
             let hitted: boolean = this._target_hitTest.call(this._target, worldPoint);
             if (zooming) this.setScale(scale);
             return hitted;
+        }
+
+
+        //
+
+
+        public destroy(): void {
+            lolo.stage.event_removeListener(Event.DEACTIVATE, this.bc_touchEnd, this);
+
+            super.destroy();
         }
 
 

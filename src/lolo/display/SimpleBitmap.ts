@@ -40,6 +40,21 @@ namespace lolo {
 
 
         /**
+         * 获取纹理宽度
+         */
+        public get textureWidth(): number {
+            return this._textureRect.width;
+        }
+
+        /**
+         * 获取纹理高度
+         */
+        public get textureHeight(): number {
+            return this._textureRect.height;
+        }
+
+
+        /**
          * width
          */
         public setWidth(value: number): void {

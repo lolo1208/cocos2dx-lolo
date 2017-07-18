@@ -6,13 +6,15 @@ namespace lolo {
      * @author LOLO
      */
     export class CachePool {
+
         /**Animation 缓存池*/
         private static _aniPool: Animation[] = [];
         /**Bitmap 缓存池*/
         private static _bmpPool: Bitmap[] = [];
         /**ArtText 缓存池*/
         private static _atPool: ArtText[] = [];
-
+        /**Label 缓存池*/
+        private static _labelPool: Label[] = [];
 
         /**Point 缓存池*/
         private static _pointPool: Point[] = [];
@@ -20,7 +22,6 @@ namespace lolo {
         private static _rectPool: Rectangle[] = [];
         /**Dictionary 缓存池*/
         private static _dicPool: Dictionary[] = [];
-
 
         /**同一个像素点上不能重叠的动画列表，[ ani.sourceName + _ + x + _ + y ] 为key*/
         private static _aniList: Object = {};
@@ -42,8 +43,7 @@ namespace lolo {
                 bs = CachePool._bmpPool.pop();
                 if (sn != "") bs.sourceName = sn;
             }
-            bs.x = x;
-            bs.y = y;
+            bs.setPosition(x, y);
 
             return bs;
         }
@@ -81,8 +81,7 @@ namespace lolo {
                 if (sn != "") ani.sourceName = sn;
                 if (fps != 0) ani.fps = fps;
             }
-            ani.x = x;
-            ani.y = y;
+            ani.setPosition(x, y);
 
             if (excludeKey != null) {
                 ani.name = excludeKey;
@@ -106,12 +105,40 @@ namespace lolo {
             let at: ArtText = CachePool._atPool.length == 0
                 ? new ArtText()
                 : CachePool._atPool.pop();
-            at.x = x;
-            at.y = y;
+            at.setPosition(x, y);
             at.align = align;
             at.valign = valign;
             at.spacing = spacing;
             return at;
+        }
+
+
+        /**
+         * 获取一个 Label 对象
+         * @param x
+         * @param y
+         * @param styleName
+         * @param width
+         * @param height
+         * @param align
+         * @param valign
+         * @return
+         */
+        public static getLabel(x: number = 0, y: number = 0,
+                               styleName: string = "label",
+                               width: number = 0, height: number = 0,
+                               align: string = "left", valign: string = "top"): Label {
+            let label: Label = CachePool._labelPool.length == 0
+                ? new Label()
+                : CachePool._labelPool.pop();
+            label.styleName = styleName;
+            label.setPosition(x, y);
+            label._width = width;
+            label._height = height;
+            label.setDimensions(width, height);
+            label.align = align;
+            label.valign = valign;
+            return label;
         }
 
 
@@ -194,9 +221,9 @@ namespace lolo {
             // 显示对象相关属性重置
             if (obj instanceof cc.Node) {
                 let disObj: cc.Node = obj;
-                disObj.rotation = 0;
-                disObj.alpha = 1;
-                disObj.visible = true;
+                disObj.setRotation(0);
+                disObj.setOpacity(255);
+                disObj.setVisible(true);
                 disObj.setScale(1);
                 disObj.removeFromParent();
             }
@@ -214,7 +241,7 @@ namespace lolo {
                 let ani: Animation = obj;
                 ani.stop();
                 delete CachePool._aniList[ani.name];
-                ani.name = "";
+                ani.setName("");
                 CachePool._aniPool.push(ani);
             }
 
@@ -224,6 +251,13 @@ namespace lolo {
                 at.text = null;
                 CachePool._atPool.push(at);
                 at.clean();
+            }
+
+            else if (obj instanceof Label) {
+                let label: Label = obj;
+                label.stroke = label.shadow = TextField.EFFECT_DISABLED;
+                label.text = "";
+                CachePool._labelPool.push(label);
             }
 
             else if (obj instanceof Rectangle) {
@@ -242,9 +276,10 @@ namespace lolo {
          * @param type    1 : Animation 缓存池 和 不能重叠的动画列表
          *                2 : Bitmap 缓存池
          *                3 : ArtText 缓存池
-         *                4 : Point 缓存池
-         *                5 : Rectangle 缓存池
-         *                6 : Dictionary 缓存池
+         *                4 : Label 缓存池
+         *                5 : Point 缓存池
+         *                6 : Rectangle 缓存池
+         *                7 : Dictionary 缓存池
          *                其他值 : 所有缓存池
          */
         public static clean(type: number = 0): void {
@@ -260,12 +295,15 @@ namespace lolo {
                     CachePool._atPool.length = 0;
                     break;
                 case 4:
-                    CachePool._pointPool.length = 0;
+                    CachePool._labelPool.length = 0;
                     break;
                 case 5:
-                    CachePool._rectPool.length = 0;
+                    CachePool._pointPool.length = 0;
                     break;
                 case 6:
+                    CachePool._rectPool.length = 0;
+                    break;
+                case 7:
                     CachePool._dicPool.length = 0;
                     break;
 
@@ -276,6 +314,7 @@ namespace lolo {
                     CachePool.clean(4);
                     CachePool.clean(5);
                     CachePool.clean(6);
+                    CachePool.clean(7);
             }
         }
 
