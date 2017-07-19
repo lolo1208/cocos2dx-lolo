@@ -465,6 +465,7 @@ namespace lolo {
         public clean(): void {
             this.recycleAllItem();
             this.cleanItemPool();
+            this.destroyAllChildren();
 
             if (this._data != null) {
                 this._data.dispatchChanged = false;

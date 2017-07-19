@@ -199,7 +199,7 @@ namespace lolo {
                 this._handler = handler;
             }
 
-            this._xhr.responseType = this.responseType;
+            this._xhr.responseType = <any>this.responseType;
             this._xhr.withCredentials = this.withCredentials;
             this._xhr.timeout = this._timeout;
             for (let key in this._requestHeaders) {

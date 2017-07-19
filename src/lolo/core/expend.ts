@@ -553,14 +553,14 @@ namespace lolo {
         _original_cc_moveBy = cc.moveBy;
         cc.moveBy = function (): cc.MoveBy {
             if (arguments.length == 3) arguments[2] = -arguments[2];
-            else if (arguments.length == 2) arguments[1].y = -arguments[1].y;
+            else if (arguments.length == 2) arguments[1] = {x: arguments[1].x, y: -arguments[1].y};
             return lolo._original_cc_moveBy.apply(this, arguments);
         };
 
         _original_cc_moveTo = cc.moveTo;
         cc.moveTo = function (): cc.MoveTo {
             if (arguments.length == 3) arguments[2] = -arguments[2];
-            else if (arguments.length == 2) arguments[1].y = -arguments[1].y;
+            else if (arguments.length == 2) arguments[1] = {x: arguments[1].x, y: -arguments[1].y};
             return lolo._original_cc_moveTo.apply(this, arguments);
         };
 
@@ -574,13 +574,13 @@ namespace lolo {
 
         _original_cc_bezierBy = cc.bezierBy;
         cc.bezierBy = function (t: number, c: cc.Point[]): cc.BezierBy {
-            for (let i = 0; i < c.length; i++) c[i].y = -c[i].y;
+            for (let i = 0; i < c.length; i++) c[i] = {x: c[i].x, y: -c[i].y};
             return lolo._original_cc_bezierBy.call(this, t, c);
         };
 
         _original_cc_bezierTo = cc.bezierTo;
         cc.bezierTo = function (t: number, c: cc.Point[]): cc.BezierTo {
-            for (let i = 0; i < c.length; i++) c[i].y = -c[i].y;
+            for (let i = 0; i < c.length; i++) c[i] = {x: c[i].x, y: -c[i].y};
             return lolo._original_cc_bezierTo.call(this, t, c);
         };
     }

@@ -83,8 +83,11 @@ namespace lolo {
          * scale
          */
         public setScale(scale: number, scaleY?: number): void {
+            if (scaleY == null) scaleY = scale;
+            this._scaleX = scale;
+            this._scaleY = scaleY;
             this._width = this._textureRect.width * scale;
-            this._height = this._textureRect.height * (scaleY == null ? scale : scaleY);
+            this._height = this._textureRect.height * scaleY;
             this.sizeChanged();
         }
 
@@ -92,6 +95,7 @@ namespace lolo {
          * scaleX
          */
         public setScaleX(newScaleX: number): void {
+            this._scaleX = newScaleX;
             this._width = this._textureRect.width * newScaleX;
             this.sizeChanged();
         }
@@ -100,6 +104,7 @@ namespace lolo {
          * scaleY
          */
         public setScaleY(newScaleY: number): void {
+            this._scaleY = newScaleY;
             this._height = this._textureRect.height * newScaleY;
             this.sizeChanged();
         }

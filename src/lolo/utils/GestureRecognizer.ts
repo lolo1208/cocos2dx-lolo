@@ -6,28 +6,29 @@ namespace lolo {
         id?: number;
         /**TouchBegin 时所在的世界坐标*/
         beginWorldPoint: Point;
-        /**上次计算手势的屏幕坐标*/
-        lastPoint: Point;
         /**当前屏幕坐标*/
         currentPoint: Point;
     }
 
 
     /**
-     * 手势识别，广播相关事件
+     * 手势识别，广播相关事件。
+     * 单例，请通过 lolo.gesture 访问
      * @author LOLO
      */
     export class GestureRecognizer extends EventDispatcher {
 
-        private static _infoPool: TouchInfo[] = [];
+        /**TouchInfo 缓存池*/
+        private _infoPool: TouchInfo[] = [];
 
         /**上次发生 TouchEvent 时所在的舞台坐标*/
         public touchPoint: Point = new Point();
         /**上次发生 TouchEvent 时所在的 cocos 世界坐标（可用于 cc.node.convertToNodeSpace()）*/
         public worldPoint: cc.Point = cc.p();
 
-        private _touchEvent: TouchEvent;
         private _touchListener: cc.TouchListener;
+        private _touchEvent: TouchEvent;
+        private _gestureEvent: GestureEvent;
 
         /**当前帧发生的 touch 信息列表*/
         private _touchInfoList: any = {};
@@ -37,6 +38,8 @@ namespace lolo {
             super();
 
             this._touchEvent = new TouchEvent("");
+            this._gestureEvent = new GestureEvent("");
+
             this._touchListener = <cc.TouchListener>cc.EventListener.create({
                 event: cc.EventListener.TOUCH_ONE_BY_ONE,
                 swallowTouches: false,
@@ -71,8 +74,8 @@ namespace lolo {
                 case 0:
                     e.type = TouchEvent.TOUCH_BEGIN;
 
-                    info = infoList[touchID] = (GestureRecognizer._infoPool.length > 0)
-                        ? GestureRecognizer._infoPool.pop()
+                    info = infoList[touchID] = (this._infoPool.length > 0)
+                        ? this._infoPool.pop()
                         : {
                             beginWorldPoint: CachePool.getPoint(),
                             lastPoint: CachePool.getPoint(),
@@ -81,35 +84,36 @@ namespace lolo {
                     info.id = touchID;
                     info.beginWorldPoint.x = this.worldPoint.x;
                     info.beginWorldPoint.y = this.worldPoint.y;
-                    info.lastPoint.x = info.currentPoint.x = this.touchPoint.x;
-                    info.lastPoint.y = info.currentPoint.y = this.touchPoint.y;
                     break;
 
                 case 1:
                     e.type = TouchEvent.TOUCH_MOVE;
-
-                    if (info != null) {
-                        info.currentPoint.x = this.touchPoint.x;
-                        info.currentPoint.y = this.touchPoint.y;
-                    }
                     break;
 
                 case 2:
                     e.type = TouchEvent.TOUCH_END;
 
                     if (info != null) {
-                        GestureRecognizer._infoPool.push(info);
+                        this._infoPool.push(info);
                         delete infoList[touchID];
-                        delete this._pinch_touchIDs[touchID];
+                    }
+
+                    if (this._pinch_touchPoints[touchID] != null) {
+                        CachePool.recycle(this._pinch_touchPoints[touchID]);
+                        delete this._pinch_touchPoints[touchID];
                     }
                     break;
+            }
+            if (info != null) {// deactivate 发生时，touchMove 值会为 null
+                info.currentPoint.x = this.touchPoint.x;
+                info.currentPoint.y = this.touchPoint.y;
             }
 
             e.touch = touch;
             e.event = event;
             this.event_dispatch(e, false, false);
 
-            // lolo.stage.event_addListener(Event.ENTER_FRAME, this.stage_enterFrame, this);
+            lolo.stage.event_addListener(Event.ENTER_FRAME, this.stage_enterFrame, this);
 
             return true;
         }
@@ -119,18 +123,11 @@ namespace lolo {
          * 在下一帧开始检测手势
          * @param event
          */
-        private stage_enterFrame(event?: Event): void {
+        private stage_enterFrame(event: Event): void {
             lolo.stage.event_removeListener(Event.ENTER_FRAME, this.stage_enterFrame, this);
 
             let pinchActivated: boolean = this._eventMap[GestureEvent.PINCH_ZOOM] != null;// 当前是否需要识别轻捏缩放手势
             if (pinchActivated) this.pinch_recognizer();
-
-            // 更新 lastPoint
-            let infoList = this._touchInfoList;
-            for (let touchID in infoList) {
-                let info: TouchInfo = infoList[touchID];
-                info.lastPoint.copyFrom(info.currentPoint);
-            }
         }
 
 
@@ -139,9 +136,8 @@ namespace lolo {
         // 轻捏缩放手势识别
         //
         /////////////////////////////////////////////////////////////
-        /**上次进行轻捏缩放手势识别的 touchID 标记列表*/
-        private _pinch_touchIDs: any = {};
-        private _lastD = 0;
+        /**进行轻捏缩放手势识别的信息列表，touchID 为 key，值为 Point*/
+        private _pinch_touchPoints: any = {};
 
         private pinch_recognizer(): void {
             // 识别两个手指即可
@@ -155,56 +151,52 @@ namespace lolo {
                     break;
                 }
             }
-
-
-            if (this.label == null) {
-                this.label = new Label();
-                lolo.stage.addChild(this.label);
-            }
-            this.label.text = "";
-
-
             if (info2 == null) return;
 
-            let touchIDs: any = this._pinch_touchIDs;
-            if (touchIDs[info1.id] == null || touchIDs[info2.id] == null) {
-                touchIDs[info1.id] = touchIDs[info2.id] = true;
+            // 初始化用于识别的两个手指
+            let touchIDs: any = this._pinch_touchPoints;
+            let p1: Point = touchIDs[info1.id];
+            let p2: Point = touchIDs[info2.id];
+            if (p1 == null) {
+                touchIDs[info1.id] = CachePool.getPoint(info1.currentPoint.x, info1.currentPoint.y);
+            } else if (p2 == null) {
+                touchIDs[info2.id] = CachePool.getPoint(info2.currentPoint.x, info2.currentPoint.y);
             }
+
             else {
-                let ox1 = info1.currentPoint.x - info1.lastPoint.x;
-                let oy1 = info1.currentPoint.y - info1.lastPoint.y;
-                let ox2 = info2.currentPoint.x - info2.lastPoint.x;
-                let oy2 = info2.currentPoint.y - info2.lastPoint.y;
-                let threshold = 2;
-                if (Math.abs(ox1) < threshold && Math.abs(oy1) < threshold
-                    || Math.abs(ox2) < threshold && Math.abs(oy2) < threshold
-                ) return;
+                // 与上次记录的位置算出间距，得出缩放比例
+                let dLast = Point.distance(p1, p2);
+                let dCurrent = Point.distance(info1.currentPoint, info2.currentPoint);
+                let d = dCurrent - dLast;
+                if (Math.abs(d) < 20) return;// 每次判断的最少间距
 
-                let x = info2.currentPoint.x - info1.currentPoint.x;
-                let y = info2.currentPoint.y - info1.currentPoint.y;
-                let d = Math.abs(x * x + y * y);
+                // 更新，记录当前位置
+                p1.copyFrom(info1.currentPoint);
+                p2.copyFrom(info2.currentPoint);
 
-                this.label.text = ""
-                    + info1.currentPoint.x.toFixed(1) + ", " + info1.currentPoint.y.toFixed(1)
-                    + "  ||  "
-                    + info2.currentPoint.x.toFixed(1) + ", " + info2.currentPoint.y.toFixed(1)
-                    + "  ||  "
-                    + d.toFixed(3)
-                    + "  ||  "
-                    + (this._lastD <= d);
-
-                this._lastD = d;
+                // 抛出事件
+                let e: GestureEvent = this._gestureEvent;
+                e.touchInfos.length = 0;
+                e.touchInfos.push(info1, info2);
+                e.type = GestureEvent.PINCH_ZOOM;
+                e.detail = d / 200;// 得出 scale
+                this.event_dispatch(e, false, false);
             }
         }
 
         /////////////////////////////////////////////////////////////
 
-        private label: Label;
-
 
         private deactivateHandler(event: Event): void {
+            // recycle TouchInfo
+            for (let key in this._touchInfoList)
+                this._infoPool.push(this._touchInfoList[key]);
             this._touchInfoList = {};
-            this._pinch_touchIDs = {};
+
+            // recycle Point
+            for (let key in this._pinch_touchPoints)
+                CachePool.recycle(this._pinch_touchPoints[key]);
+            this._pinch_touchPoints = {};
         }
 
         //

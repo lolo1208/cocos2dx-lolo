@@ -486,7 +486,7 @@ namespace lolo {
             let thumbPos: number = -(contentPos - viewPos) / (contentSize - viewSize) * (this._size - thumbSize);
             //限定在size范围内
             let thumbMaxPos: number = maxSize - thumbSize;
-            if (thumbPos < 0) thumbPos = 0;
+            if (thumbPos < 0 || isNaN(thumbPos)) thumbPos = 0;
             else if (thumbPos > thumbMaxPos) thumbPos = thumbMaxPos;
             this._thumb[this._xy] = thumbPos;
         }

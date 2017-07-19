@@ -86,53 +86,29 @@ namespace app.testScene {
             this.errorBtn.event_addListener(TouchEvent.TOUCH_TAP, this.errorBtn_touchTapHandler, this);
 
 
-            lolo.gesture.event_addListener(GestureEvent.PINCH_ZOOM, function (event: GestureEvent): void {
-                console.log(event);
-            }, this);
-
-
             // this.c.visible = false;
 
-            // let bmp: Bitmap = new Bitmap("skin.button.1.up");
-            // this.addChild(bmp);
-            // bmp.x = bmp.y = bmp.width = bmp.height = 300;
-            // new ButtonContainer(bmp);
 
-            // let img: Image = new Image();
-            // img.directory = "skillIcon";
-            // img.fileName = "gongJi";
-            // this.addChild(img);
-            // img.x = img.y = 100;
-            // // img.width = img.height = 300;
-            // new ButtonContainer(img);
+            let img: Image = this._img = new Image();
+            img.x = img.y = 50;
+            img.extension = Constants.EXTENSION_JPG;
+            img.directory = "background/cat";
+            img.fileName = "1";
+            this.addChild(img);
 
+            lolo.gesture.event_addListener(GestureEvent.PINCH_ZOOM, this.testGesture, this);
+        }
 
-            // let ani: Animation = new Animation("avatar.female.run2");
-            // this.addChild(ani);
-            // ani.x = ani.y = 300;
-            // ani.setScale(2);
-            // ani.play();
-            // new ButtonContainer(ani);
+        private _img: Image;
 
+        private testGesture(event: GestureEvent): void {
+            if (event.hitTest(this._img)) {
 
-            // let sb: SimpleBitmap = new SimpleBitmap();
-            // cc.loader.loadImg(lolo.getResUrl("ui/skin/default.ui"), {}, function (err, data) {
-            //     let texture2d;
-            //     if (lolo.isNative) {
-            //         texture2d = data;
-            //     }
-            //     else {
-            //         texture2d = new cc.Texture2D();
-            //         texture2d.initWithElement(data);
-            //         texture2d.handleLoadedTexture();
-            //     }
-            //     sb.texture = texture2d;
-            //     sb.setScale(3);
-            //     it.placeholder = sb.width.toFixed(1) + "," + sb.height.toFixed(1);
-            //     new ButtonContainer(sb);
-            // });
-            // sb.x = sb.y = 300;
-            // this.addChild(sb);
+                let scale: number = this._img.scaleX + event.detail;
+                this._img.setScale(scale);
+                console.log(event.detail, scale);
+
+            }
         }
 
 
