@@ -83,23 +83,29 @@ namespace lolo {
         /**最大滚动值*/
         private _max: number;
 
+        /**渲染回调*/
+        protected _renderHandler: Handler;
+
 
         public constructor() {
             super();
 
             this.setOpacity(0);
-            this.visible = false;
+            this.setVisible(false);
 
             this._thumb = new Bitmap();
             this.addChild(this._thumb);
 
             this._direction = Constants.VERTICAL;
             this.scrollPolicy = Constants.POLICY_AUTO;
+
+            this._renderHandler = new Handler(this.doRender, this);
         }
 
 
         public onExit(): void {
             super.onExit();
+
             this.mask_touchEnd();
             // 在滚动过程中将滚动条或所在父节点移除舞台时，会stopAllAction，导致滚动条不消失
             if (this.scrollPolicy != Constants.POLICY_ON) {
@@ -132,14 +138,14 @@ namespace lolo {
 
 
         /**
-         * 更新显示内容（在 Event.ENTER_FRAME 事件中更新）
+         * 更新显示内容（在 Event.PRERENDER 事件中更新）
          */
         public render(): void {
-            lolo.stage.event_addListener(Event.ENTER_FRAME, this.doRender, this);
+            PrerenderScheduler.add(this._renderHandler, -1);
         }
 
         /**
-         * 立即更新显示内容，而不是等待 Event.ENTER_FRAME 事件更新
+         * 立即更新显示内容，而不是等待 Event.PRERENDER 事件更新
          */
         public renderNow(): void {
             this.doRender();
@@ -147,10 +153,9 @@ namespace lolo {
 
         /**
          * 进行渲染
-         * @param event Event.ENTER_FRAME 事件
          */
-        protected doRender(event?: Event): void {
-            lolo.stage.event_removeListener(Event.ENTER_FRAME, this.doRender, this);
+        protected doRender(): void {
+            PrerenderScheduler.remove(this._renderHandler);
             if (this._viewableArea == null || this._content == null) return;
 
             this._showed = this._content[this._wh] > this._viewableArea[this._wh];
@@ -644,7 +649,7 @@ namespace lolo {
          * 销毁
          */
         public destroy(): void {
-            lolo.stage.event_removeListener(Event.ENTER_FRAME, this.doRender, this);
+            PrerenderScheduler.remove(this._renderHandler);
             lolo.stage.event_removeListener(Event.ENTER_FRAME, this.tweenContentUpdate, this);
             lolo.stage.event_removeListener(Event.DEACTIVATE, this.mask_touchEnd, this);
             this.content = null;

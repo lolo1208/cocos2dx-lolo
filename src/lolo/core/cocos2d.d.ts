@@ -392,6 +392,9 @@ declare namespace cc {
 
 
     class Director extends Class {
+        static EVENT_AFTER_UPDATE: string;
+
+        getTotalFrames(): number;
     }
 }
 

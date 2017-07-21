@@ -25,24 +25,28 @@ namespace lolo {
         /**是否启用*/
         protected _enabled: boolean = true;
 
+        /**渲染回调*/
+        protected _renderHandler: Handler;
+
 
         public constructor() {
             super();
 
             this._layout = Constants.ABSOLUTE;
             this._itemList = [];
+            this._renderHandler = new Handler(this.doRender, this);
         }
 
 
         /**
-         * 更新显示内容（在 Event.ENTER_FRAME 事件中更新）
+         * 更新显示内容（在 Event.PRERENDER 事件中更新）
          */
         public render(): void {
-            lolo.stage.event_addListener(Event.ENTER_FRAME, this.doRender, this);
+            PrerenderScheduler.add(this._renderHandler);
         }
 
         /**
-         * 立即更新显示内容，而不是等待 Event.ENTER_FRAME 事件更新
+         * 立即更新显示内容，而不是等待 Event.PRERENDER 事件更新
          */
         public renderNow(): void {
             this.doRender();
@@ -50,10 +54,9 @@ namespace lolo {
 
         /**
          * 进行渲染
-         * @param event Event.ENTER_FRAME 事件
          */
-        protected doRender(event?: Event): void {
-            lolo.stage.event_removeListener(Event.ENTER_FRAME, this.doRender, this);
+        protected doRender(): void {
+            PrerenderScheduler.remove(this._renderHandler);
             if (this._layout == Constants.ABSOLUTE || this._itemList.length == 0) return;
 
             let item: ItemRenderer;
@@ -319,8 +322,7 @@ namespace lolo {
          * 清空
          */
         public clean(): void {
-            lolo.stage.event_removeListener(Event.ENTER_FRAME, this.doRender, this);
-
+            PrerenderScheduler.remove(this._renderHandler);
             let item: ItemRenderer;
             while (this._itemList.length > 0) {
                 item = this._itemList.pop();

@@ -53,6 +53,7 @@ namespace app.testScene {
             this.contentVSB.render();
             lolo.layout.stageLayout(this);
 
+            return;
 
             let t: number = new Date().getTime();
             let n1: number = 999;

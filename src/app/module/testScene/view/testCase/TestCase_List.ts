@@ -77,11 +77,9 @@ namespace app.testScene {
                 this.at.text = "-" + this._data.text;
             else
                 this.at.text = this._index + "-" + this._data.text;
-            this.at.renderNow();
 
             if (TestCase_ItemRenderer.labelEnabled) {
                 this.btn.label = value.text;
-                this.btn.renderNow();
             }
         }
 
@@ -89,7 +87,6 @@ namespace app.testScene {
             super.setSelected(value);
 
             this.at.prefix = "public.artText.num" + (value ? 2 : 1);
-            this.at.renderNow();
 
             if (TestCase_ItemRenderer.labelEnabled) {
                 this.btn.label = value ? "selected!" : this._data.text;

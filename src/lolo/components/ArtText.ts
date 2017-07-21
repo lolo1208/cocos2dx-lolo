@@ -17,33 +17,38 @@ namespace lolo {
     export class ArtText extends DisplayObjectContainer {
 
         /**设置的文本内容*/
-        private _text: string;
+        protected _text: string;
         /**用于设置字符 BitmapSprite.sourceName 的前缀*/
-        private _prefix: string;
+        protected _prefix: string;
 
         /**水平对齐方式，默认值：Constants.ALIGN_LEFT，可选值[Constants.ALIGN_LEFT, Constants.ALIGN_CENTER, Constants.ALIGN_RIGHT]*/
-        private _align: string = "left";
+        protected _align: string = "left";
         /**垂直对齐方式，默认值：Constants.VALIGN_TOP，可选值[Constants.VALIGN_TOP, Constants.VALIGN_MIDDLE, Constants.VALIGN_BOTTOM]*/
-        private _valign: string = "top";
+        protected _valign: string = "top";
 
         /**字符间距*/
-        private _spacing: number = 0;
+        protected _spacing: number = 0;
+
+        /**渲染回调*/
+        protected _renderHandler: Handler;
 
 
         public constructor() {
             super();
+
+            this._renderHandler = new Handler(this.doRender, this);
         }
 
 
         /**
-         * 更新显示内容（在 Event.ENTER_FRAME 事件中更新）
+         * 更新显示内容（在 Event.PRERENDER 事件中更新）
          */
         public render(): void {
-            lolo.stage.event_addListener(Event.ENTER_FRAME, this.doRender, this);
+            PrerenderScheduler.add(this._renderHandler);
         }
 
         /**
-         * 立即更新显示内容，而不是等待 Event.ENTER_FRAME 事件更新
+         * 立即更新显示内容，而不是等待 Event.PRERENDER 事件更新
          */
         public renderNow(): void {
             this.doRender();
@@ -51,10 +56,9 @@ namespace lolo {
 
         /**
          * 进行渲染
-         * @param event Event.ENTER_FRAME 事件
          */
-        protected doRender(event?: Event): void {
-            lolo.stage.event_removeListener(Event.ENTER_FRAME, this.doRender, this);
+        protected doRender(): void {
+            PrerenderScheduler.remove(this._renderHandler);
             if (this._prefix == null || this._text == null) return;
 
             //创建并显示对应的字符 Bitmap
@@ -182,8 +186,7 @@ namespace lolo {
          * 清空
          */
         public clean(): void {
-            lolo.stage.event_removeListener(Event.ENTER_FRAME, this.doRender, this);
-
+            PrerenderScheduler.remove(this._renderHandler);
             let children: cc.Node[] = this.children;
             for (let i = 0; i < children.length; i++) {
                 CachePool.recycle(children[i]);

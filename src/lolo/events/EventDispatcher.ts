@@ -46,10 +46,11 @@ namespace lolo {
         public event_addListener(type: string, listener: (event: lolo.Event, ...args: any[]) => void, caller: any, priority: number = 0, ...args: any[]): void {
             if (this._eventMap[type] == null) this._eventMap[type] = [];
             let list: EventListenerInfo[] = this._eventMap[type];
+            let len: number = list.length;
 
             let index: number = -1;
             let info: EventListenerInfo;
-            for (let i = 0; i < list.length; i++) {
+            for (let i = 0; i < len; i++) {
                 info = list[i];
 
                 if (info.listener == listener && info.caller == caller)
@@ -58,21 +59,20 @@ namespace lolo {
                 if (index == -1 && info.priority < priority)
                     index = i;
             }
-
             info = {type: type, listener: listener, caller: caller, priority: priority, args: args};
 
-            if (index !== -1)
-                list.splice(index, 0, info);
-            else
-                list.push(info);
+            if (index !== -1) list.splice(index, 0, info);
+            else list.push(info);
         }
 
 
         public event_removeListener(type: string, listener: (event: lolo.Event, ...args: any[]) => void, caller: any): void {
             let list: EventListenerInfo[] = this._eventMap[type];
-            if (list == null || list.length == 0) return;
+            if (list == null) return;
+            let len: number = list.length;
+            if (len == 0) return;
 
-            for (let i = 0; i < list.length; i++) {
+            for (let i = 0; i < len; i++) {
                 let info: EventListenerInfo = list[i];
                 if (info.listener === listener && info.caller === caller) {
                     list.splice(i, 1);
@@ -90,20 +90,23 @@ namespace lolo {
             event.currentTarget = target;
 
             let list: EventListenerInfo[] = this._eventMap[event.type];
-            if (list != null && list.length > 0) {
-                list = list.concat();
+            // 当前节点有侦听该事件
+            if (list != null) {
                 let len: number = list.length;
-                for (let i = 0; i < len; i++) {
-                    let info: EventListenerInfo = list[i];
-                    if (info.args.length > 0) {
-                        let args: any[] = info.args.concat();
-                        args.unshift(event);
-                        info.listener.apply(info.caller, args);
+                if (len > 0) {
+                    list = list.concat();
+                    for (let i = 0; i < len; i++) {
+                        let info: EventListenerInfo = list[i];
+                        if (info.args.length > 0) {
+                            let args: any[] = info.args.concat();
+                            args.unshift(event);
+                            info.listener.apply(info.caller, args);
+                        }
+                        else {
+                            info.listener.call(info.caller, event);
+                        }
+                        if (event.isPropagationStopped) break;
                     }
-                    else {
-                        info.listener.call(info.caller, event);
-                    }
-                    if (event.isPropagationStopped) break;
                 }
             }
 

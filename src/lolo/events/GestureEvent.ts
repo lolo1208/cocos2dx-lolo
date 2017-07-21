@@ -15,9 +15,10 @@ namespace lolo {
 
 
         /**
+         * 手势的增量值
          * type = PINCH_ZOOM 时，值为 scale
          */
-        public detail: number;
+        public delta: number;
 
         /**触发事件的 TouchInfo 列表*/
         public touchInfos: TouchInfo[] = [];

@@ -100,14 +100,14 @@ namespace lolo {
             this._startAngle = angle;// 得出起始偏移角度
 
             this._startTime = TimeUtil.nowTime;
-            lolo.ui.event_addListener(Event.ENTER_FRAME, this.enterFrameHandler, this);
+            lolo.stage.event_addListener(Event.PRERENDER, this.prerenderHandler, this);
         }
 
         /**
-         * 帧刷新
+         * 每帧开始渲染前
          * @param event
          */
-        private enterFrameHandler(event: Event): void {
+        private prerenderHandler(event: Event): void {
             // 根据时间计算出当前角度
             let time: number = (TimeUtil.nowTime - this._startTime) / 1000;
             let angle: number = this.reverse
@@ -134,7 +134,7 @@ namespace lolo {
          * @param complete 效果是否正常结束
          */
         public end(complete: boolean = false): void {
-            lolo.ui.event_removeListener(Event.ENTER_FRAME, this.enterFrameHandler, this);
+            lolo.stage.event_removeListener(Event.PRERENDER, this.prerenderHandler, this);
             this.floating = false;
 
             if (this.once) {

@@ -61,8 +61,9 @@ namespace lolo {
          * @param event
          */
         private stage_resizeHandler(event: Event): void {
-            for (let key in this._stageLayoutList.list) {
-                let info: LayoutTargetInfo = this._stageLayoutList.getItem(key);
+            let list: any = this._stageLayoutList.list;
+            for (let key in list) {
+                let info: LayoutTargetInfo = list[key];
                 if (info.enabled) {
                     this.stageLayout(info.target, info.args);
                 }

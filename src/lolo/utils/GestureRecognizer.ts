@@ -113,18 +113,18 @@ namespace lolo {
             e.event = event;
             this.event_dispatch(e, false, false);
 
-            lolo.stage.event_addListener(Event.ENTER_FRAME, this.stage_enterFrame, this);
+            lolo.stage.event_addListener(Event.PRERENDER, this.prerenderHandler, this);
 
             return true;
         }
 
 
         /**
-         * 在下一帧开始检测手势
+         * 在渲染前开始检测手势
          * @param event
          */
-        private stage_enterFrame(event: Event): void {
-            lolo.stage.event_removeListener(Event.ENTER_FRAME, this.stage_enterFrame, this);
+        private prerenderHandler(event: Event): void {
+            lolo.stage.event_removeListener(Event.PRERENDER, this.prerenderHandler, this);
 
             let pinchActivated: boolean = this._eventMap[GestureEvent.PINCH_ZOOM] != null;// 当前是否需要识别轻捏缩放手势
             if (pinchActivated) this.pinch_recognizer();
@@ -179,7 +179,7 @@ namespace lolo {
                 e.touchInfos.length = 0;
                 e.touchInfos.push(info1, info2);
                 e.type = GestureEvent.PINCH_ZOOM;
-                e.detail = d / 200;// 得出 scale
+                e.delta = d / 200;// 得出 scale
                 this.event_dispatch(e, false, false);
             }
         }

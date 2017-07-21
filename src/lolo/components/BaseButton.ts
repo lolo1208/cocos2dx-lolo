@@ -11,13 +11,16 @@ namespace lolo {
      */
     export class BaseButton extends ItemRenderer {
 
+        /**在skinName改变时，是否需要自动重置宽高*/
+        public autoResetSize: boolean = true;
+
         /**皮肤*/
         protected _skin: Skin;
         /**按钮容器*/
         protected _bc: ButtonContainer;
 
-        /**在skinName改变时，是否需要自动重置宽高*/
-        public autoResetSize: boolean = true;
+        /**渲染回调*/
+        protected _renderHandler: Handler;
 
 
         public constructor() {
@@ -26,6 +29,7 @@ namespace lolo {
             this._skin = new Skin();
             this.addChild(this._skin);
             this._bc = new ButtonContainer(this._skin, false);
+            this._renderHandler = new Handler(this.doRender, this);
         }
 
 
@@ -80,14 +84,14 @@ namespace lolo {
 
 
         /**
-         * 更新显示内容（在 Event.ENTER_FRAME 事件中更新）
+         * 更新显示内容（在 Event.PRERENDER 事件中更新）
          */
         public render(): void {
-            lolo.stage.event_addListener(Event.ENTER_FRAME, this.doRender, this);
+            PrerenderScheduler.add(this._renderHandler);
         }
 
         /**
-         * 立即更新显示内容，而不是等待 Event.ENTER_FRAME 事件更新
+         * 立即更新显示内容，而不是等待 Event.PRERENDER 事件更新
          */
         public renderNow(): void {
             this.doRender();
@@ -95,10 +99,9 @@ namespace lolo {
 
         /**
          * 进行渲染
-         * @param event Event.ENTER_FRAME 事件
          */
-        protected doRender(event?: Event): void {
-            lolo.stage.event_removeListener(Event.ENTER_FRAME, this.doRender, this);
+        protected doRender(): void {
+            PrerenderScheduler.remove(this._renderHandler);
             this._bc.update();
         }
 
@@ -241,21 +244,10 @@ namespace lolo {
 
 
         public recycle(): void {
-            lolo.stage.event_removeListener(Event.ENTER_FRAME, this.doRender, this);
+            PrerenderScheduler.remove(this._renderHandler);
 
             super.recycle();
         }
-
-
-        /**
-         * 销毁
-         */
-        public destroy(): void {
-            lolo.stage.event_removeListener(Event.ENTER_FRAME, this.doRender, this);
-
-            super.destroy();
-        }
-
 
         //
     }

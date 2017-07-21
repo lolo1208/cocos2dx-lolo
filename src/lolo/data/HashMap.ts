@@ -158,8 +158,9 @@ namespace lolo {
          */
         public getKeysByIndex(index: number): any[] {
             let keys: any[] = [];
-            for (let key in this._keys.list) {
-                if (this._keys.getItem(key) == index) keys.push(key);
+            let list: any = this._keys.list;
+            for (let key in list) {
+                if (list[key] == index) keys.push(key);
             }
             return keys;
         }
@@ -213,15 +214,16 @@ namespace lolo {
         public removeByIndex(index: number): void {
             this._values.splice(index, 1);
 
-            for (let key in this._keys.list) {
+            let list = this._keys.list;
+            for (let key in list) {
                 //移除相关的key
-                let valueIndex: number = this._keys.getItem(key);
+                let valueIndex: number = list[key];
                 if (valueIndex == index) {
-                    this._keys.removeItem(key);
+                    delete list[key];
                 }
                 //后面的索引减一
                 else if (valueIndex > index) {
-                    this._keys.setItem(key, valueIndex - 1);
+                    list[key] = valueIndex - 1;
                 }
             }
 

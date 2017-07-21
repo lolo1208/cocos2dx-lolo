@@ -18,10 +18,9 @@ namespace lolo {
 
         /**
          * 进行渲染
-         * @param event Event.ENTER_FRAME 事件
          */
-        protected doRender(event?: Event): void {
-            lolo.stage.event_removeListener(Event.ENTER_FRAME, this.doRender, this);
+        protected doRender(): void {
+            PrerenderScheduler.remove(this._renderHandler);
             this.recycleAllItem();
 
             // 属性或数据不完整，不能显示

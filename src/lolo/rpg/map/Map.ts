@@ -379,8 +379,8 @@ namespace lolo.rpg {
             return CachePool.getRectangle(
                 -this.x - offsets,
                 -this.y - offsets,
-                lolo.ui.stageWidth + offsets * 2,
-                lolo.ui.stageHeight + offsets * 2
+                lolo.ui.stageWidth / this._scaleX + offsets * 2,
+                lolo.ui.stageHeight / this._scaleY + offsets * 2
             );
         }
 

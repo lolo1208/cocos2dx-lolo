@@ -9,27 +9,34 @@ namespace lolo {
 
         /**
          * 事件：进入新的一帧。
-         * 需要注意：该事件只会在 UIManager（lolo.ui / lolo.stage） 上抛出！
+         * 需要注意：该事件只会在 UIManager 上抛出！
          */
         public static ENTER_FRAME: string = "enterFrame";
 
         /**
+         * 事件：当前帧即将开始渲染（在 ENTER_FRAME 事件之后）。
+         * 需要注意：该事件只会在 UIManager 上抛出！
+         */
+        public static PRERENDER: string = "prerender";
+
+        /**
          * 事件：APP 获得焦点（切换回前台）。
-         * 需要注意：该事件只会在 UIManager（lolo.ui / lolo.stage） 上抛出！
+         * 需要注意：该事件只会在 UIManager 上抛出！
          */
         public static ACTIVATE: string = "activate";
 
         /**
          * 事件：APP 失去焦点（切换到后台）。
-         * 需要注意：该事件只会在 UIManager（lolo.ui / lolo.stage） 上抛出！
+         * 需要注意：该事件只会在 UIManager 上抛出！
          */
         public static DEACTIVATE: string = "deactivate";
 
         /**
          * 事件：舞台尺寸有改变。
-         * 需要注意：该事件只会在 UIManager（lolo.ui / lolo.stage） 上抛出！
+         * 需要注意：该事件只会在 UIManager 上抛出！
          */
         public static RESIZE: string = "stageResize";
+
 
         /**
          * 事件：子对象的尺寸有改变

@@ -81,9 +81,8 @@ namespace lolo {
 
         /**
          * 进行渲染
-         * @param event Event.ENTER_FRAME 事件
          */
-        protected doRender(event?: Event): void {
+        protected doRender(): void {
             let label: LinkText = this._labelText;
 
             if (label.currentText.length == 0) {
@@ -116,8 +115,6 @@ namespace lolo {
 
             label.align = this._labelHorizontalAlign;
             label.valign = this._labelVerticalAlign;
-            // label.x = this._labelPaddingLeft - this._width / 2;
-            // label.y = this._labelPaddingTop - this._height / 2;
             label.setPosition(
                 this._labelPaddingLeft,
                 -this._height + this._labelPaddingTop

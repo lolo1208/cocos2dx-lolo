@@ -28,6 +28,7 @@ namespace app.testScene {
     import InputText = lolo.InputText;
     import SimpleBitmap = lolo.SimpleBitmap;
     import GestureEvent = lolo.GestureEvent;
+    import Event = lolo.Event;
 
 
     /**
@@ -88,29 +89,7 @@ namespace app.testScene {
 
             // this.c.visible = false;
 
-
-            let img: Image = this._img = new Image();
-            img.x = img.y = 50;
-            img.extension = Constants.EXTENSION_JPG;
-            img.directory = "background/cat";
-            img.fileName = "1";
-            this.addChild(img);
-
-            lolo.gesture.event_addListener(GestureEvent.PINCH_ZOOM, this.testGesture, this);
         }
-
-        private _img: Image;
-
-        private testGesture(event: GestureEvent): void {
-            if (event.hitTest(this._img)) {
-
-                let scale: number = this._img.scaleX + event.detail;
-                this._img.setScale(scale);
-                console.log(event.detail, scale);
-
-            }
-        }
-
 
         private testBtn_touchTapHandler(event: TouchEvent): void {
             (<AppUIManager>lolo.ui).loadRpgMap(RpgScene.TEST_MAP_ID, lolo.handler(() => {
@@ -153,75 +132,6 @@ namespace app.testScene {
 
             this.addChild(this.backBtn);
             this.c.visible = false;
-        }
-
-
-        //
-
-
-        private testTouch(): void {
-            for (let i = 1; i < 5; i++) {
-                let bmp: Bitmap | Animation = (i > 3)
-                    ? new Bitmap("mainUI.loadBar.bg")
-                    : new Animation("avatar.banShouRen.run3");
-                bmp.x = 200 + (i * 80);
-                bmp.y = 100 + (i * 30);
-                bmp.name = "bmp" + i;
-                if (i < 3) {
-                    lolo.stage.getLayer(Constants.LAYER_NAME_ALERT).addChild(bmp);
-                }
-                else {
-                    lolo.stage.getLayer(Constants.LAYER_NAME_ADORN).addChild(bmp);
-                    lolo.stage.getLayer(Constants.LAYER_NAME_ALERT).addChild(bmp);
-                    lolo.stage.getLayer(Constants.LAYER_NAME_ALERT).addChild(bmp);
-                    lolo.stage.getLayer(Constants.LAYER_NAME_ALERT).addChild(bmp);
-                    lolo.stage.getLayer(Constants.LAYER_NAME_SCENE).addChild(bmp);
-                }
-
-                bmp.touchEnabled = true;
-                bmp.event_addListener(TouchEvent.TOUCH_BEGIN, this.testTouchHandler, this);
-                bmp.event_addListener(TouchEvent.TOUCH_MOVE, this.testTouchHandler, this);
-                bmp.event_addListener(TouchEvent.TOUCH_END, this.testTouchHandler, this);
-                bmp.event_addListener(TouchEvent.TOUCH_TAP, this.testTouchHandler, this);
-            }
-        }
-
-        private touchLocalZOrder: number = 0;
-
-        private testTouchHandler(event: TouchEvent): void {
-            let bmp: Bitmap = event.target;
-            console.log(bmp.name, event.type);
-            if (event.type == TouchEvent.TOUCH_END) bmp.setLocalZOrder(++this.touchLocalZOrder);
-        }
-
-
-        private testAni(): void {
-            let type: string[] = ["banShouRen", "female", "jiangShi", "jinQianBao", "kuLouSheShou", "langRenZhanShi", "male", "shuangTouMo"];
-            let action: string[] = ["attack", "dead", "run", "stand"];
-            let reverse: boolean[] = [true, false, false];
-
-            for (let i = 0; i < 500; i++) {
-                let ani: Animation = new Animation("avatar."
-                    + type[Math.floor(Math.random() * type.length)] + "."
-                    + action[Math.floor(Math.random() * action.length)]
-                    + Math.ceil(Math.random() * 8)
-                );
-                ani.x = Math.floor(Math.random() * (lolo.ui.stageWidth - 100) + 50);
-                ani.y = Math.floor(Math.random() * (lolo.ui.stageHeight - 100) + 50);
-                ani.fps = Math.random() * 55 + 5;
-                ani.reverse = reverse[Math.floor(Math.random() * reverse.length)];
-                ani.play();
-                this.addChild(ani);
-            }
-        }
-
-
-        private testTexture(): void {
-            let ani: Animation = new Animation("avatar.female.attack8");
-            ani.x = ani.y = 400;
-            ani.scaleX = ani.scaleY = 3;
-            this.addChild(ani);
-            ani.play();
         }
 
 

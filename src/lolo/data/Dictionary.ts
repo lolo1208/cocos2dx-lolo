@@ -7,13 +7,13 @@ namespace lolo {
      */
     export class Dictionary {
 
-        /**字典在各函数传入的key对象上 创建的唯一key属性*/
+        /**字典在各函数传入的 key 对象上 创建的唯一 key 属性*/
         private static ONLY_KEY: string = "__LOLO_DOK__";
-        /**key计数*/
+        /**key 计数，不重复的 key 值*/
         private static _keyCount: number = 0;
 
         /**已创建好映射关系的键值列表*/
-        public list: Object;
+        public list: any;
 
 
         /**
@@ -30,11 +30,11 @@ namespace lolo {
          * @param value
          */
         public setItem(key: any, value: any): void {
-            //尝试添加 ONLY_KEY 属性
+            // 尝试添加 ONLY_KEY 属性
             if (key[Dictionary.ONLY_KEY] == undefined) {
                 key[Dictionary.ONLY_KEY] = Dictionary.ONLY_KEY + (++Dictionary._keyCount);
             }
-            //添加成功，key 值改为 ONLY_KEY
+            // 添加成功，key 值改为 ONLY_KEY
             if (key[Dictionary.ONLY_KEY] != undefined) {
                 key = key[Dictionary.ONLY_KEY];
             }
@@ -53,7 +53,7 @@ namespace lolo {
 
 
         /**
-         * 通过键移除对应的Item
+         * 通过键移除对应的 Item
          * @param key
          */
         public removeItem(key: any): void {
@@ -63,7 +63,7 @@ namespace lolo {
 
 
         /**
-         * 是否已经包含该key与value
+         * 是否已经包含该 key 与 value
          */
         public hasItem(key: any): boolean {
             if (key[Dictionary.ONLY_KEY] != undefined) key = key[Dictionary.ONLY_KEY];

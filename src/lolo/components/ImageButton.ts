@@ -79,9 +79,8 @@ namespace lolo {
 
         /**
          * 进行渲染
-         * @param event Event.ENTER_FRAME 事件
          */
-        protected doRender(event?: Event): void {
+        protected doRender(): void {
             //根据内容调整大小
             if (this._autoSize) {
                 this._width = this._image.width + this._imagePaddingLeft + this._imagePaddingRight;

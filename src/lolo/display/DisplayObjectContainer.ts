@@ -74,9 +74,13 @@ namespace lolo {
         }
 
         public getWidth(): number {
-            if (this._width > 0) return this._width;
-            if (this.childResized) this.getChildrenSize();
-            return this._childrenWidth;
+            let w: number;
+            if (this._width > 0) w = this._width;
+            else {
+                if (this.childResized) this.getChildrenSize();
+                w = this._childrenWidth;
+            }
+            return w * this._scaleX;
         }
 
 
@@ -88,9 +92,13 @@ namespace lolo {
         }
 
         public getHeight(): number {
-            if (this._height > 0) return this._height;
-            if (this.childResized) this.getChildrenSize();
-            return this._childrenHeight;
+            let h: number;
+            if (this._height > 0) h = this._height;
+            else {
+                if (this.childResized) this.getChildrenSize();
+                h = this._childrenHeight;
+            }
+            return h * this._scaleY;
         }
 
 

@@ -122,12 +122,20 @@ namespace lolo {
         public halfStageHeight: number;
 
 
+        private _enterFrameEvent: Event;
+        private _prerenderEvent: Event;
+
+
         public constructor() {
             super();
             lolo.CALL_SUPER_REPLACE_KEYWORD();
 
+            this._enterFrameEvent = new Event(Event.ENTER_FRAME);
+            this._prerenderEvent = new Event(Event.PRERENDER);
+
             this.stage_resizeHandler();
             this.scheduleUpdate();
+            cc.eventManager.addCustomListener(cc.Director.EVENT_AFTER_UPDATE, this.afterUpdateHandler.bind(this));
             cc.eventManager.addCustomListener(cc.game.EVENT_SHOW, this.activateHandler.bind(this));
             cc.eventManager.addCustomListener(cc.game.EVENT_HIDE, this.deactivateHandler.bind(this));
         }
@@ -600,9 +608,12 @@ namespace lolo {
             let date = TimeUtil.nowDate = new Date();
             TimeUtil.nowTime = date.getTime();
 
-            this.event_dispatch(Event.create(Event, Event.ENTER_FRAME));
+            this.event_dispatch(this._enterFrameEvent, false, false);
         }
 
+        private afterUpdateHandler(): void {
+            this.event_dispatch(this._prerenderEvent, false, false);
+        }
 
         private activateHandler(): void {
             this.event_dispatch(Event.create(Event, Event.ACTIVATE));

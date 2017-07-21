@@ -60,22 +60,19 @@ namespace lolo {
 
         /**
          * 进行渲染
-         * @param event Event.ENTER_FRAME 事件
          */
-        protected doRender(event?: Event): void {
-            lolo.stage.event_removeListener(Event.ENTER_FRAME, this.doRender, this);
-
+        protected doRender(): void {
             if (this._scrollBar == null) {
                 super.doRender();
                 return;
             }
 
             this.recycleAllItem();
-
             // 属性或数据不完整，不能显示
             if (this._data == null || this._data.length == 0 || this._itemRendererClass == null) {
                 this._width = this._height = 0;
                 if (this._selectedItem != null) this.selectedItem = null;//取消选中
+                PrerenderScheduler.remove(this._renderHandler);
                 this.dispatchListEvent(ListEvent.RENDER);
                 return;
             }
@@ -119,7 +116,7 @@ namespace lolo {
             let lastItem: ItemRenderer = null;
             for (let i = minI; i < maxI; i++) {
                 item = this.getItem();
-                item.touchListener.swallowTouches = false;
+                item.touchListener.swallowTouches = false;// 不能吞噬事件，TouchScrollBar(Mask) 还在侦听 touch
                 this.addChild(item);
                 this.addItem(item);
                 item.index = i;// addItem 和 set index 顺序不能反
@@ -182,6 +179,7 @@ namespace lolo {
             }
 
             this.updateSelectedItem();
+            PrerenderScheduler.remove(this._renderHandler);
             this.dispatchListEvent(ListEvent.RENDER);
         }
 

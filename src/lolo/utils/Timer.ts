@@ -221,7 +221,7 @@ namespace lolo {
                 Timer.removeTimer(Timer._startingList, this);
                 Timer._startingList.push(this);
 
-                lolo.stage.event_addListener(Event.ENTER_FRAME, Timer.enterFrameHandler, Timer);
+                lolo.stage.event_addListener(Event.ENTER_FRAME, Timer.enterFrameHandler, Timer, 9);
             }
         }
 
