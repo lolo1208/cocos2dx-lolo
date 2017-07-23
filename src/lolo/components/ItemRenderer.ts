@@ -197,12 +197,6 @@ namespace lolo {
         }
 
 
-        public destroy(): void {
-            this.recycle();
-            super.destroy();
-        }
-
-
         //
     }
 }

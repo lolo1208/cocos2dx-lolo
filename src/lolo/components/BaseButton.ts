@@ -243,11 +243,12 @@ namespace lolo {
         //
 
 
-        public recycle(): void {
+        public destroy(): void {
             PrerenderScheduler.remove(this._renderHandler);
 
-            super.recycle();
+            super.destroy();
         }
+
 
         //
     }
