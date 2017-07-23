@@ -5,7 +5,7 @@
     "mapCover" : "map/{0}/covers/{1}.png",
     "mapTouchAni" : "ui.mainUI.touchMap",
     
-    "avatarAnimation" : "ani/avatar/{0}_{1}.ani",
+    "avatarAnimation" : "ani/avatar/{0}/{1}.ani",
     "adjunctAnimation" : "ani/adjunct/{0}/{1}.ani",
     
 	

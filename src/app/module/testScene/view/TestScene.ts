@@ -87,11 +87,6 @@ namespace app.testScene {
             this.errorBtn.event_addListener(TouchEvent.TOUCH_TAP, this.errorBtn_touchTapHandler, this);
 
 
-            let ani: Animation = new Animation("ui.mainUI.requestModal.loading");
-            ani.x = ani.y = 100;
-            this.addChild(ani);
-            ani.play();
-
             // this.c.visible = false;
 
         }

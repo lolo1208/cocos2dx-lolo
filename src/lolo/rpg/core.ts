@@ -33,10 +33,10 @@ namespace lolo.rpg {
         /**垂直方向图块的数量*/
         vChunkCount: number;
 
-        /**地图数据，二维数组 data[y][x] */
-        data: { x: number, y: number, cover: boolean, canPass: boolean }[][];
-        /**遮挡物列表 covers[{id:遮挡物的id, point:遮挡物的像素位置)}]*/
-        covers: { id: string, point: { x: number, y: number } }[];
+        /**地图数据，二维数组，data[y][x] = { p:是否可通过, c:是否被遮挡, f:特性 }*/
+        data: {p: boolean, c: boolean, f: string}[][];
+        /**特性列表，features["feature"] = [ {x, y}, {x, y}, ... ]*/
+        features: any;
     }
 
 
@@ -56,7 +56,7 @@ namespace lolo.rpg {
     export function wayfinding(mapInfo: MapInfo, startP: Point, endP: Point): any[] {
         let mapData: any[] = mapInfo.data;
         if (startP.x == endP.x && startP.y == endP.y) return [];//结束点就是开始点
-        if (!mapData[endP.y] || !mapData[endP.y][endP.x].canPass) return [];//结束点是不可通行的
+        if (!mapData[endP.y] || !mapData[endP.y][endP.x].p) return [];//结束点是不可通行的
 
         let isPathFind: boolean = false;//是否有找到可通行的路线
         let closeA: any[] = [];//关闭列表
@@ -71,7 +71,7 @@ namespace lolo.rpg {
         for (y = 0; y < yCount; y++) {
             findA[y] = [];
             for (x = 0; x < xCount; x++) {
-                findA[y][x] = mapData[y][x].canPass ? 0 : 1;//高度大于0的点才可以考察
+                findA[y][x] = mapData[y][x].p ? 0 : 1;//高度大于0的点才可以考察
             }
         }
 
@@ -332,7 +332,7 @@ namespace lolo.rpg {
 
         if (!tileInTheMapData(pSide, mapInfo)) return false;//超出范围
 
-        return mapInfo.data[pSide.y][pSide.x].canPass;
+        return mapInfo.data[pSide.y][pSide.x].p;
     }
 
 
@@ -436,7 +436,7 @@ namespace lolo.rpg {
      * @return
      */
     export function canPassTile(p: Point, mapInfo: MapInfo): boolean {
-        return mapInfo.data[p.y] && mapInfo.data[p.y][p.x] && mapInfo.data[p.y][p.x].canPass;
+        return mapInfo.data[p.y] && mapInfo.data[p.y][p.x] && mapInfo.data[p.y][p.x].p;
     }
 
 
@@ -472,7 +472,7 @@ namespace lolo.rpg {
     export function getRandomCanPassTile(mapInfo: MapInfo): Point {
         let x: number = Math.floor(mapInfo.data[0].length * Math.random());
         let y: number = Math.floor(mapInfo.data.length * Math.random());
-        while (!mapInfo.data[y][x].canPass) {
+        while (!mapInfo.data[y][x].p) {
             x = Math.floor(mapInfo.data[0].length * Math.random());
             y = Math.floor(mapInfo.data.length * Math.random());
         }

@@ -17,7 +17,7 @@ namespace app.rpgScene {
      */
     export class RpgScene extends Container {
 
-        public static TEST_MAP_ID: string = "101";
+        public static TEST_MAP_ID: string = "102";
 
 
         private _map: Map;

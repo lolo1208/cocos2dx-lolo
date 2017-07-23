@@ -214,7 +214,7 @@ namespace lolo.rpg {
             // 走到了被遮挡的区块上
             let opacity: number = 255;
             if (this.autoCoverAvatar) {
-                if (this._info.data[avatar.tile.y][avatar.tile.x].cover) opacity = 150;
+                if (this._info.data[avatar.tile.y][avatar.tile.x].c) opacity = 150;
             }
             avatar.setOpacity(opacity);
 
