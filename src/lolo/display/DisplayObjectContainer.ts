@@ -27,15 +27,16 @@ namespace lolo {
          * 重写添加子对象方法
          * - 支持对 child 多次调用addChild()
          * - 标记子节点变化，用于计算宽度
-         * @param args [ child: Node, localZOrder?: number, tagOrName?: number|string ]
+         * @param child
+         * @param localZOrder
+         * @param tagOrName
          */
-        public addChild(...args: any[]): void {
-            let child: cc.Node = args[0];
+        public addChild(child: cc.Node, localZOrder?: number, tagOrName?: number | string): void {
             if (child == null) return;
 
             this.childResized = true;
             child.removeFromParent();
-            super.addChild.apply(this, args);
+            super.addChild.apply(this, arguments);
         }
 
 
@@ -49,7 +50,7 @@ namespace lolo {
             if (child == null) return;
 
             this.childResized = true;
-            super.removeChild(child, cleanup);
+            super.removeChild.apply(this, arguments);
         }
 
 
@@ -62,7 +63,7 @@ namespace lolo {
             if (this.childrenCount == 0) return;
 
             this.childResized = true;
-            super.removeAllChildren(cleanup);
+            super.removeAllChildren.apply(this, arguments);
         }
 
 

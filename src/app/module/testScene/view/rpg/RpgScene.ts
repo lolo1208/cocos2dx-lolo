@@ -9,6 +9,7 @@ namespace app.rpgScene {
     import Point = lolo.Point;
     import closestCanPassTile = lolo.rpg.closestCanPassTile;
     import TouchEvent = lolo.TouchEvent;
+    import Button = lolo.Button;
 
 
     /**
@@ -19,6 +20,8 @@ namespace app.rpgScene {
 
         public static TEST_MAP_ID: string = "102";
 
+
+        public backBtn: Button;
 
         private _map: Map;
         private _role: Avatar;
@@ -34,6 +37,9 @@ namespace app.rpgScene {
 
             this._map = new Map();
             this.addChild(this._map);
+            this.addChild(this.backBtn);
+
+            this.backBtn.event_addListener(TouchEvent.TOUCH_TAP, this.backBtn_touchTap, this);
         }
 
 
@@ -41,6 +47,11 @@ namespace app.rpgScene {
             let role: Avatar = this._role;
             let tile: Point = closestCanPassTile(role.tile, this._map.touchTile, this._map.info);
             role.moveToTile(tile);
+        }
+
+
+        private backBtn_touchTap(event: TouchEvent): void {
+            this.hide();
         }
 
 

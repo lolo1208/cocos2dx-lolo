@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-  <container id="rpgScene"/>
+  <container id="rpgScene">
+    <button id="backBtn" properties='{"x":194, "y":243, "width":100, "height":50, "label":"Back", "styleName":"button1"}' stageLayout='{"paddingRight":20, "paddingBottom":20}'/>
+  </container>
 </config>
