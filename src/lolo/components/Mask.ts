@@ -192,8 +192,7 @@ namespace lolo {
 
             if (this._clipper != null) {
                 // 将子节点还回 parent 中
-                let children: cc.Node[] = this._clipper.children;
-                if (!isNative) children = children.concat();
+                let children: cc.Node[] = this._clipper.getChildren();
                 let len: number = children.length;
                 let parent: cc.Node = this._clipper.getParent();
                 for (let i = 0; i < len; i++) parent.addChild(children[i]);

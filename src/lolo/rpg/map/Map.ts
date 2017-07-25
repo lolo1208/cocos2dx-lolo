@@ -183,7 +183,7 @@ namespace lolo.rpg {
          * @return
          */
         public getAllAvatar(): Avatar[] {
-            return <Avatar[]>this._avatarC.children;
+            return <Avatar[]>this._avatarC.getChildren();
         }
 
 
@@ -492,7 +492,7 @@ namespace lolo.rpg {
                 let avatar: Avatar;
                 let rect: Rectangle = lolo.temp_rect;
                 // 从上往下循环搜索
-                let children: cc.Node[] = this._avatarC.children;
+                let children: cc.Node[] = this._avatarC.getChildren();
                 for (let i = children.length - 1; i >= 0; i--) {
                     avatar = <Avatar>children[i];
                     if (!avatar.isVisible() || avatar.getOpacity() <= 0) continue;
@@ -552,8 +552,7 @@ namespace lolo.rpg {
          * 清理所有的Avatar
          */
         public cleanAllAvatar(): void {
-            let children: cc.Node[] = this._avatarC.children;
-            if (!isNative) children = children.concat();
+            let children: cc.Node[] = this._avatarC.getChildren();
             let len: number = children.length;
             for (let i = 0; i < len; i++) this.removeAvatar(<Avatar>children[i]);
 

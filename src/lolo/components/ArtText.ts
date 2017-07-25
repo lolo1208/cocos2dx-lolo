@@ -63,7 +63,7 @@ namespace lolo {
 
             //创建并显示对应的字符 Bitmap
             let count: number, len: number, children: cc.Node[];
-            children = this.children;
+            children = this.getChildren();
             len = this._text.length;
             count = children.length;
             if (count > len) {
@@ -79,7 +79,7 @@ namespace lolo {
                 }
             }
 
-            if (isNative) children = this.children;
+            children = this.getChildren();
             let i: number, bs: Bitmap, len: number = this._text.length, w: number = 0;
             for (i = 0; i < len; i++) {
                 bs = <Bitmap>children[i];
@@ -187,7 +187,7 @@ namespace lolo {
          */
         public clean(): void {
             PrerenderScheduler.remove(this._renderHandler);
-            let children: cc.Node[] = this.children;
+            let children: cc.Node[] = this.getChildren();
             for (let i = 0; i < children.length; i++) {
                 CachePool.recycle(children[i]);
             }

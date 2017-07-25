@@ -73,7 +73,7 @@ namespace app.core {
          * 注册好游戏内的所有模块
          */
         private addAllModule(): void {
-            this.addModule(AppConstants.MN_S_TEST, app.testScene.TestScene, "testCfg1", "testCfg2", "testRpgCfg");
+            this.addModule(AppConstants.MN_S_TEST, app.testScene.TestScene, "testCfg1", "testCfg2", "rpgScCfg", "jumpScCfg");
         }
 
 

@@ -176,7 +176,7 @@ namespace lolo {
          */
         private mask_touchBegin(event: TouchEvent): void {
             if (this._touchID != null) return;
-            this._touchID = event.touch.getID();
+            this._touchID = event.touch.getTouchID();
 
             this._content.stopAllActions();
             let scrolls: TouchScrollBar[] = this._content[TouchScrollBar.SCROLLS];
@@ -199,7 +199,7 @@ namespace lolo {
          * 拖动更新
          */
         private mask_touchMove(event: TouchEvent): void {
-            if (event.touch.getID() != this._touchID) return;
+            if (event.touch.getTouchID() != this._touchID) return;
 
             // 还没开始滚动，检查位置是否已达到开始滚动的阈值
             let curPosition: number = (this._direction == Constants.HORIZONTAL)
@@ -250,7 +250,7 @@ namespace lolo {
          * 拖动结束
          */
         private mask_touchEnd(event?: TouchEvent): void {
-            if (event instanceof TouchEvent && event.touch.getID() != this._touchID) return;
+            if (event instanceof TouchEvent && event.touch.getTouchID() != this._touchID) return;
             this._touchID = null;
 
             this._mask.event_removeListener(TouchEvent.TOUCH_MOVE, this.mask_touchMove, this);

@@ -66,7 +66,7 @@ namespace lolo {
 
             let e: TouchEvent = this._touchEvent;
             let eventCode: number = event.getEventCode();
-            let touchID: number = isPCWeb ? touch.__instanceId : touch.getID();
+            let touchID: number = isPCWeb ? touch.__instanceId : touch.getTouchID();
             let infoList = this._touchInfoList;
             let info: TouchInfo = infoList[touchID];
 

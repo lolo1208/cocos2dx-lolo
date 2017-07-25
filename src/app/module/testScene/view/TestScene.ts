@@ -1,4 +1,5 @@
 /// <reference path="./rpg/RpgScene.ts"/>
+/// <reference path="./jump/JumpScene.ts"/>
 
 namespace app.testScene {
 
@@ -19,7 +20,7 @@ namespace app.testScene {
     import delayedCall = lolo.delayedCall;
     import Image = lolo.Image;
     import AppUIManager = app.core.AppUIManager;
-    import RpgScene = app.rpgScene.RpgScene;
+    import RpgScene = app.rpg.RpgScene;
     import Label = lolo.Label;
     import Mask = lolo.Mask;
     import TouchEvent = lolo.TouchEvent;
@@ -29,6 +30,7 @@ namespace app.testScene {
     import SimpleBitmap = lolo.SimpleBitmap;
     import GestureEvent = lolo.GestureEvent;
     import Event = lolo.Event;
+    import JumpScene = app.jump.JumpScene;
 
 
     /**
@@ -45,6 +47,7 @@ namespace app.testScene {
         public errorBtn: Button;
 
         public rpgScene: RpgScene = new RpgScene();
+        public jumpScene: JumpScene = new JumpScene();
 
         public p: TestCase_Page = new TestCase_Page();
         public nt: TestCase_NumberText = new TestCase_NumberText();
@@ -73,9 +76,11 @@ namespace app.testScene {
         public initialize(): void {
             this.initUI("testCfg1");
             this.initUI("testCfg2");
-            this.initUI("testRpgCfg");
+            this.initUI("rpgScCfg");
+            this.jumpScene.initialize();
+            this.addChild(this.jumpScene);
 
-            let children: cc.Node[] = this.c.children;
+            let children: cc.Node[] = this.c.getChildren();
             for (let i = 0; i < children.length; i++) {
                 let btn: Button = <Button>children[i];
                 btn.event_addListener(TouchEvent.TOUCH_TAP, this.btns_touchTapHandler, this);
@@ -92,6 +97,10 @@ namespace app.testScene {
         }
 
         private testBtn_touchTapHandler(event: TouchEvent): void {
+            this.jumpScene.show();
+            this.c.removeFromParent();
+            return;
+
             (<AppUIManager>lolo.ui).loadRpgMap(RpgScene.TEST_MAP_ID, lolo.handler(() => {
                 this.rpgScene.show();
             }, this));

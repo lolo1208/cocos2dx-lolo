@@ -10,7 +10,8 @@
     
 	"testCfg1" : { "url":"json/uiConfig/test/Config1.json", "type":"json", "nameID":"020150" },
 	"testCfg2" : { "url":"json/uiConfig/test/Config2.json", "type":"json", "nameID":"020150" },
-	"testRpgCfg" : { "url":"json/uiConfig/test/Rpg.json", "type":"json", "nameID":"020150" },
+	"rpgScCfg" : { "url":"json/uiConfig/test/Rpg.json", "type":"json", "nameID":"020150" },
+	"jumpScCfg" : { "url":"json/uiConfig/test/Jump.json", "type":"json", "nameID":"020150" },
 	
 	
 	

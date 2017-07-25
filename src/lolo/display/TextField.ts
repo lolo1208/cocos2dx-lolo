@@ -220,7 +220,7 @@ namespace lolo {
             if (isNative) {
                 offset["width"] = offset["x"];// native 只支持 cc.Size
                 offset["height"] = offset["y"];
-                this.children[0]["enableShadow"](color, offset, blur);// CCLabel
+                this.getChildren()[0]["enableShadow"](color, offset, blur);// children[0] = CCLabel
             }
             else {
                 super.enableShadow(color, offset, blur);

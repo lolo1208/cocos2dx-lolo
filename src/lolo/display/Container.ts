@@ -24,7 +24,7 @@ namespace lolo {
         public constructor() {
             super();
 
-            this.visible = false;
+            this.setVisible(false);
         }
 
 
@@ -45,7 +45,7 @@ namespace lolo {
         public show(): void {
             if (!this._showed) {
                 this._showed = true;
-                this.visible = true;
+                this.setVisible(true);
                 if (this.autoRemove /*&& this.getParent() == null*/ && this._target_parent != null)
                     this._target_parent.addChild(this);
                 this.startup();
@@ -59,7 +59,7 @@ namespace lolo {
         public hide(): void {
             if (this._showed) {
                 this._showed = false;
-                this.visible = false;
+                this.setVisible(false);
 
                 let p: cc.Node = this.getParent();
                 if (p != null) this._target_parent = p;

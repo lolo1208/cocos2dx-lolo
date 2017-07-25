@@ -110,7 +110,7 @@ namespace lolo {
             if (!this.childResized) return;
             this.childResized = false;
 
-            let children: cc.Node[] = this.children;
+            let children: cc.Node[] = this.getChildren();
             if (children.length == 0) {
                 this._childrenWidth = this._childrenHeight = 0;
                 return;

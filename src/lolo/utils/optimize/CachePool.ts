@@ -199,17 +199,20 @@ namespace lolo {
          * @param args
          */
         public static recycle(...args: any[]): void {
-            if (args.length == 0) return;
+            let obj: any = args[0];
+            if (obj == null) return;
 
             // 列表循环回收
+            let len: number = args.length;
+            if (Object.prototype.toString.call(obj) === "[object Array]" && len == 1) {// ObjectUtil.isArray(obj)
+                args = obj;
+                len = args.length;
+            }
             if (args.length > 1) {
-                let len: number = args.length;
                 for (let i = 0; i < len; i++) CachePool.recycle(args[i]);
                 return;
             }
 
-            let obj: any = args[0];
-            if (obj == null) return;
 
             // event handler
             if (obj instanceof Event) {

@@ -1,4 +1,4 @@
-namespace app.rpgScene {
+namespace app.rpg {
 
 
     import Module = lolo.Module;

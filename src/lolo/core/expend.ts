@@ -85,10 +85,17 @@ namespace lolo {
         p._original_addChild = p.addChild;
         p.addChild = expend_addChild;
 
-        // html5中，onEnter 的时候，需要重新注册 touchListener
+        // html5
         if (!isNative) {
+
+            // onEnter() 的时候，需要重新注册 touchListener
             p._original_onEnter = p.onEnter;
             p.onEnter = expend_onEnter;
+
+            // getChildren() 返回 _children 的副本
+            p.getChildren = function (): cc.Node[] {
+                return this._children.concat();
+            };
         }
 
         // EventDispatcher
@@ -212,21 +219,20 @@ namespace lolo {
 
     // destroyAllChildren
     export function expend_destroyAllChildren(): void {
-        let children: cc.Node[] = this.children;
-        if (!isNative) children = children.concat();
+        let children: cc.Node[] = this.getChildren();
         let len: number = children.length;
         for (let i = 0; i < len; i++) children[i].destroy();
     }
 
 
     // inStageVisibled
-    export function expend_inStageVisibled(worldPoint: cc.Point): boolean {
+    export function expend_inStageVisibled(worldPoint?: cc.Point): boolean {
         let node: cc.Node = this;
         while (node != null) {
             if (node == lolo.stage) return true;// 已经找到舞台了
             if (!node.isVisible()) return false;
             if (node.getOpacity() <= 0) return false;
-            if (node instanceof cc.ClippingNode && !node.contains(worldPoint)) return false;
+            if (node instanceof cc.ClippingNode && worldPoint != null && !node.contains(worldPoint)) return false;
             node = node.parent;
         }
         return false;
@@ -236,8 +242,9 @@ namespace lolo {
     // hitTest
     export function expend_hitTest(worldPoint: cc.Point): boolean {
         if (!this.inStageVisibled(worldPoint)) return false;// 当前节点不可见
-        let children: cc.Node[] = this.children;
-        for (let i = 0; i < children.length; i++) {
+        let children: cc.Node[] = this.getChildren();
+        let len: number = children.length;
+        for (let i = 0; i < len; i++) {
             let child: cc.Node = children[i];
             if (child instanceof ModalBackground) continue;// 忽略模态背景
             if (child.hitTest(worldPoint)) return true;
@@ -642,5 +649,15 @@ namespace lolo {
             };
         }
 
+
+        // 扩展 cc.Touch
+        p = cc.Touch.prototype;
+        if (isPCWeb) {
+            p.getTouchID = function (): number {
+                return this.__instanceId;
+            };
+        } else {
+            p.getTouchID = p.getID;
+        }
     }
 }

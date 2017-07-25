@@ -30,9 +30,13 @@ declare namespace cc {
         cascadeOpacity: boolean;
         zIndex: number;
         parent: Node;
-        children: Node[];
         childrenCount: number;
 
+        /**html5 才有的属性。要获取所有子节点，请通过 getChildren() 获取*/
+        _children: Node[];
+
+
+        getChildren(): Node[];
 
         setAnchorPoint(point: number | Point, y?: number): void;
 
@@ -182,7 +186,7 @@ declare namespace cc {
          *  - 自己或父级的 opacity = 0
          *  @param worldPoint 需要检测该点是否在显示范围内（cc.ClippingNode）
          */
-        inStageVisibled(worldPoint: Point): boolean;
+        inStageVisibled(worldPoint?: Point): boolean;
 
         /**点击测试函数*/
         hitTest(worldPoint: Point): boolean;
@@ -420,7 +424,9 @@ declare namespace cc {
 
 
     class Touch extends Class {
-        getID(): number;
+        getID(): number;// isPCWeb 环境下值为：undefined。推荐使用 getTouchID()，任何环境下都能获取到值
+
+        getTouchID(): number;// 所有环境下都能获取到 touchID 值
 
         getDelta(): Point;
 

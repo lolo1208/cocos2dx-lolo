@@ -195,8 +195,7 @@ namespace lolo {
             this.removeFromParent();
             lolo.layout.removeStageLayout(this);
 
-            let buttons: Button[] = <Button[]>this._btnC.children;
-            if (!isNative) buttons = buttons.concat();
+            let buttons: Button[] = <Button[]>this._btnC.getChildren();
             let len: number = buttons.length;
             for (let i = 0; i < len; i++) {
                 let btn: Button = buttons[i];
