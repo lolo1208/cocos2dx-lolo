@@ -29,8 +29,10 @@ declare namespace cc {
         visible: boolean;
         cascadeOpacity: boolean;
         zIndex: number;
+        tag: number;
         parent: Node;
         childrenCount: number;
+        shaderProgram: GLProgram;
 
         /**html5 才有的属性。要获取所有子节点，请通过 getChildren() 获取*/
         _children: Node[];
@@ -86,6 +88,8 @@ declare namespace cc {
 
         getChildByName(name: string): Node;
 
+        getChildByTag(tag: number): Node;
+
         setParent(parent: Node): void;
 
         getParent(): Node;
@@ -103,6 +107,10 @@ declare namespace cc {
         setName(name: string): void;
 
         getName(): string;
+
+        setShaderProgram(newShaderProgram: GLProgram): void;
+
+        getShaderProgram(): GLProgram;
 
         scheduleUpdate(): void;
 
@@ -400,6 +408,23 @@ declare namespace cc {
 
         getTotalFrames(): number;
     }
+
+
+    class GLProgram extends Class {
+        initWithString(vertShaderStr: string, fragShaderStr: string): boolean;
+
+        addAttribute(attributeName: string, index: number): void;
+
+        link(): boolean;
+
+        updateUniforms(): void;
+
+        use(): void;
+
+        retain(): void;
+
+        release(): void;
+    }
 }
 
 
@@ -533,7 +558,7 @@ declare namespace cc {
     let view: EGLView;
     let textureCache: TextureCache;
 
-    // EditBox Constants
+    // EditBox
     let EDITBOX_INPUT_MODE_ANY: number;// 文本键盘（含换行）[ 默认 ]
     let EDITBOX_INPUT_MODE_EMAILADDR: number;// 邮箱地址键盘
     let EDITBOX_INPUT_MODE_NUMERIC: number;// 数字符号键盘
@@ -553,6 +578,15 @@ declare namespace cc {
     let KEYBOARD_RETURNTYPE_SEND: number;// Send字样
     let KEYBOARD_RETURNTYPE_SEARCH: number;// Search字样
     let KEYBOARD_RETURNTYPE_GO: number;// Go字样
+
+    // Shader
+    let ATTRIBUTE_NAME_POSITION: string;
+    let ATTRIBUTE_NAME_TEX_COORD: string;
+    let ATTRIBUTE_NAME_COLOR: string;
+
+    let VERTEX_ATTRIB_POSITION: number;
+    let VERTEX_ATTRIB_TEX_COORDS: number;
+    let VERTEX_ATTRIB_COLOR: number;
 }
 
 

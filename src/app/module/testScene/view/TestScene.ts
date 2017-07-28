@@ -31,6 +31,7 @@ namespace app.testScene {
     import GestureEvent = lolo.GestureEvent;
     import Event = lolo.Event;
     import JumpScene = app.jump.JumpScene;
+    import Filter = lolo.Filter;
 
 
     /**
@@ -92,11 +93,45 @@ namespace app.testScene {
             this.errorBtn.event_addListener(TouchEvent.TOUCH_TAP, this.errorBtn_touchTapHandler, this);
 
 
+            let img = this._img = new Image();
+            img.directory = "skillIcon";
+            img.fileName = "gongJi";
+            img.x = img.y = img.width = img.height = 100;
+            this.addChild(img);
+
+            let bmp1: Bitmap = new Bitmap("test.s9");
+            bmp1.x = 220;
+            bmp1.y = 100;
+            this.addChild(bmp1);
+
+            let bmp2 = new Bitmap("skin.checkBox.1.down");
+            bmp2.x = 400;
+            bmp2.y = 100;
+            this.addChild(bmp2);
+
+            delayedCall(2000, () => {
+                Filter.grayScale(img);
+                Filter.grayScale(bmp1);
+                Filter.grayScale(bmp2);
+            });
+
+            delayedCall(3000, () => {
+                Filter.none(img);
+                Filter.none(bmp1);
+                Filter.none(bmp2);
+            });
+
+
             // this.c.visible = false;
 
         }
 
+        private _img: Image;
+
+
         private testBtn_touchTapHandler(event: TouchEvent): void {
+
+
             this.jumpScene.show();
             this.c.removeFromParent();
             return;

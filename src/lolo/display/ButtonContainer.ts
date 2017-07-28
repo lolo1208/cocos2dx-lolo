@@ -17,8 +17,8 @@ namespace lolo {
 
         /**Touch Begin 时，播放的音效名称。默认值：null，表示不用播放*/
         public static touchSoundName: string = null;
-        /**Touch Begin 时，缩放的比例。值为 1 时，表示不用缩放。默认值：0.9*/
-        public static touchZoomScale: number = 0.9;
+        /**Touch Begin 时，缩放的比例。值为 1 时，表示不用缩放。默认值：0.95*/
+        public static touchZoomScale: number = 0.95;
 
 
         /**
@@ -89,6 +89,7 @@ namespace lolo {
             this._target = target;
             if (target == null) return;
 
+            target.touchEnabled = true;
             target.touchListener.swallowTouches = false;
 
             target.parent.addChild(this);

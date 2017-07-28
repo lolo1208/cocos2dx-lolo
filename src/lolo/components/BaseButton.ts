@@ -29,6 +29,7 @@ namespace lolo {
             this._skin = new Skin();
             this.addChild(this._skin);
             this._bc = new ButtonContainer(this._skin, false);
+            this._skin.touchEnabled = false;// ButtonContainer 会默认设置为 true
             this._renderHandler = new Handler(this.doRender, this);
         }
 
