@@ -167,6 +167,7 @@ declare namespace cc {
         _scaleY: number;
         _ed: lolo.IEventDispatcher;
         _touchEnabled: boolean;
+        _filter: string;
 
         alpha: number;
         name: string;// override
@@ -180,11 +181,16 @@ declare namespace cc {
         propagateTouchEvents: boolean;
         /**touch事件侦听器*/
         touchListener: TouchListener;
+        /**滤镜*/
+        filter: string;
 
         setWidth(value: number): void;//
         getWidth(): number;//
         setHeight(value: number): void;//
         getHeight(): number;//
+
+        setFilter(value: string | GLProgram): void;//
+        getFilter(): string;//
 
         /**
          * 对象是否在舞台，并且可见
@@ -215,6 +221,7 @@ declare namespace cc {
 
     class Sprite extends Node {
         texture: Texture2D;
+        _original_setTexture: (texture: Texture2D) => void;
 
         setTexture(texture: Texture2D): void;
 
@@ -411,6 +418,8 @@ declare namespace cc {
 
 
     class GLProgram extends Class {
+        filterType: string;// Filter 中创建的值
+
         initWithString(vertShaderStr: string, fragShaderStr: string): boolean;
 
         addAttribute(attributeName: string, index: number): void;

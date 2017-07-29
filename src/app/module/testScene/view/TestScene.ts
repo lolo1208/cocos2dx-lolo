@@ -98,28 +98,49 @@ namespace app.testScene {
             img.fileName = "gongJi";
             img.x = img.y = img.width = img.height = 100;
             this.addChild(img);
+            img.filter = Filter.GRAY_SCALE;
 
             let bmp1: Bitmap = new Bitmap("test.s9");
             bmp1.x = 220;
             bmp1.y = 100;
             this.addChild(bmp1);
+            bmp1.filter = Filter.GRAY_SCALE;
 
             let bmp2 = new Bitmap("skin.checkBox.1.down");
             bmp2.x = 400;
             bmp2.y = 100;
             this.addChild(bmp2);
+            bmp2.filter = Filter.GRAY_SCALE;
+
+            let ani: Animation = new Animation("avatar.female.attack.5");
+            ani.x = ani.y = 300;
+            this.addChild(ani);
+            ani.filter = Filter.GRAY_SCALE;
+
+
+            let btn: Button = new Button();
+            btn.styleName = "button1";
+            btn.x = btn.y = 400;
+            btn.width = btn.height = 100;
+            btn.label = "a是的s";
+            btn.labelProps = {color: "0xFF0000"};
+            this.addChild(btn);
+            btn.filter = Filter.GRAY_SCALE;
+
 
             delayedCall(2000, () => {
-                Filter.grayScale(img);
-                Filter.grayScale(bmp1);
-                Filter.grayScale(bmp2);
+                img.fileName = "fengBao";
+                bmp1.sourceName = "skin.checkBox.1.down";
+                ani.play();
+                btn.label = "撒丁岛";
             });
 
-            delayedCall(3000, () => {
-                Filter.none(img);
-                Filter.none(bmp1);
-                Filter.none(bmp2);
+            delayedCall(5000, () => {
+                bmp1.sourceName = "test.s9";
+                img.filter = bmp1.filter = bmp2.filter = ani.filter = btn.filter = Filter.NONE;
             });
+
+            bmp1.runAction(cc.moveTo(6, 300, 300));
 
 
             // this.c.visible = false;

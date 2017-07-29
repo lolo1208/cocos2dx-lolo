@@ -38,10 +38,20 @@ namespace lolo {
         p.contains = expend_clippingNode_contains;
 
 
-        // cc.LabelTTF 属性重新定义
-        let p = cc.LabelTTF.prototype;
+        // cc.LabelTTF
+        p = cc.LabelTTF.prototype;
         Object.defineProperty(p, "width", expend_width);
         Object.defineProperty(p, "height", expend_height);
+
+
+        // cc.Sprite
+        p = cc.Sprite.prototype;
+        p._original_setTexture = p.setTexture;
+        p.setTexture = function (texture) {
+            this._original_setTexture(texture);
+            if (this._filter != Filter.NONE)
+                this.setShaderProgram(Filter.getShaderProgram(this.filter));
+        };
 
 
         if (isNative) {
@@ -71,6 +81,7 @@ namespace lolo {
         p.propagateTouchEvents = true;
         p._x = p._y = p._width = p._height = 0;
         p._scaleX = p._scaleY = 1;
+        p._filter = Filter.NONE;
 
         Object.defineProperty(p, "alpha", expend_alpha);
         Object.defineProperty(p, "name", expend_name);
@@ -145,6 +156,10 @@ namespace lolo {
         p.getScaleY = expend_getScaleY;
         Object.defineProperty(p, "scaleY", expend_scaleY);
 
+        // filter
+        p.setFilter = expend_setFilter;
+        p.getFilter = expend_getFilter;
+        Object.defineProperty(p, "filter", expend_filter);
     }
 
 
@@ -514,6 +529,36 @@ namespace lolo {
     export function expend_event_hasListener(): boolean {
         return this._ed.event_hasListener.apply(this._ed, arguments);
     }
+
+
+    // filter
+    export function expend_setFilter(value: string | cc.GLProgram): void {
+        let program: cc.GLProgram = <cc.GLProgram>value;
+        if (!(value instanceof cc.GLProgram)) program = Filter.getShaderProgram(<string>value);
+        this._filter = (program != null) ? program.filterType : Filter.NONE;
+
+        if (this instanceof cc.Sprite) this.setShaderProgram(program);
+
+        let children: cc.Node[] = this.getChildren();
+        let len: number = children.length;
+        for (let i = 0; i < len; i++) {
+            children[i].setFilter(program);
+        }
+    }
+
+    export function expend_getFilter(): string {
+        return this._filter;
+    }
+
+    export let expend_filter: PropertyDescriptor = {
+        enumerable: true, configurable: true,
+        set: function (value) {
+            this.setFilter(value);
+        },
+        get: function () {
+            return this.getFilter();
+        }
+    };
 
 
     // clippingNode.onEnter

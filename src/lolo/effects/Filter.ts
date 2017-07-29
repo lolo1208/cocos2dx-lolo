@@ -2,66 +2,64 @@ namespace lolo {
 
 
     /**
-     * 使用 Shader 实现一些滤镜效果
+     * 使用 cc.GLProgram(Shader) 实现一些滤镜效果
      * 2017/7/27
      * @author LOLO
      */
     export class Filter {
 
+        /**不使用滤镜*/
+        public static NONE: string = "none";
+        /**使用灰显滤镜（常用于禁用状态）*/
+        public static GRAY_SCALE: string = "grayscale";
+
+
+        /**已缓存的 GLPrpgram(Shader)*/
         private static _programs: any = {};
 
 
         /**
-         * 图像变灰
-         * @param target
+         * 根据传入的 type 获取对应的 cc.GLProgram(Shader)
+         * @param type
          */
-        public static grayScale(target: cc.Sprite): void {
-            let program: cc.GLProgram = this._programs["grayScale"];
+        public static getShaderProgram(type: string): cc.GLProgram {
+            if (type == null) type = this.NONE;
+            let program: cc.GLProgram = this._programs[type];
             if (program == null) {
+                let vertexShader: string = this.VS_DEFAULT;
+                let fragmentShader: string;
+                switch (type) {
+
+                    case this.NONE:
+                        if (!isNative) return null;// html5 可以直接用 null
+                        fragmentShader = this.FS_NONE;
+                        break;
+
+                    case this.GRAY_SCALE:
+                        fragmentShader = this.FS_GRAY_SCALE;
+                        break;
+                }
+
                 program = new cc.GLProgram();
                 program.retain();
-                program.initWithString(this.DEFAULT_VERTEX_SHADER, this.GRAY_SCALE_FRAGMENT_SHADER);
+                program.initWithString(vertexShader, fragmentShader);
                 program.addAttribute(cc.ATTRIBUTE_NAME_POSITION, cc.VERTEX_ATTRIB_POSITION);
                 program.addAttribute(cc.ATTRIBUTE_NAME_TEX_COORD, cc.VERTEX_ATTRIB_TEX_COORDS);
                 program.link();
                 program.updateUniforms();
-                this._programs["grayScale"] = program;
+                program.filterType = type;
+                this._programs[type] = program;
             }
-            target.setShaderProgram(program);
+            return program;
         }
-
-
-        public static none(target: cc.Sprite): void {
-            let program: cc.GLProgram = this._programs["none"];
-            if (program == null) {
-                program = new cc.GLProgram();
-                program.retain();
-                program.initWithString(this.DEFAULT_VERTEX_SHADER, this.NONE_FRAGMENT_SHADER);
-                program.addAttribute(cc.ATTRIBUTE_NAME_POSITION, cc.VERTEX_ATTRIB_POSITION);
-                program.addAttribute(cc.ATTRIBUTE_NAME_TEX_COORD, cc.VERTEX_ATTRIB_TEX_COORDS);
-                program.link();
-                program.updateUniforms();
-                this._programs["none"] = program;
-            }
-            target.setShaderProgram(program);
-        }
-
-        public static NONE_FRAGMENT_SHADER: string = ""
-            + "#ifdef GL_ES \n"
-            + "    precision lowp float; \n"
-            + "#endif \n"
-            + "varying vec4 v_fragmentColor; \n"
-            + "varying vec2 v_texCoord; \n"
-            + "void main() \n"
-            + "{ \n"
-            + "    vec4 c = texture2D(CC_Texture0, v_texCoord); \n"
-            + "    c = v_fragmentColor * c; \n"
-            + "    gl_FragColor = c; \n"
-            + "}";
 
         //
 
-        public static DEFAULT_VERTEX_SHADER: string = ""
+
+        ////////////////////////////[ Vertex Shader ]////////////////////////////
+
+        /**默认的 Vertex Shader*/
+        private static VS_DEFAULT: string = ""
             + "attribute vec4 a_position; \n"
             + "attribute vec2 a_texCoord; \n"
             + "attribute vec4 a_color; \n"
@@ -78,9 +76,27 @@ namespace lolo {
             + "    v_fragmentColor = a_color; \n"
             + "    v_texCoord = a_texCoord; \n"
             + "}";
+
+
+        ///////////////////////////[ Fragment Shader ]///////////////////////////
+
+        /**什么效果都没有，只使用本身纹理渲染的 Fragment Shader（用于还原 Shader 效果）*/
+        private static FS_NONE: string = ""
+            + "#ifdef GL_ES \n"
+            + "    precision lowp float; \n"
+            + "#endif \n"
+            + "varying vec4 v_fragmentColor; \n"
+            + "varying vec2 v_texCoord; \n"
+            + "void main() \n"
+            + "{ \n"
+            + "    vec4 c = texture2D(CC_Texture0, v_texCoord); \n"
+            + "    c = v_fragmentColor * c; \n"
+            + "    gl_FragColor = c; \n"
+            + "}";
         //
 
-        public static GRAY_SCALE_FRAGMENT_SHADER: string = ""
+        /**灰显 Fragment Shader，常用于表示禁用状态*/
+        private static FS_GRAY_SCALE: string = ""
             + "#ifdef GL_ES \n"
             + "    precision lowp float; \n"
             + "#endif \n"
@@ -93,6 +109,7 @@ namespace lolo {
             + "    gl_FragColor.xyz = vec3(0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b); \n"
             + "    gl_FragColor.w = c.w; \n"
             + "}";
+        //
 
 
         //
