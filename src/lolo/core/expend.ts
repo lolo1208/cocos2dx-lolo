@@ -49,8 +49,8 @@ namespace lolo {
         p._original_setTexture = p.setTexture;
         p.setTexture = function (texture) {
             this._original_setTexture(texture);
-            if (this._filter != Filter.NONE)
-                this.setShaderProgram(Filter.getShaderProgram(this.filter));
+            if (this._filter != null)
+                this.setShaderProgram(Filter.getShaderProgram(this._filter));
         };
 
 
@@ -81,7 +81,7 @@ namespace lolo {
         p.propagateTouchEvents = true;
         p._x = p._y = p._width = p._height = 0;
         p._scaleX = p._scaleY = 1;
-        p._filter = Filter.NONE;
+        p._filter = null;
 
         Object.defineProperty(p, "alpha", expend_alpha);
         Object.defineProperty(p, "name", expend_name);
@@ -532,17 +532,18 @@ namespace lolo {
 
 
     // filter
-    export function expend_setFilter(value: string | cc.GLProgram): void {
-        let program: cc.GLProgram = <cc.GLProgram>value;
-        if (!(value instanceof cc.GLProgram)) program = Filter.getShaderProgram(<string>value);
-        this._filter = (program != null) ? program.filterType : Filter.NONE;
+    export function expend_setFilter(value: string): void {
+        if (value == null) return;
+        this._filter = value;
 
-        if (this instanceof cc.Sprite) this.setShaderProgram(program);
+        if (this instanceof cc.Sprite) {
+            this.setShaderProgram(Filter.getShaderProgram(value));
+        }
 
         let children: cc.Node[] = this.getChildren();
         let len: number = children.length;
         for (let i = 0; i < len; i++) {
-            children[i].setFilter(program);
+            children[i].setFilter(value);
         }
     }
 

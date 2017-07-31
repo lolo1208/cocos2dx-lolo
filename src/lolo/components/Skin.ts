@@ -34,6 +34,10 @@ namespace lolo {
         ];
 
 
+        /**禁用时，没有对应的状态图像时，是否自动灰显。默认：true*/
+        public autoGrayScaleDisalbed: boolean = true;
+
+
         /**皮肤的名称*/
         private _skinName: string;
         /**当前皮肤包含的状态列表*/
@@ -139,6 +143,13 @@ namespace lolo {
                     state = this.hasState(Skin.SELECTED_UP) ? Skin.SELECTED_UP : Skin.UP;
                 else
                     state = Skin.UP;
+
+                if (this.autoGrayScaleDisalbed) {
+                    if (value == Skin.DISABLED || value == Skin.SELECTED_DISABLED)
+                        this.setFilter(Filter.GRAY_SCALE);
+                    else if (this._filter == Filter.GRAY_SCALE)
+                        this.setFilter(Filter.NONE);
+                }
             }
 
             this.sourceName = this._stateList[state];

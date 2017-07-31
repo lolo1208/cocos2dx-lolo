@@ -189,7 +189,7 @@ declare namespace cc {
         setHeight(value: number): void;//
         getHeight(): number;//
 
-        setFilter(value: string | GLProgram): void;//
+        setFilter(value: string): void;//
         getFilter(): string;//
 
         /**

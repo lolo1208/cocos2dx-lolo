@@ -46,8 +46,11 @@ namespace lolo {
             if (!this._showed) {
                 this._showed = true;
                 this.setVisible(true);
-                if (this.autoRemove /*&& this.getParent() == null*/ && this._target_parent != null)
-                    this._target_parent.addChild(this);
+
+                let p: cc.Node = this.getParent();
+                if (p != null) this._target_parent = p;
+
+                if (this.autoRemove && this._target_parent != null) this._target_parent.addChild(this);
                 this.startup();
             }
         }

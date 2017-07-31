@@ -229,7 +229,8 @@ namespace lolo {
                 disObj.setVisible(true);
                 disObj.setScale(1);
                 disObj.removeFromParent();
-                if (disObj._filter != Filter.NONE) disObj.setFilter(Filter.NONE);
+                if (disObj._filter != null && disObj._filter != Filter.NONE)
+                    disObj.setFilter(Filter.NONE);
             }
 
             // 各对象回收相关处理

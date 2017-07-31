@@ -23,7 +23,6 @@ namespace lolo {
          * @param type
          */
         public static getShaderProgram(type: string): cc.GLProgram {
-            if (type == null) type = this.NONE;
             let program: cc.GLProgram = this._programs[type];
             if (program == null) {
                 let vertexShader: string = this.VS_DEFAULT;
@@ -31,7 +30,6 @@ namespace lolo {
                 switch (type) {
 
                     case this.NONE:
-                        if (!isNative) return null;// html5 可以直接用 null
                         fragmentShader = this.FS_NONE;
                         break;
 

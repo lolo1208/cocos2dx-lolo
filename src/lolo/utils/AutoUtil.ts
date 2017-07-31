@@ -192,14 +192,19 @@ namespace lolo {
                         if (obj.selected) obj.group.selectedItem = obj;// 默认选中
                     }
 
+                    let parent: cc.Node;
                     // 有指定父级容器
                     if (parentID != null && parentID != "null") {
-                        target[parentID].addChild(obj);
+                        parent = target[parentID];
+                        if (parent == null) throwError("指定的容器 parentID=" + parentID + " 为 null！（请注意界面生成顺序）");
                     }
                     // 不是模态背景
                     else if (!(obj instanceof ModalBackground)) {
-                        target.addChild(obj);
+                        parent = target;
                     }
+
+                    if (itemName == "container") obj["_target_parent"] = parent;
+                    else if (parent != null) parent.addChild(obj);
 
                     obj = null;
                 }

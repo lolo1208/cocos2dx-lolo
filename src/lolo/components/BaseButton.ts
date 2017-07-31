@@ -11,7 +11,7 @@ namespace lolo {
      */
     export class BaseButton extends ItemRenderer {
 
-        /**在skinName改变时，是否需要自动重置宽高*/
+        /**在skinName改变时，是否需要自动重置宽高。默认：true*/
         public autoResetSize: boolean = true;
 
         /**皮肤*/
@@ -240,6 +240,18 @@ namespace lolo {
             return this._bc.touchSoundName;
         }
 
+
+        /**
+         * 禁用时，没有对应的状态图像时，是否自动灰显。
+         * 默认：true
+         */
+        public set autoGrayScaleDisalbed(value: boolean) {
+            this._skin.autoGrayScaleDisalbed = value;
+        }
+
+        public get autoGrayScaleDisalbed(): boolean {
+            return this._skin.autoGrayScaleDisalbed;
+        }
 
         //
 

@@ -31,9 +31,10 @@ namespace lolo {
                 ? this._pool.pop() : new Scale9Bitmap();
 
             let bitmaps = s9b.bitmaps;
+            let filter: string = target._filter;
             for (let i = 0; i < 9; i++) {
-                bitmaps[i].filter = target._filter;
                 target.addChild(bitmaps[i]);
+                bitmaps[i].setFilter(filter);
             }
 
             s9b.target = target;
