@@ -686,6 +686,15 @@ declare namespace jsb {
 
 
 declare namespace cc.sys {
+    let OS_ANDROID: string;
+    let OS_IOS: string;
+    let OS_WINDOWS: string;
+    let OS_OSX: string;
+    let OS_LINUX: string;
+    let OS_UNIX: string;
+    let OS_UNKNOWN: string;
+
+    let os: string;
     let isNative: boolean;
     let isMobile: boolean;
 

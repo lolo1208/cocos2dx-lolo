@@ -76,6 +76,7 @@ namespace lolo {
         }
 
         protected setFont(value: string): void {
+            if (isWindowsNative) return;// 关模拟器时，有大概率出现bug
             this._font = value;
             if (lolo.isNative) value = "res/" + lolo.locale + "/font/" + value + ".ttf";
             this.setFontName(value);

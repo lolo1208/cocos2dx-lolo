@@ -36,6 +36,8 @@ namespace lolo {
     export let isMobileWeb: boolean;
     /**当前是否在 PC端浏览器 环境中*/
     export let isPCWeb: boolean;
+    /**当前是否在 windows native（模拟器）中*/
+    export let isWindowsNative: boolean;
 
     /**资源映射列表（在打包时会自动生成）*/
     export let resList: any;

@@ -32,6 +32,7 @@ namespace lolo {
             super();
 
             this._clipper = new cc.ClippingNode();
+            this._clipper.retain();
             this._clipper.setAnchorPoint(0, 1);
             this._clipper.mask = this;
 
@@ -191,13 +192,8 @@ namespace lolo {
             }
 
             if (this._clipper != null) {
-                // 将子节点还回 parent 中
-                let children: cc.Node[] = this._clipper.getChildren();
-                let len: number = children.length;
-                let parent: cc.Node = this._clipper.getParent();
-                for (let i = 0; i < len; i++) parent.addChild(children[i]);
-
                 this._clipper.destroy();
+                this._clipper.release();
                 this._clipper = null;
             }
 

@@ -46,7 +46,8 @@ cc.game.onStart = function () {
     lolo.isMobile = cc.sys.isMobile;
     lolo.isMobileWeb = lolo.isMobile && !lolo.isNative;
     lolo.isPCWeb = !lolo.isNative && !lolo.isMobile;
-    lolo.isDebug = cc.game.config.debugMode != 0;
+    lolo.isWindowsNative = lolo.isNative && cc.sys.os === cc.sys.OS_WINDOWS;
+    lolo.isDebug = cc.game.config.debugMode !== 0;
     lolo.coreVersion = cc.game.config.coreVersion;
 
 
