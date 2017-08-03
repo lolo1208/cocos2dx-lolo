@@ -590,6 +590,8 @@ namespace lolo {
     export let _original_cc_bezierBy: Function;
     export let _original_cc_bezierTo: Function;
 
+    export let _original_cc_place: Function;
+
 
     /**
      * 重写 Action 相关方法，将传入的y值取反（native），并在运行时同步位置
@@ -635,6 +637,15 @@ namespace lolo {
         cc.bezierTo = function (t: number, c: cc.Point[]): cc.BezierTo {
             for (let i = 0; i < c.length; i++) c[i] = {x: c[i].x, y: -c[i].y};
             return lolo._original_cc_bezierTo.call(this, t, c);
+        };
+
+
+        // place
+        _original_cc_place = cc.place;
+        cc.place = function (): cc.Place {
+            if (arguments.length == 2) arguments[1] = -arguments[1];
+            else if (arguments.length == 1) arguments[0] = {x: arguments[0].x, y: -arguments[0].y};
+            return lolo._original_cc_place.apply(this, arguments);
         };
     }
 

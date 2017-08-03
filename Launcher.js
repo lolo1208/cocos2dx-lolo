@@ -88,7 +88,7 @@ lolo.Launcher.checkUpdate = function () {
 
     launcher.url = launcher.urlList[launcher.index];
     launcher.index++;
-    if (launcher.index == launcher.urlList.length) launcher.index = 0;
+    if (launcher.index === launcher.urlList.length) launcher.index = 0;
 
     var xhr = launcher.xhr = cc.loader.getXMLHttpRequest();
     xhr.onreadystatechange = launcher.xhrReadyStateChangeHandler;
@@ -110,7 +110,7 @@ lolo.Launcher.xhrErrorHandler = function () {
 lolo.Launcher.xhrReadyStateChangeHandler = function () {
     var launcher = lolo.Launcher;
     var xhr = launcher.xhr;
-    if (xhr.readyState == 4) {// 4 = "loaded"
+    if (xhr.readyState === 4) {// 4 = "loaded"
         if (xhr.status > 199 && xhr.status < 300) {// 200 - 299
             var verInfo = JSON.parse(xhr.response);
             // 服务器返回的版本信息有问题（获取版本信息失败）
@@ -118,11 +118,11 @@ lolo.Launcher.xhrReadyStateChangeHandler = function () {
                 launcher.xhrErrorHandler();
             }
             // 核心框架版本号有变化，需要下载整包
-            else if (lolo.coreVersion != verInfo.coreVersion) {
+            else if (lolo.coreVersion !== verInfo.coreVersion) {
                 launcher.scene.coreVersionChanged.call(launcher.scene);
             }
             // 项目版本号有变化，动更
-            else if (lolo.version != verInfo.version) {
+            else if (lolo.version !== verInfo.version) {
                 launcher.scene.versionChanged.call(launcher.scene);
                 lolo.Updater.start(launcher.url, lolo.version, verInfo.md5);
             }
@@ -209,7 +209,7 @@ lolo.LauncherScene = cc.Scene.extend({
 
         var state = updater.getState();
         var STATE = updater.State;
-        if (state != STATE.DOWNLOAD && state == this._lastState) return;
+        if (state !== STATE.DOWNLOAD && state === this._lastState) return;
         this._lastState = state;
 
         switch (state) {

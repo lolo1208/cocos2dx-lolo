@@ -20,7 +20,7 @@ lolo.getResUrl = function (url) {
     }
 
     // 代码模块映射
-    if (url.substr(0, 6) == "module") {
+    if (url.substr(0, 6) === "module") {
         url = url.replace("module", (lolo.isDebug && !lolo.isNative) ? "bin-debug" : "bin-release");
     }
     else {
@@ -37,7 +37,7 @@ cc.game.onStart = function () {
 
     cc.view.enableRetina(cc.sys.os === cc.sys.OS_IOS);
     cc.view.adjustViewPort(true);
-    cc.view.setDesignResolutionSize(960, 640, cc.ResolutionPolicy.FIXED_WIDTH);
+    cc.view.setDesignResolutionSize(1136, 640, cc.ResolutionPolicy.FIXED_WIDTH);
     cc.view.resizeWithBrowserSize(true);
 
 
@@ -62,7 +62,7 @@ cc.game.onStart = function () {
         if (fu.isFileExist(fullPath)) {
             cc.loader.loadJs(fullPath, function () {
                 // 不是APP的版本号，旧资源都要删除
-                if (lolo.initVersion != lolo.version) {
+                if (lolo.initVersion !== lolo.version) {
                     lolo.Updater.clearUpdateDirectory();
                     lolo.enterLauncher(dir, fullPath);
                 }

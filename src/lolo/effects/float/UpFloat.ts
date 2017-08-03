@@ -112,11 +112,12 @@ namespace lolo {
                 UpFloat._pool.push(this);
                 CachePool.recycle(this.target);
             }
-            this.target = null;
 
             let handler: Handler = this.onComplete;
             this.onComplete = null;
             if (handler != null) handler.execute(complete, this);
+
+            this.target = null;
         }
 
         //

@@ -107,6 +107,7 @@ namespace lolo {
          * 字体名称
          */
         public set font(value: string) {
+            if (isWindowsNative) return;// 关模拟器时，有大概率出现bug
             this._font = value;
             this.setFontName(value);
             this.setPlaceholderFontName(value);
