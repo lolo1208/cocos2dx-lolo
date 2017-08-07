@@ -590,6 +590,10 @@ namespace lolo {
     export let _original_cc_bezierBy: Function;
     export let _original_cc_bezierTo: Function;
 
+    export let _original_cc_jumpBy_update: Function;
+    export let _original_cc_jumpBy: Function;
+    export let _original_cc_jumpTo: Function;
+
     export let _original_cc_place: Function;
 
 
@@ -608,35 +612,59 @@ namespace lolo {
         _original_cc_moveBy = cc.moveBy;
         cc.moveBy = function (): cc.MoveBy {
             if (arguments.length == 3) arguments[2] = -arguments[2];
-            else if (arguments.length == 2) arguments[1] = {x: arguments[1].x, y: -arguments[1].y};
+            else/* if (arguments.length == 2)*/ arguments[1] = {x: arguments[1].x, y: -arguments[1].y};
             return lolo._original_cc_moveBy.apply(this, arguments);
         };
 
         _original_cc_moveTo = cc.moveTo;
         cc.moveTo = function (): cc.MoveTo {
             if (arguments.length == 3) arguments[2] = -arguments[2];
-            else if (arguments.length == 2) arguments[1] = {x: arguments[1].x, y: -arguments[1].y};
+            else/* if (arguments.length == 2)*/ arguments[1] = {x: arguments[1].x, y: -arguments[1].y};
             return lolo._original_cc_moveTo.apply(this, arguments);
         };
 
 
         // bezier
-        _original_cc_bezierBy_update = cc.BezierBy.prototype.update;
-        cc.BezierBy.prototype.update = function (dt: number): void {
-            lolo._original_cc_bezierBy_update.call(this, dt);
-            lolo.expend_updatePosition.call(this.getTarget());
-        };
+        // _original_cc_bezierBy_update = cc.BezierBy.prototype.update;
+        // cc.BezierBy.prototype.update = function (dt: number): void {
+        //     lolo._original_cc_bezierBy_update.call(this, dt);
+        //     lolo.expend_updatePosition.call(this.getTarget());
+        // };
 
         _original_cc_bezierBy = cc.bezierBy;
         cc.bezierBy = function (t: number, c: cc.Point[]): cc.BezierBy {
-            for (let i = 0; i < c.length; i++) c[i] = {x: c[i].x, y: -c[i].y};
+            let len = c.length;
+            for (let i = 0; i < len; i++) c[i] = {x: c[i].x, y: -c[i].y};
             return lolo._original_cc_bezierBy.call(this, t, c);
         };
 
         _original_cc_bezierTo = cc.bezierTo;
         cc.bezierTo = function (t: number, c: cc.Point[]): cc.BezierTo {
-            for (let i = 0; i < c.length; i++) c[i] = {x: c[i].x, y: -c[i].y};
+            let len = c.length;
+            for (let i = 0; i < len; i++) c[i] = {x: c[i].x, y: -c[i].y};
             return lolo._original_cc_bezierTo.call(this, t, c);
+        };
+
+
+        // jump
+        // _original_cc_jumpBy_update = cc.JumpTo.prototype.update;
+        // cc.JumpBy.prototype.update = function (dt: number): void {
+        //     lolo._original_cc_jumpBy_update.call(this, dt);
+        //     lolo.expend_updatePosition.call(this.getTarget());
+        // };
+
+        _original_cc_jumpBy = cc.jumpBy;
+        cc.jumpBy = function (): cc.JumpBy {
+            if (arguments.length == 5) arguments[2] = -arguments[2];
+            else/* if (arguments.length == 4)*/ arguments[1] = {x: arguments[1].x, y: -arguments[1].y};
+            return lolo._original_cc_jumpBy.apply(this, arguments);
+        };
+
+        _original_cc_jumpTo = cc.jumpTo;
+        cc.jumpTo = function (): cc.JumpTo {
+            if (arguments.length == 5) arguments[2] = -arguments[2];
+            else/* if (arguments.length == 4)*/ arguments[1] = {x: arguments[1].x, y: -arguments[1].y};
+            return lolo._original_cc_jumpTo.apply(this, arguments);
         };
 
 
@@ -644,7 +672,7 @@ namespace lolo {
         _original_cc_place = cc.place;
         cc.place = function (): cc.Place {
             if (arguments.length == 2) arguments[1] = -arguments[1];
-            else if (arguments.length == 1) arguments[0] = {x: arguments[0].x, y: -arguments[0].y};
+            else/* if (arguments.length == 1)*/ arguments[0] = {x: arguments[0].x, y: -arguments[0].y};
             return lolo._original_cc_place.apply(this, arguments);
         };
     }

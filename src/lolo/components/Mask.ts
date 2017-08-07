@@ -34,6 +34,7 @@ namespace lolo {
             this._clipper = new cc.ClippingNode();
             this._clipper.retain();
             this._clipper.setAnchorPoint(0, 1);
+            this._clipper.cascadeOpacity = true;
             this._clipper.mask = this;
 
             this.touchListener = <cc.TouchListener>cc.EventListener.create({
