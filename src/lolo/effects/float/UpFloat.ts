@@ -109,8 +109,16 @@ namespace lolo {
             this.target.stopAllActions();
 
             if (this.once) {
-                UpFloat._pool.push(this);
                 CachePool.recycle(this.target);
+
+                this.step1_duration = 0.1;
+                this.step1_y = 10;
+                this.step2_duration = 0.05;
+                this.step2_y = 5;
+                this.step3_duration = 0.65;
+                this.step3_delay = 0.3;
+                this.step3_y = -30;
+                UpFloat._pool.push(this);
             }
 
             let handler: Handler = this.onComplete;

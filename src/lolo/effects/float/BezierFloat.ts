@@ -138,8 +138,12 @@ namespace lolo {
             this.floating = false;
 
             if (this.once) {
-                BezierFloat._pool.push(this);
                 CachePool.recycle(this.target);
+
+                this.distance = 0.5;
+                this.duration = 0;
+                this.durationFactor = 800;
+                BezierFloat._pool.push(this);
             }
 
             let handler: Handler = this.onComplete;

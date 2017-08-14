@@ -94,8 +94,12 @@ namespace lolo {
             this.target.stopAllActions();
 
             if (this.once) {
-                DelayedHide._pool.push(this);
                 CachePool.recycle(this.target);
+
+                this.step1_duration = 0.2;
+                this.step2_duration = 0.5;
+                this.step2_delay = 0.5;
+                DelayedHide._pool.push(this);
             }
 
             let handler: Handler = this.onComplete;

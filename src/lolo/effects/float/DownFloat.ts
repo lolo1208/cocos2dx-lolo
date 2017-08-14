@@ -98,8 +98,14 @@ namespace lolo {
             this.target.stopAllActions();
 
             if (this.once) {
-                DownFloat._pool.push(this);
                 CachePool.recycle(this.target);
+
+                this.step1_duration = 0.1;
+                this.step1_y = 10;
+                this.step2_duration = 0.65;
+                this.step2_delay = 0.3;
+                this.step2_y = 40;
+                DownFloat._pool.push(this);
             }
 
             let handler: Handler = this.onComplete;

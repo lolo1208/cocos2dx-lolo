@@ -95,13 +95,11 @@ namespace app.testScene {
 
             // this.c.visible = false;
 
-        }
 
-        private _img: Image;
+        }
 
 
         private testBtn_touchTapHandler(event: TouchEvent): void {
-
 
             this.jumpScene.show();
             this.c.removeFromParent();

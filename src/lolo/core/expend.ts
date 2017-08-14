@@ -655,15 +655,27 @@ namespace lolo {
 
         _original_cc_jumpBy = cc.jumpBy;
         cc.jumpBy = function (): cc.JumpBy {
-            if (arguments.length == 5) arguments[2] = -arguments[2];
-            else/* if (arguments.length == 4)*/ arguments[1] = {x: arguments[1].x, y: -arguments[1].y};
+            if (arguments.length == 5) {
+                arguments[2] = -arguments[2];
+                arguments[3] = -arguments[3];
+            }
+            else/* if (arguments.length == 4)*/{
+                arguments[1] = {x: arguments[1].x, y: -arguments[1].y};
+                arguments[2] = -arguments[2];
+            }
             return lolo._original_cc_jumpBy.apply(this, arguments);
         };
 
         _original_cc_jumpTo = cc.jumpTo;
         cc.jumpTo = function (): cc.JumpTo {
-            if (arguments.length == 5) arguments[2] = -arguments[2];
-            else/* if (arguments.length == 4)*/ arguments[1] = {x: arguments[1].x, y: -arguments[1].y};
+            if (arguments.length == 5) {
+                arguments[2] = -arguments[2];
+                arguments[3] = -arguments[3];
+            }
+            else/* if (arguments.length == 4)*/{
+                arguments[1] = {x: arguments[1].x, y: -arguments[1].y};
+                arguments[2] = -arguments[2];
+            }
             return lolo._original_cc_jumpTo.apply(this, arguments);
         };
 
