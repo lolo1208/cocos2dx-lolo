@@ -200,7 +200,7 @@ namespace lolo {
                         handlers = [];
                         Bitmap._handlers.setItem(info.url, handlers);
                     }
-                    handlers.push(Handler.once(this.render, this));
+                    handlers.push(lolo.handler(this.render, this));
                 }
             }
             this.render();

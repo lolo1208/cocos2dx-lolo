@@ -202,7 +202,7 @@ namespace lolo {
                         handlers = [];
                         Image._handlers.push(handlers, url);
                     }
-                    handlers.push(Handler.once(this.render, this));
+                    handlers.push(lolo.handler(this.render, this));
 
                     Image.loadHandler();
                 }
@@ -255,10 +255,10 @@ namespace lolo {
          */
         public destroy(): void {
             this._url = null;
-            if (this.hander != null) {
-                this.hander.recycle();
-                this.hander = null;
-            }
+
+            let hander: Handler = this.hander;
+            this.hander = null;
+            if (hander != null && hander.once) hander.recycle();
 
             super.destroy();
         }

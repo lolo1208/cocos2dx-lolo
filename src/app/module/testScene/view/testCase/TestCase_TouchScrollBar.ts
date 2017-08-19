@@ -26,7 +26,7 @@ namespace app.testScene {
             super.initUI(chains, config);
             this.vsb.content = this.content;
             this.hsb.content = this.content;
-            this.content.hander = lolo.Handler.once(function () {
+            this.content.hander = lolo.handler(function () {
                 this.vsb.render();
                 this.hsb.render();
             }, this);

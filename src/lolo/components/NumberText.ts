@@ -155,7 +155,7 @@ namespace lolo {
          */
         public destroy(): void {
             if (this._effectHandler != null) {
-                this._effectHandler.clean();
+                this._effectHandler.recycle();
                 this._effectHandler = null;
             }
 

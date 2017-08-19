@@ -61,7 +61,7 @@ namespace app.core {
                 lolo.loader.add(new lolo.LoadItemInfo("bitmapConfig"));
                 lolo.loader.add(new lolo.LoadItemInfo("mainUIConfig"));
 
-                lolo.loader.start(null, lolo.Handler.once(this.allComplete_callback, this));
+                lolo.loader.start(null, lolo.handler(this.allComplete_callback, this));
                 break;
 
             case "skin":

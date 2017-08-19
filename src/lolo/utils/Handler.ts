@@ -18,6 +18,8 @@ namespace lolo {
         /**是否只执行一次，执行完毕后，将会自动回收到池中*/
         public once: boolean;
 
+        /**是否正在缓存池中*/
+        public inPool: boolean = false;
         /**setTimeout() 返回的句柄。使用 lolo.delayedCall() 创建时，才会存在该属性*/
         public dcHandle: number;
 
@@ -34,6 +36,7 @@ namespace lolo {
             let handler: Handler;
             if (this._pool.length > 0) {
                 handler = this._pool.pop();
+                handler.inPool = false;
                 handler.setTo(callback, caller, args, true);
             }
             else {
@@ -73,21 +76,26 @@ namespace lolo {
          * @param args 附带的参数。在执行回调时，args 的值会添加到创建时传入的 args 之前。args.concat(this.args)
          */
         public execute(...args: any[]): void {
-            console.log("handler.execute()", this.once, this.callback);
             if (this.dcHandle != null) {
                 clearTimeout(this.dcHandle);
                 this.dcHandle = null;
             }
+
             if (this.callback != null)
                 this.callback.apply(this.caller, args.concat(this.args));
+
             if (this.once) this.recycle();
         }
 
 
         /**
-         * 清除引用，并回收到池中
+         * 清除引用，并回收到池中。
+         * 注意：手动调用该方法，一定要仔细检查上下文逻辑，避免缓存池混乱
          */
         public recycle(): void {
+            if (this.inPool) return;
+            this.inPool = true;
+
             this.clean();
             Handler._pool.push(this);
         }

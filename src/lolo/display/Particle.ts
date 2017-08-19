@@ -65,7 +65,7 @@ namespace lolo {
                             handlers = [];
                             Particle._handlers.setItem(this._url, handlers);
                         }
-                        handlers.push(Handler.once(this.render, this));
+                        handlers.push(lolo.handler(this.render, this));
 
                         // 加载粒子数据
                         let lii: LoadItemInfo = new LoadItemInfo();

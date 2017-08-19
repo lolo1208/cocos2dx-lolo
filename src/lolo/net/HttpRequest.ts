@@ -194,10 +194,8 @@ namespace lolo {
         public send(data?: any, handler?: Handler): void {
             if (this._xhr == null) return;
 
-            if (handler != null) {
-                if (this._handler != null && this._handler.once) this._handler.recycle();
-                this._handler = handler;
-            }
+            if (this._handler != null && this._handler.once) this._handler.recycle();
+            this._handler = handler;
 
             this._xhr.responseType = <any>this.responseType;
             this._xhr.withCredentials = this.withCredentials;

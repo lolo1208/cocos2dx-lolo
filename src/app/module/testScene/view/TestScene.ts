@@ -107,8 +107,9 @@ namespace app.testScene {
 
             let audio = lolo.audio.playEffect("effect/13", 3);
             audio.completeHandler = lolo.handler(() => {
-                console.log("-----", audio.repeatCount, audio.currentRepeatCount, Math.random());
+                console.log("-----", Math.random());
             }, this);
+
 
             // delayedCall(3000, () => {
             //     lolo.audio.stopAll(true);

@@ -174,7 +174,7 @@ namespace lolo.rpg {
             this._touchAni.y = p.y;
 
             if (this._touchAni.parent == null) this.addChild(this._touchAni);
-            this._touchAni.play(1, 1, 0, Handler.once(this._touchAni.removeFromParent, this._touchAni));
+            this._touchAni.play(1, 1, 0, lolo.handler(this._touchAni.removeFromParent, this._touchAni));
         }
 
 

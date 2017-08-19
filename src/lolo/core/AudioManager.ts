@@ -318,8 +318,25 @@ namespace lolo {
         }
 
 
+        /**
+         * 清除所有的音频缓存数据，并停止所有音频。
+         * 在 html5 环境中，只能清除【正在播放的】背景音乐和音效
+         */
         public uncacheAll(): void {
+            if (isNative) {
+                jsb.AudioEngine.stopAll();
+                jsb.AudioEngine.uncacheAll();
+            }
+            else {
+                cc.audioEngine.stopMusic(true);
+                let effectList = Audio._effectList;
+                for (let path in effectList)
+                    cc.audioEngine.unloadEffect(lolo.getResUrl("audio/" + path + ".mp3"));
+                cc.audioEngine.end();
+            }
 
+            this.currentMusic = null;
+            Audio._effectList = {};
         }
 
 
@@ -390,6 +407,7 @@ namespace lolo {
          * native 播放音频
          */
         private native_play(): void {
+            this._nativePlayHandler = null;
             if (this._stopped) return;
 
             this._id = jsb.AudioEngine.play2d(this._realPath);
@@ -409,14 +427,12 @@ namespace lolo {
 
             this.currentRepeatCount++;
 
-            console.log(this._id, this.repeatCount, this.currentRepeatCount);
             // 无限循环，或还未达到指定重复次数
             if (this.repeatCount < 1 || this.currentRepeatCount < this.repeatCount) {
                 // 如果直接调用，会立即收到播放完成的回调
                 this._nativePlayHandler = delayedCall(0, this.native_play, this);
             }
             else {
-                console.log("OK!!!", this.completeHandler);
                 this._stopped = true;
                 if (lolo.audio.currentMusic == this) {
                     lolo.audio.currentMusic = null;
@@ -428,14 +444,12 @@ namespace lolo {
                         if (index != -1) effects.splice(index, 1);
                         if (effects.length == 0) delete Audio._effectList[this._path];
                     }
-                    console.log(effects.length, Audio._effectList[this._path]);
                 }
 
                 if (this.completeHandler != null) {
                     let handler = this.completeHandler;
                     this.completeHandler = null;
                     handler.execute();
-                    console.log("??????");
                 }
             }
         }
