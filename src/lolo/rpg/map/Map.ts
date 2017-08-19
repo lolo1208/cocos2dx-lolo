@@ -35,6 +35,7 @@ namespace lolo.rpg {
         private _avatars: any[];
         /**用于对可见范围内的角色进行排序*/
         private _sortTimer: Timer;
+        private _sortAvatarFnBind: Function;
 
         /**鼠标在背景上按下时，是否自动播放鼠标点击动画*/
         private _autoPlayTouchAnimation: boolean = false;
@@ -63,6 +64,7 @@ namespace lolo.rpg {
             this._aboveC = new DisplayObjectContainer();
             this.addChild(this._aboveC);
 
+            this._sortAvatarFnBind = this.sortAvatar.bind(this);
             this.touchEnabledChanged();
 
             if (id != null) this.init(id);
@@ -229,7 +231,7 @@ namespace lolo.rpg {
             this._sortTimer.stop();
 
             let avatars: Avatar[] = this.getScreenAvatars();
-            avatars = avatars.sort(this.sortAvatar.bind(this));
+            avatars = avatars.sort(this._sortAvatarFnBind);
 
             let len: number = avatars.length;
             for (let i = 0; i < len; i++) avatars[i].setLocalZOrder(i + 1);

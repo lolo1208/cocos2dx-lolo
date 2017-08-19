@@ -70,15 +70,16 @@ namespace lolo {
 
         /**
          * 执行回调
-         * @param args 附带的参数。在执行回调时，args的值会添加到创建时传入的args之前。args.concat(this.args)
+         * @param args 附带的参数。在执行回调时，args 的值会添加到创建时传入的 args 之前。args.concat(this.args)
          */
         public execute(...args: any[]): void {
+            console.log("handler.execute()", this.once, this.callback);
             if (this.dcHandle != null) {
                 clearTimeout(this.dcHandle);
                 this.dcHandle = null;
             }
-            if (this.callback == null) return;
-            this.callback.apply(this.caller, args.concat(this.args));
+            if (this.callback != null)
+                this.callback.apply(this.caller, args.concat(this.args));
             if (this.once) this.recycle();
         }
 

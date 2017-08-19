@@ -95,11 +95,28 @@ namespace app.testScene {
 
             // this.c.visible = false;
 
+            // lolo.audio.preload("music/3", lolo.handler(() => {
+            //     console.log(this.backBtn.label + " ---");
+            // }, this));
 
+            lolo.audio.effectVolume = 0.3;
         }
 
 
         private testBtn_touchTapHandler(event: TouchEvent): void {
+
+            let audio = lolo.audio.playEffect("effect/13", 3);
+            audio.completeHandler = lolo.handler(() => {
+                console.log("-----", audio.repeatCount, audio.currentRepeatCount, Math.random());
+            }, this);
+
+            // delayedCall(3000, () => {
+            //     lolo.audio.stopAll(true);
+            //     // cc.audioEngine.unloadEffect(lolo.getResUrl("audio/" + audio.path + ".mp3"));
+            // });
+
+
+            return;
 
             this.jumpScene.show();
             this.c.removeFromParent();

@@ -39,8 +39,9 @@ namespace lolo {
         /**是否已经建立好连接了*/
         protected _connected: boolean;
 
+        protected _url: string;
         protected _ws: IWebSocket;
-        protected _data: string|ArrayBuffer;
+        protected _data: string | ArrayBuffer;
 
 
         public constructor() {
@@ -110,6 +111,7 @@ namespace lolo {
         public connectByUrl(url: string): void {
             this.close();
 
+            this._url = url;
             this._connecting = true;
 
             this._ws = new __WebSocket(url);
@@ -122,10 +124,18 @@ namespace lolo {
 
 
         /**
+         * 使用之前的连接地址进行重连
+         */
+        public reconnection(): void {
+            this.connectByUrl(this._url);
+        }
+
+
+        /**
          * 发送数据
          * @param data
          */
-        public send(data: string|ArrayBuffer|ByteArray): void {
+        public send(data: string | ArrayBuffer | ByteArray): void {
             if (!this._connected) return;
 
             if (data instanceof ByteArray) {
@@ -179,7 +189,7 @@ namespace lolo {
          * 数据在读取后将会被置为null。
          * 如果数据在 SocketEvent.DATA 事件抛出后没有被读取，在下次收到数据时将会被覆盖
          */
-        public readData(): string|ArrayBuffer {
+        public readData(): string | ArrayBuffer {
             if (this._data != null) {
                 let data: any = this._data;
                 this._data = null;

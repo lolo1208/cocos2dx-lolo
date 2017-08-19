@@ -126,7 +126,7 @@ namespace lolo {
 
 
         protected setState(value: string): void {
-            super.setStyle(value);
+            super.setState(value);
             this._image.state = value;
             this.render();
         }

@@ -16,6 +16,8 @@ namespace lolo {
     // export var consoleView:Console;
     /**手势管理*/
     export let gesture: GestureRecognizer;
+    /**音频管理*/
+    export let audio: AudioManager;
 
     /**核心框架版本号，修改该值，在动更时会强制重新下载APP。定义在 project.json 中*/
     export let coreVersion: string;
@@ -61,6 +63,7 @@ namespace lolo {
         lolo.loader = new LoadManager();
         lolo.layout = new LayoutManager();
         lolo.gesture = new GestureRecognizer();
+        lolo.audio = new AudioManager();
         // consoleView = new Console();
 
         if (!isNative && !isDebug) window["onerror"] = Logger.uncaughtErrorHandler;// native 无效

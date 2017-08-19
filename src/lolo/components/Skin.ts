@@ -35,7 +35,7 @@ namespace lolo {
 
 
         /**禁用时，没有对应的状态图像时，是否自动灰显。默认：true*/
-        public autoGrayScaleDisalbed: boolean = true;
+        public autoGrayScaleDisabled: boolean = true;
 
 
         /**皮肤的名称*/
@@ -138,18 +138,17 @@ namespace lolo {
             this._state = value;
 
             let state: string = value;
-            if (!this.hasState(value)) {
+            if (this._stateList[state] == null) {// 没有对应的状态图像
                 if (value == Skin.SELECTED_OVER || value == Skin.SELECTED_DOWN || value == Skin.SELECTED_DISABLED)
-                    state = this.hasState(Skin.SELECTED_UP) ? Skin.SELECTED_UP : Skin.UP;
+                    state = (this._stateList[Skin.SELECTED_UP] != null) ? Skin.SELECTED_UP : Skin.UP;
                 else
                     state = Skin.UP;
 
-                if (this.autoGrayScaleDisalbed) {
-                    if (value == Skin.DISABLED || value == Skin.SELECTED_DISABLED)
-                        this.setFilter(Filter.GRAY_SCALE);
-                    else if (this._filter == Filter.GRAY_SCALE)
-                        this.setFilter(Filter.NONE);
-                }
+                if (this.autoGrayScaleDisabled && (value == Skin.DISABLED || value == Skin.SELECTED_DISABLED))
+                    this.setFilter(Filter.GRAY_SCALE);
+            }
+            else if (this._filter == Filter.GRAY_SCALE) {
+                this.setFilter(Filter.NONE);
             }
 
             this.sourceName = this._stateList[state];

@@ -3,7 +3,7 @@ namespace lolo {
 
     /**
      * 简单的位图显示对象，该对象与 cc.Sprite 无异
-     * 注意：因native 与 html5 有很多表现不一致，所以不要直接从 cc.Sprite 继承，要从该类继承
+     * 注意：因 native 与 html5 有很多表现不一致，所以不要直接从 cc.Sprite 继承，要从该类继承
      * @author LOLO
      */
     export class SimpleBitmap extends cc.Sprite {

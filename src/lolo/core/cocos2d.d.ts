@@ -7,8 +7,9 @@
 declare namespace cc {
 
     class Class {
-        __instanceId: number;// html5 才有该值
         static extend(props: any): void;
+
+        __instanceId: number;// html5 才有该值
 
         ctor(...args: any[]): void;
     }
@@ -520,26 +521,24 @@ declare namespace cc {
 
 
 declare namespace cc {
-
-    class Game {
+    interface Game {
         EVENT_HIDE: string;
         EVENT_SHOW: string;
         CONFIG_KEY: {
-            engineDir: string,
-            dependencies: string,
-            debugMode: string,
-            showFPS: string,
-            frameRate: string,
-            id: string,
-            renderMode: string,
-            jsList: string,
-            classReleaseMode: string
+            engineDir: string;
+            dependencies: string;
+            debugMode: string;
+            showFPS: string;
+            frameRate: string;
+            id: string;
+            renderMode: string;
+            jsList: string;
+            classReleaseMode: string;
         };
 
         config: any;
 
         setFrameRate(frameRate: number): void;
-
         run(id?: string): void;
     }
 
@@ -673,15 +672,12 @@ declare namespace cc {
 
 
 declare namespace jsb {
-    class fileUtils {
-        static getWritablePath(): string;
-
-        static createDirectory(path: string): boolean;
-
-        static isFileExist(filePath: string): boolean;
-
-        static writeStringToFile(data: string, fullPath: string): boolean;
-    }
+    let fileUtils: {
+        getWritablePath(): string;
+        createDirectory(path: string): boolean;
+        isFileExist(filePath: string): boolean;
+        writeStringToFile(data: string, fullPath: string): boolean;
+    };
 }
 
 
@@ -699,25 +695,22 @@ declare namespace cc.sys {
     let isMobile: boolean;
 
     let localStorage: {
-        setItem: (key: string, value: string) => void;
-        getItem: (key: string) => string;
-        removeItem: (key: string) => void;
+        setItem(key: string, value: string): void;
+        getItem(key: string): string;
+        removeItem(key: string): void;
     };
 }
 
 
-declare namespace cc.loader {
-    function load(resources: any | any[], optionOrCB?: any, cb?: Function): void;
-
-    function loadImg(url: string, option: any, cb: Function): void;
-
-    function loadJson(url: string, cb: Function): void;
-
-    function loadTxt(url: string, cb: Function): void;
-
-    function loadJs(url: string | string[], cb: Function): void;
-
-    function getXMLHttpRequest(): XMLHttpRequest;
+declare namespace cc {
+    let loader: {
+        load(resources: any | any[], optionOrCB?: any, cb?: Function): void;
+        loadImg(url: string, option: any, cb: Function): void;
+        loadJson(url: string, cb: Function): void;
+        loadTxt(url: string, cb: Function): void;
+        loadJs(url: string | string[], cb: Function): void;
+        getXMLHttpRequest(): XMLHttpRequest;
+    };
 }
 
 
@@ -1172,3 +1165,84 @@ declare namespace cc {
 
 }
 
+
+// html5 audioEngine or SimpleAudioEngine
+declare namespace cc {
+    let audioEngine: {
+        playMusic(url: string, loop: boolean = false): void;
+        stopMusic(releaseData: boolean = false): void;
+        pauseMusic(): void;
+        resumeMusic(): void;
+        isMusicPlaying(): boolean;
+        rewindMusic(): void;
+        willPlayMusic(): boolean;
+
+        playEffect(url: string, loop: boolean = false): number;// return audioID or null
+        stopEffect(audioID: number): void;
+        pauseEffect(audioID: number): void;
+        resumeEffect(audioID: number): void;
+        pauseAllEffects(): void;
+        resumeAllEffects(): void;
+        stopAllEffects(): void;
+        unloadEffect(url: string): void;
+
+        getMusicVolume(): number;// 0~1
+        setMusicVolume(volume: number): void;
+        getEffectsVolume(): number;
+        setEffectsVolume(volume: number): void;
+        end(): void;// stopMusic() & stopAllEffects()
+    };
+}
+
+
+// native AudioEngine
+declare namespace jsb {
+    interface AudioProfile {
+        name: string;
+        maxInstances: number;
+        minDelay: number;
+    }
+
+    let AudioEngine: {
+        INVALID_AUDIO_ID: number;// -1
+        TIME_UNKNOWN: number;// -1
+
+        AudioState: {
+            ERROR: number;// -1
+            INITIALZING: number;// 0
+            PLAYING: number;// 1
+            PAUSED: number;// 2
+        };
+
+        // return audioID or INVALID_AUDIO_ID
+        play2d(filePath: string, loop: boolean = false, volume: number = 1, profile?: AudioProfile): number;
+
+        pause(audioID: number): void;
+        resume(audioID: number): void;
+        stop(audioId: number): void;
+
+        setVolume(audioID: number, volume: number): void;
+        getVolume(audioID: number): number;
+        setLoop(audioID: number, loop: boolean): void;
+        isLoop(audioID: number): boolean;
+        setCurrentTime(audioID: number, sec: number): boolean;
+        getCurrentTime(audioID: number): number;
+
+        setFinishCallback(audioID: number, callback: Function): void;
+        getState(audioID: number): number;// return AudioState
+        getProfile(audioID_or_profileName: number | string): AudioProfile;
+
+        preload(filePath: string, callback?: Function): void;
+        uncache(filePath: string): void;
+        uncacheAll(): void;
+
+        getMaxAudioInstance(): number;
+        setMaxAudioInstance(maxInstances: number): boolean;
+        getDefaultProfile(): AudioProfile;
+
+        pauseAll(): void;
+        resumeAll(): void;
+        stopAll(): void;
+        end(): void;
+    };
+}

@@ -245,12 +245,12 @@ namespace lolo {
          * 禁用时，没有对应的状态图像时，是否自动灰显。
          * 默认：true
          */
-        public set autoGrayScaleDisalbed(value: boolean) {
-            this._skin.autoGrayScaleDisalbed = value;
+        public set autoGrayScaleDisabled(value: boolean) {
+            this._skin.autoGrayScaleDisabled = value;
         }
 
-        public get autoGrayScaleDisalbed(): boolean {
-            return this._skin.autoGrayScaleDisalbed;
+        public get autoGrayScaleDisabled(): boolean {
+            return this._skin.autoGrayScaleDisabled;
         }
 
         //
