@@ -229,15 +229,15 @@ namespace lolo {
 
         /**
          * Touch时，播放的音效名称。
-         * 默认将使用 ButtonContainer.touchSoundName 的值
+         * 默认将使用 ButtonContainer.touchAudioName 的值
          * 值为 null 时，表示不用播放音效。
          */
-        public set touchSoundName(value: string) {
-            this._bc.touchSoundName = value;
+        public set touchAudioName(value: string) {
+            this._bc.touchAudioName = value;
         }
 
-        public get touchSoundName(): string {
-            return this._bc.touchSoundName;
+        public get touchAudioName(): string {
+            return this._bc.touchAudioName;
         }
 
 

@@ -14,13 +14,14 @@ namespace lolo.rpg {
 
         /**背景*/
         private _background: Background;
+        /**在所有角色和遮挡物之下的容器*/
+        private _belowC: DisplayObjectContainer;
         /**角色容器*/
         private _avatarC: DisplayObjectContainer;
         /**在所有角色和遮挡物之上的容器*/
         private _aboveC: DisplayObjectContainer;
-        /**在所有角色和遮挡物之下的容器*/
-        private _belowC: DisplayObjectContainer;
-
+        /**添加在 avatar 层的显示对象列表（参与 avatar 排序）*/
+        private _avatarCChildren: cc.Node[] = [];
 
         /**镜头跟踪的角色*/
         private _trackingAvatar: Avatar;
@@ -31,8 +32,10 @@ namespace lolo.rpg {
             rb?: number, db?: number// 右和下的边界
         } = {};
 
-        /**角色索引列表，avatars[tile.y][tile.x]=Vector.Avatar*/
-        private _avatars: any[];
+        /**角色索引列表。_avatars[tile.y][tile.x] = Avatar[]*/
+        private _avatars: any[] = [];
+        /**已创建的所有 avatar 列表。avatar.key 作为 key*/
+        private _allAvatars: HashMap = new HashMap();
         /**用于对可见范围内的角色进行排序*/
         private _sortTimer: Timer;
         private _sortAvatarFnBind: Function;
@@ -64,9 +67,10 @@ namespace lolo.rpg {
             this._aboveC = new DisplayObjectContainer();
             this.addChild(this._aboveC);
 
-            this._sortAvatarFnBind = this.sortAvatar.bind(this);
-            this.touchEnabledChanged();
+            this._sortTimer = new Timer(Constants.AVATAR_DEPTH_SORT_DELAY, new Handler(this.avatarSortTimerHandler, this));
+            this._sortAvatarFnBind = this.sortAvatarFn.bind(this);
 
+            this.touchEnabledChanged();
             if (id != null) this.init(id);
         }
 
@@ -79,19 +83,12 @@ namespace lolo.rpg {
             this.clean();
 
             this._id = id;
-            this.name = "id" + id;
 
             // 读取地图信息
             this._info = lolo.loader.getResByUrl(lolo.config.getUIConfig(Constants.CN_MAP_DATA, id), true);
 
             // 显示背景（这里不需要清除，因为IMG会被ImageLoader清除）
             this._background.init(lolo.loader.getResByUrl(lolo.config.getUIConfig(Constants.CN_MAP_THUMBNAIL, id)));
-            // 初始化数据
-            this._avatars = [];
-
-            // 添加事件侦听
-            if (this._sortTimer == null)
-                this._sortTimer = new Timer(Constants.AVATAR_DEPTH_SORT_DELAY, new Handler(this.avatarSortTimerHandler, this));
 
             this.screenCenter.setTo(0, 0);
             lolo.stage.event_addListener(Event.RESIZE, this.stage_resizeHandler, this);
@@ -142,11 +139,13 @@ namespace lolo.rpg {
             }
 
             // 先将相同key的角色移除
-            this.removeAvatar(this.getAvatarByKey(avatar.key));
+            let key = avatar.key;
+            this.removeAvatar(this.getAvatarByKey(key));
 
             // 再将该角色添加到地图
-            avatar.name = "avatar" + avatar.key;
             this._avatarC.addChild(avatar);
+            this._allAvatars.add(avatar, key);
+
             avatar.event_addListener(AvatarEvent.TILE_CHANGED, this.avatarTileChangedHandler, this);
             avatar.event_dispatch(Event.create(AvatarEvent, AvatarEvent.TILE_CHANGED));
         }
@@ -164,6 +163,8 @@ namespace lolo.rpg {
             let i: number = avatars.indexOf(avatar);
             if (i != -1) avatars.splice(i, 1);
 
+            this._allAvatars.removeByKey(avatar.key);
+
             // 销毁
             avatar.event_removeListener(AvatarEvent.TILE_CHANGED, this.avatarTileChangedHandler, this);
             avatar.destroy();
@@ -176,16 +177,16 @@ namespace lolo.rpg {
          * @return
          */
         public getAvatarByKey(key: string): Avatar {
-            return <Avatar>this._avatarC.getChildByName("avatar" + key);
+            return this._allAvatars.getValueByKey(key);
         }
 
 
         /**
-         * 获取所有角色
+         * 获取所有角色（请勿直接操作该数组）
          * @return
          */
         public getAllAvatar(): Avatar[] {
-            return <Avatar[]>this._avatarC.getChildren();
+            return this._allAvatars.values;
         }
 
 
@@ -195,7 +196,7 @@ namespace lolo.rpg {
          * @return
          */
         public getAvatarListFromTile(tile: Point): Avatar[] {
-            if (tile == null) return [];// 传入的错误的值
+            if (tile == null) return [];// 传入了错误的值
             let avatars: any[] = this._avatars;
             if (avatars[tile.y] == null) avatars[tile.y] = [];
             if (avatars[tile.y][tile.x] == null) avatars[tile.y][tile.x] = [];
@@ -204,6 +205,14 @@ namespace lolo.rpg {
 
 
         //
+
+
+        /**
+         * 对 avatar 层的显示内容进行排序
+         */
+        public sortAvatar(): void {
+            if (!this._sortTimer.running) this._sortTimer.start();
+        }
 
 
         /**
@@ -220,7 +229,6 @@ namespace lolo.rpg {
             }
             avatar.setOpacity(opacity);
 
-            // 启动透视深度排序的定时器
             if (!this._sortTimer.running) this._sortTimer.start();
         }
 
@@ -231,6 +239,7 @@ namespace lolo.rpg {
             this._sortTimer.stop();
 
             let avatars: Avatar[] = this.getScreenAvatars();
+            avatars = avatars.concat(<any>this._avatarCChildren);
             avatars = avatars.sort(this._sortAvatarFnBind);
 
             let len: number = avatars.length;
@@ -238,19 +247,29 @@ namespace lolo.rpg {
         }
 
         /**
-         * Avatar 排序函数。根据角色的 y 和 isDead 进行排序
+         * Avatar（包括其他在 avatar 层的元素） 排序函数。根据角色的 y 和 isDead 进行排序
          * @param a1
          * @param a2
-         * @return {number}
          */
-        private sortAvatar(a1: Avatar, a2: Avatar): number {
+        private sortAvatarFn(a1: Avatar, a2: Avatar): number {
+            let a1_x = a1.x, a1_y = a1.y;
+            let a2_x = a2.x, a2_y = a2.y;
+
+            // 有不是 avatar 的显示对象
+            if (!(a1 instanceof Avatar) || !(a2 instanceof Avatar)) {
+                if (a1_y < a2_y) return -1;
+                if (a1_y > a2_y) return 1;
+                if (a1_x < a2_x) return -1;
+                if (a1_x > a2_x) return 1;
+                return 0;
+            }
+
+            // 其中有一个 avatar 已仆街
             if (a1.isDead && !a2.isDead) return -1;
             if (a2.isDead && !a1.isDead) return 1;
 
             let staggered = this._info.staggered;
-            let a1_x = a1.tile.x, a1_y = a1.tile.y;
-            let a2_x = a2.tile.x, a2_y = a2.tile.y;
-
+            // 两个 avatar 均已仆街
             if (a1.isDead && a2.isDead) {
                 if (staggered) {
                     if (a1_y < a2_y) return 1;
@@ -275,7 +294,7 @@ namespace lolo.rpg {
                 if (a1_x > a2_x) return -1;
             }
 
-            // 同一个位置，都没死亡，按key排序，保证顺序
+            // 同一个位置，都没仆街，按key排序，保证顺序
             if (a1.key < a2.key) return -1;
             if (a1.key > a2.key) return 1;
             return 0;
@@ -388,7 +407,7 @@ namespace lolo.rpg {
 
 
         /**
-         * 获取屏幕范围内的玩家列表
+         * 获取屏幕范围内的角色列表
          * @return
          */
         public getScreenAvatars(): Avatar[] {
@@ -438,6 +457,9 @@ namespace lolo.rpg {
         }
 
 
+        //
+
+
         /**
          * 添加一个显示元素
          * @param element
@@ -448,6 +470,33 @@ namespace lolo.rpg {
             let c: DisplayObjectContainer = above ? this._aboveC : this._belowC;
             c.addChild(element, zIndex);
         }
+
+        /**
+         * 将 element 添加到 avatar 层，参与 avatar 排序。
+         * 移除时，请使用 removeElementFromAvatarC() 方法
+         * @param element
+         */
+        public addElementToAvatarLayer(element: cc.Node): void {
+            let i: number = this._avatarCChildren.indexOf(element);
+            if (i == -1) {
+                this._avatarC.addChild(element);
+                this._avatarCChildren.push(element);
+                if (!this._sortTimer.running) this._sortTimer.start();
+            }
+        }
+
+        /**
+         * 从 avatar 层中移除（不销毁）element
+         * @param element
+         */
+        public removeElementFromAvatarLayer(element: cc.Node): void {
+            let i: number = this._avatarCChildren.indexOf(element);
+            if (i != -1) this._avatarCChildren.splice(i, 1);
+            element.removeFromParent();
+        }
+
+
+        //
 
 
         /**
@@ -493,10 +542,11 @@ namespace lolo.rpg {
                 let worldPoint: cc.Point = event.touch.getLocation();
                 let avatar: Avatar;
                 let rect: Rectangle = lolo.temp_rect;
-                // 从上往下循环搜索
-                let children: cc.Node[] = this._avatarC.getChildren();
-                for (let i = children.length - 1; i >= 0; i--) {
-                    avatar = <Avatar>children[i];
+
+                // 循环搜索
+                let avatars: Avatar[] = this._allAvatars.values;
+                for (let i = avatars.length - 1; i >= 0; i--) {
+                    avatar = avatars[i];
                     if (!avatar.isVisible() || avatar.getOpacity() <= 0) continue;
                     // 用 avatarAni 做检测
                     let avatarAni: Animation = avatar.avatarAni;
@@ -551,15 +601,17 @@ namespace lolo.rpg {
 
 
         /**
-         * 清理所有的Avatar
+         * 清理所有的 Avatar
          */
         public cleanAllAvatar(): void {
-            let children: cc.Node[] = this._avatarC.getChildren();
-            let len: number = children.length;
-            for (let i = 0; i < len; i++) this.removeAvatar(<Avatar>children[i]);
+            let avatars: Avatar[] = this._allAvatars.values;
+            let len: number = avatars.length;
+            for (let i = 0; i < len; i++) this.removeAvatar(avatars[i]);
 
             this.trackingAvatar = null;
-            this._avatars = null;
+            this._avatars.length = 0;
+            this._allAvatars.clean();
+            this._avatarCChildren.length = 0;
         }
 
 

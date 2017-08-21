@@ -16,17 +16,17 @@ namespace lolo {
     export class ButtonContainer extends DisplayObjectContainer {
 
         /**Touch Begin 时，播放的音效名称。默认值：null，表示不用播放*/
-        public static touchSoundName: string = null;
+        public static touchAudioName: string = null;
         /**Touch Begin 时，缩放的比例。值为 1 时，表示不用缩放。默认值：0.95*/
         public static touchZoomScale: number = 0.95;
 
 
         /**
          * Touch时，播放的音效名称。
-         * 默认将使用 ButtonContainer.touchSoundName 的值
+         * 默认将使用 ButtonContainer.touchAudioName 的值
          * 值为 null 时，表示不用播放音效。
          */
-        public touchSoundName: string = null;
+        public touchAudioName: string = null;
 
         /**
          * Touch begin 时，缩放的比例。
@@ -45,7 +45,7 @@ namespace lolo {
         public constructor(target?: cc.Node, swallowTouches: boolean = true) {
             super();
             this.touchZoomScale = ButtonContainer.touchZoomScale;
-            this.touchSoundName = ButtonContainer.touchSoundName;
+            this.touchAudioName = ButtonContainer.touchAudioName;
             this.target = target;
 
             this.touchEnabled = true;
@@ -159,8 +159,8 @@ namespace lolo {
                 this.runAction(cc.scaleTo(0.05, scale));
             }
 
-            // var snd:string = (this.touchSoundName != null) ? this.touchSoundName : BaseButton.touchSoundName;
-            // if(snd != null || snd != "") lolo.sound.play(snd);
+            let snd: string = (this.touchAudioName != null) ? this.touchAudioName : ButtonContainer.touchAudioName;
+            if (snd != null) lolo.audio.playEffect(snd);
         }
 
         /**

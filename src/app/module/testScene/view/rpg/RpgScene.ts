@@ -10,6 +10,9 @@ namespace app.rpg {
     import closestCanPassTile = lolo.rpg.closestCanPassTile;
     import TouchEvent = lolo.TouchEvent;
     import Button = lolo.Button;
+    import Image = lolo.Image;
+    import Animation = lolo.Animation;
+    import delayedCall = lolo.delayedCall;
 
 
     /**
@@ -18,7 +21,7 @@ namespace app.rpg {
      */
     export class RpgScene extends Container {
 
-        public static TEST_MAP_ID: string = "102";
+        public static TEST_MAP_ID: string = "101";
 
 
         public backBtn: Button;
@@ -62,6 +65,17 @@ namespace app.rpg {
             this._role = this._map.createAvatar("lolo", "female");
             this._map.trackingAvatar = this._role;
             this._map.event_addListener(MapEvent.TOUCH, this.touchMap, this);
+
+
+            let ani1: Animation = new Animation("avatar.female.attack.3");
+            ani1.x = 800;
+            ani1.y = 1000;
+            ani1.play();
+            this._map.addElementToAvatarLayer(ani1);
+
+            delayedCall(2000, () => {
+                this._map.removeElementFromAvatarLayer(ani1);
+            }, this);
         }
 
 

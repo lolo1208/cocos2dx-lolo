@@ -25,8 +25,9 @@ namespace lolo {
         private _key: number;
         /**定时器间隔*/
         private _delay: number = 0;
+
         /**定时器是否正在运行中*/
-        private _running: boolean = false;
+        public running: boolean = false;
 
         /**定时器当前已运行次数*/
         public currentCount: number = 0;
@@ -192,7 +193,7 @@ namespace lolo {
             }
             if (this._delay == value) return;
 
-            let running: boolean = this._running;
+            let running: boolean = this.running;
             if (this._delay != 0) this.reset();//之前被设置或启动过，重置定时器
 
             //创建当前间隔的定时器
@@ -210,11 +211,11 @@ namespace lolo {
          * 开始定时器
          */
         public start(): void {
-            if (this._running) return;
+            if (this.running) return;
 
             //没达到设置的运行最大次数
             if (this.repeatCount == 0 || this.currentCount < this.repeatCount) {
-                this._running = true;
+                this.running = true;
                 this.lastUpdateTime = TimeUtil.nowTime;
 
                 Timer.removeTimer(Timer._stoppingList, this);
@@ -230,8 +231,8 @@ namespace lolo {
          * 如果定时器正在运行，则停止定时器
          */
         public stop(): void {
-            if (!this._running) return;
-            this._running = false;
+            if (!this.running) return;
+            this.running = false;
 
             Timer.removeTimer(Timer._startingList, this);
             Timer.removeTimer(Timer._stoppingList, this);
@@ -245,12 +246,6 @@ namespace lolo {
         public reset(): void {
             this.currentCount = 0;
             this.stop();
-        }
-
-
-        /**定时器是否正在运行中*/
-        public get running(): boolean {
-            return this._running;
         }
 
 

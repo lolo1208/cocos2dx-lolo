@@ -35,7 +35,7 @@ namespace lolo {
             if (child == null) return;
 
             this.childResized = true;
-            child.removeFromParent();
+            child.removeFromParent(false);
             super.addChild.apply(this, arguments);
         }
 

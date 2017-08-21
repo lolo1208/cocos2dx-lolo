@@ -26,8 +26,6 @@ namespace lolo.rpg {
         private _direction: number;
         /**当前所在的区块坐标*/
         private _tile: Point;
-        /**是否已死亡*/
-        private _isDead: boolean;
         /**当前移动的动作（默认：Constants.A_RUN）*/
         private _moveAction: string;
         /**移动速度*/
@@ -81,6 +79,9 @@ namespace lolo.rpg {
 
         /**移动时，用于记录上次移动（上一帧）的时间*/
         private _lastMoveTime: number;
+
+        /**是否已死亡*/
+        public isDead: boolean;
 
 
         public constructor() {
@@ -796,18 +797,6 @@ namespace lolo.rpg {
 
             // 添加到现在的列表中
             this._map.getAvatarListFromTile(this._tile).push(this);
-        }
-
-
-        /**
-         * 是否已死亡
-         */
-        public set isDead(value: boolean) {
-            this._isDead = value;
-        }
-
-        public get isDead(): boolean {
-            return this._isDead;
         }
 
 

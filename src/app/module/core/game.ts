@@ -125,20 +125,13 @@ namespace app.core {
         // Console.getInstance().container = lolo.stage;
         // Stats.getInstance().container = lolo.stage;
 
-        // lolo.sound = SoundManager.getInstance();
-        // lolo.mouse = MouseManager.getInstance();
-        // lolo.mouse.defaultStyle = GameConstants.MOUSE_STYLE_NORMAL;
-        // lolo.mouse.contextMenu.customItems.push(new ContextMenuItem(lolo.version, false, false));
-
+        // lolo.ButtonContainer.touchAudioName = AudioConstants.COMMON_TOUCH;
         lolo.Animation.initialize();
         lolo.Bitmap.initialize();
         lolo.Image.initialize();
         lolo.Particle.initialize();
-        // ExternalUtil.initialize();
 
         // LogSampler.enabled = true;
-
-        // lolo.service = app.net.WebSocketService.getInstance();
 
         lolo.Logger.event_addListener(lolo.LogEvent.SAMPLE_LOG, logHandler, null);
         lolo.Logger.event_addListener(lolo.LogEvent.ERROR_LOG, logHandler, null);
