@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
+  <bitmapSprite id="bg" properties='{"sourceName":"test.jump.scene.bg"}'/>
   <container id="map"/>
   <container id="joystick">
     <bitmapSprite id="bg" properties='{"sourceName":"test.jump.joystick.bg"}'/>
