@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
+  <bitmapSprite id="bg" properties='{"sourceName":"test.jump.scene.bg"}'/>
   <container id="map"/>
   <container id="joystick">
     <bitmapSprite id="bg" properties='{"sourceName":"test.jump.joystick.bg"}'/>
     <bitmapSprite id="sight" properties='{"sourceName":"test.jump.joystick.sight"}'/>
   </container>
+  <avatar>
+    <bitmapSprite id="shadow" properties='{"sourceName":"test.jump.scene.shadow"}'/>
+    <animation id="ani" properties='{"sourceName":"test.jump.avatar.move1", "fps":30}'/>
+    <label id="nameText" properties='{"x":-40, "y":15, "width":80, "height":24}' style='{"strokeSize":1, "align":"center", "size":18}' editorProps='{"tipsText":"Label"}'/>
+  </avatar>
 </config>
