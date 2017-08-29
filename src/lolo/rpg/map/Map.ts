@@ -182,7 +182,7 @@ namespace lolo.rpg {
 
 
         /**
-         * 获取所有角色（请勿直接操作该数组）
+         * 获取所有角色（请勿直接对该数组：加／删／排序）
          * @return
          */
         public getAllAvatar(): Avatar[] {
@@ -209,9 +209,13 @@ namespace lolo.rpg {
 
         /**
          * 对 avatar 层的显示内容进行排序
+         * @param now 是否立即排序
          */
-        public sortAvatar(): void {
-            if (!this._sortTimer.running) this._sortTimer.start();
+        public sortAvatar(now: boolean = false): void {
+            if (now)
+                this.avatarSortTimerHandler();
+            else if (!this._sortTimer.running)
+                this._sortTimer.start();
         }
 
 
@@ -540,18 +544,17 @@ namespace lolo.rpg {
         private background_touchBegin(event: TouchEvent): void {
             if (this._avatarTouchEnabled) {
                 let worldPoint: cc.Point = event.touch.getLocation();
-                let avatar: Avatar;
                 let rect: Rectangle = lolo.temp_rect;
 
                 // 循环搜索
                 let avatars: Avatar[] = this._allAvatars.values;
                 for (let i = avatars.length - 1; i >= 0; i--) {
-                    avatar = avatars[i];
+                    let avatar: Avatar = avatars[i];
                     if (!avatar.isVisible() || avatar.getOpacity() <= 0) continue;
                     // 用 avatarAni 做检测
                     let avatarAni: Animation = avatar.avatarAni;
                     let p: cc.Point = avatarAni.convertToNodeSpace(worldPoint);
-                    rect.setTo(0, 0, avatarAni.getWidth(), avatarAni.getHeight());
+                    rect.setTo(0, 0, avatarAni._getWidth(), avatarAni._getHeight());
                     if (rect.contains(p.x, p.y)) {
                         avatar.event_dispatch(Event.create(AvatarEvent, AvatarEvent.TOUCH), true);
                         return;
@@ -604,7 +607,7 @@ namespace lolo.rpg {
          * 清理所有的 Avatar
          */
         public cleanAllAvatar(): void {
-            let avatars: Avatar[] = this._allAvatars.values;
+            let avatars: Avatar[] = this._allAvatars.values.concat();
             let len: number = avatars.length;
             for (let i = 0; i < len; i++) this.removeAvatar(avatars[i]);
 
@@ -630,6 +633,7 @@ namespace lolo.rpg {
 
             // 销毁附加的显示元素
             this._aboveC.destroyAllChildren();
+            this._avatarC.destroyAllChildren();
             this._belowC.destroyAllChildren();
 
             this._id = null;

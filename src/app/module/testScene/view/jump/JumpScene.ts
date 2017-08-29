@@ -2,6 +2,8 @@ namespace app.jump {
 
 
     import Container = lolo.Container;
+    import Bitmap = lolo.Bitmap;
+    import Event = lolo.Event;
 
 
     /**
@@ -10,6 +12,8 @@ namespace app.jump {
      * @author LOLO
      */
     export class JumpScene extends Container {
+
+        public bg: Bitmap;
 
         public map: Map = new Map();
         public joystick: Joystick = new Joystick();
@@ -22,13 +26,12 @@ namespace app.jump {
 
         public initialize(): void {
             this.initUI("jumpScCfg");
+        }
 
-            let lb = new lolo.Label();
-            lb.x = 100;
-            lb.y = 100;
-            lb.color = "0xFFFFFF";
-            lb.text = "sadasdasd";
-            this.addChild(lb);
+
+        private stage_resize(event?: Event): void {
+            this.bg.width = lolo.stage.stageWidth;
+            this.bg.height = lolo.stage.stageHeight;
         }
 
 
@@ -40,14 +43,18 @@ namespace app.jump {
 
             this.map.show();
             this.joystick.show();
+            this.joystick.setPosition(120, lolo.stage.stageHeight - 120);
+            lolo.stage.event_addListener(Event.RESIZE, this.stage_resize, this);
+            this.stage_resize();
         }
 
 
         protected reset(): void {
             super.reset();
 
-            this.joystick.hide();
+            lolo.stage.event_removeListener(Event.RESIZE, this.stage_resize, this);
             this.map.hide();
+            this.joystick.hide();
         }
 
 

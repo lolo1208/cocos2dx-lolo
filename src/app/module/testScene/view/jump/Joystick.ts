@@ -18,10 +18,10 @@ namespace app.jump {
         public sight: Bitmap;
 
         /**可摇动半径*/
-        public radius: number = 30;
+        public radius: number = 45;
 
         private _enabled: boolean;
-        private _touchID: number;
+        private _touchID: number = null;
 
 
         public constructor() {
@@ -39,17 +39,33 @@ namespace app.jump {
 
         private touchHandler(event: TouchEvent): void {
             let touchID: number = event.touch.getTouchID();
-            if (event.type == TouchEvent.TOUCH_BEGIN) {
-                if (this._touchID != null) return;
-                this.sight.stopAllActions();
-                let pStage: Point = lolo.gesture.touchPoint;
-                if (pStage.y > lolo.stage.stageHeight - 300) {// 屏幕下方 300px 是点击区域
-                    // padding 120px
-                    this.x = Math.min(Math.max(pStage.x, 120), lolo.stage.halfStageWidth - 120);
-                    this.y = Math.min(Math.max(pStage.y, 120), lolo.stage.halfStageHeight - 120);
-                }
+            switch (event.type) {
+
+                case TouchEvent.TOUCH_BEGIN:
+                    if (this._touchID != null) return;
+
+                    // 屏幕左下方 300x300 像素是点击区域
+                    let pStage: Point = lolo.gesture.touchPoint;
+                    if (pStage.x > 300 || pStage.y < lolo.stage.stageHeight - 300) return;
+
+                    this._touchID = touchID;
+                    this.sight.stopAllActions();
+
+                    // 至少距左下 110 像素
+                    this.x = Math.max(110, pStage.x);
+                    this.y = Math.min(pStage.y, lolo.stage.stageHeight - 110);
+                    this.fade(true);
+
+                    lolo.gesture.event_addListener(TouchEvent.TOUCH_MOVE, this.touchHandler, this);
+                    lolo.gesture.event_addListener(TouchEvent.TOUCH_END, this.touchHandler, this);
+                    break;
+
+                case TouchEvent.TOUCH_END:
+                    if (touchID == this._touchID) this.end();
+                    return;
             }
 
+            if (touchID != this._touchID) return;
 
             let p: cc.Point = this.convertToNodeSpace(event.touch.getLocation());
             let x: number = p.x, y: number = -p.y;
@@ -67,20 +83,6 @@ namespace app.jump {
             }
             this.sight.x = x;
             this.sight.y = y;
-
-
-            switch (event.type) {
-                case TouchEvent.TOUCH_BEGIN:
-
-                    break;
-
-                // case TouchEvent.TOUCH_MOVE:
-                //     break;
-
-                case TouchEvent.TOUCH_END:
-                    this.end();
-                    break;
-            }
         }
 
 
@@ -107,6 +109,7 @@ namespace app.jump {
          * 结束使用虚拟摇杆
          */
         private end(): void {
+            this._touchID = null;
             lolo.gesture.event_removeListener(TouchEvent.TOUCH_MOVE, this.touchHandler, this);
             lolo.gesture.event_removeListener(TouchEvent.TOUCH_END, this.touchHandler, this);
             this.sight.stopAllActions();
@@ -132,6 +135,7 @@ namespace app.jump {
 
         protected startup(): void {
             super.startup();
+            this.fade(false);
             if (this._enabled) this.enabled = this._enabled;
         }
 

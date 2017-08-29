@@ -336,9 +336,7 @@ namespace lolo {
                 let scrollBar: TouchScrollBar = scrolls[i];
                 let tweenContentTo: number = scrollBar._tweenContentTo;
                 if (tweenContentTo == null) continue;
-
-                let xy: string = scrollBar._xy;
-                props[xy] = tweenContentTo;
+                props[scrollBar._xy] = tweenContentTo;
             }
             if (props.x == null) props.x = this._content.x;
             if (props.y == null) props.y = this._content.y;
@@ -411,10 +409,10 @@ namespace lolo {
 
             let pos: number = this._content[this._xy];
             let posTo: number = pos;
-            if (pos > this._min) posTo = this._min;
+            if (pos >= this._min) posTo = this._min;
             else if (pos < this._max) posTo = this._max;
 
-            if (posTo != pos) {//弹回
+            if (Math.round(posTo) != Math.round(pos)) {//弹回
                 this.tweenContent(posTo, 300);
             }
             else {

@@ -69,7 +69,8 @@ namespace lolo {
 
             this.recycleAllItem();
             // 属性或数据不完整，不能显示
-            if (this._data == null || this._data.length == 0 || this._itemRendererClass == null) {
+            let dataLength: number = (this._data != null) ? this._data.length : 0;
+            if (dataLength == 0 || this._itemRendererClass == null) {
                 this._width = this._height = 0;
                 if (this._selectedItem != null) this.selectedItem = null;//取消选中
                 PrerenderScheduler.remove(this._renderHandler);
@@ -110,7 +111,7 @@ namespace lolo {
                 minI = Math.floor(minP / this._itemLayoutWidth) * this._rowCount;
                 maxI = Math.ceil(maxP / this._itemLayoutWidth) * this._rowCount;
             }
-            if (maxI > this._data.length) maxI = this._data.length;
+            if (maxI > dataLength) maxI = dataLength;
 
             // 根据数据显示（创建）子项
             let lastItem: ItemRenderer = null;
@@ -160,15 +161,11 @@ namespace lolo {
             let oldValue: number;
             if (isVertical) {
                 oldValue = this._height;
-                this._height = 0;
-                this._height = super.getHeight();
-                this._height += Math.ceil((this._data.length - (maxI - minI)) / this._columnCount) * this._itemLayoutHeight;
+                this._height = Math.ceil(dataLength / this._columnCount) * this._itemLayoutHeight - this._verticalGap;
             }
             else {
                 oldValue = this._width;
-                this._width = 0;
-                this._width = super.getWidth();
-                this._width += Math.ceil((this._data.length - (maxI - minI)) / this._rowCount) * this._itemLayoutWidth;
+                this._width = Math.ceil(dataLength / this._rowCount) * this._itemLayoutWidth - this._horizontalGap;
             }
 
             // 内容或宽高有变化时，通知滚动条更新

@@ -113,6 +113,8 @@ declare namespace cc {
 
         getShaderProgram(): GLProgram;
 
+        update(dt: number): void;
+
         scheduleUpdate(): void;
 
         unscheduleUpdate(): void;
@@ -380,6 +382,14 @@ declare namespace cc {
         _updateEditBoxSize: (width: number, height: number) => void;
     }
 
+    class Scale9Sprite extends Node {// ccui.Scale9Sprite = cc.Scale9Sprite
+        constructor(file: string, rect?: Rect, capInsets?: Rect);
+    }
+
+    class EditBoxDelegate extends Class {
+    }
+
+
     class ParticleSystem extends Node {
         sourceName: string;// lolo.Particle 实现该属性
         duration: number;
@@ -399,11 +409,26 @@ declare namespace cc {
         setTexture(texture: Texture2D): void;
     }
 
-    class Scale9Sprite extends Node {// ccui.Scale9Sprite = cc.Scale9Sprite
-        constructor(file: string, rect?: Rect, capInsets?: Rect);
-    }
 
-    class EditBoxDelegate extends Class {
+    class MotionStreak extends Node {
+        texture: Texture2D;
+        fastMode: boolean;// default:true
+
+        constructor(fade: number, minSeg: number, stoke: number, color: Color, texture: Texture2D)
+
+        initWithFade(fade: number, minSeg: number, stoke: number, color: Color, texture: Texture2D): void;
+
+        tintWithColor(color: Color): void;
+
+        setStroke(value: number): void;
+
+        getStroke(): number;
+
+        setTexture(value: Texture2D): void;
+
+        getTexture(): Texture2D;
+
+        reset(): void;
     }
 
 
@@ -459,7 +484,7 @@ declare namespace cc {
 
 
     class Touch extends Class {
-        getID(): number;// isPCWeb 环境下值为：undefined。推荐使用 getTouchID()，任何环境下都能获取到值
+        getID(): number;// isPCWeb 环境下值为：undefined。请使用 getTouchID()，在任何环境下都能获取到值
 
         getTouchID(): number;// 所有环境下都能获取到 touchID 值
 
@@ -610,7 +635,7 @@ declare namespace cc {
     function rect(x: number | Rect = 0, y: number = 0, w: number = 0, h: number = 0): Rect;
 
     /**返回一个新的 cc.Color 对象*/
-    function color(r?: number | string | Color, g?: number, b?: number, a?: number = 255): Color;
+    function color(r: number | string | Color = 0, g: number = 0, b: number = 0, a?: number = 255): Color;
 
     /**返回一个新的 cc.Color 对象*/
     function hexToColor(hex: string): Color;

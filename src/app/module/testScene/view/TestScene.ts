@@ -32,6 +32,7 @@ namespace app.testScene {
     import Event = lolo.Event;
     import JumpScene = app.jump.JumpScene;
     import Filter = lolo.Filter;
+    import MotionStreak = lolo.MotionStreak;
 
 
     /**
@@ -96,14 +97,34 @@ namespace app.testScene {
             // this.c.visible = false;
 
 
+            let img: Image = new Image();
+            img.y = img.x = 200;
+            this.addChild(img);
+            img.hander = lolo.handler(() => {
+                let ms = new MotionStreak(img, 0.5, 10, false);
+                img.runAction(cc.sequence(
+                    cc.moveTo(0.5, 400, 200),
+                    cc.delayTime(0.5),
+                    cc.moveTo(0.5, 400, 400),
+                    cc.delayTime(0.5),
+                    cc.moveTo(0.5, 200, 300),
+                    cc.moveTo(0.5, 200, 200)
+                ).repeatForever());
+                delayedCall(1200, ms.start, ms);
+                delayedCall(4200, ms.stop, ms);
+                delayedCall(8200, ms.start, ms);
+                delayedCall(10200, ms.destroy, ms);
+            });
+            img.directory = "skillIcon";
+            img.fileName = "gongJi";
         }
 
 
         private testBtn_touchTapHandler(event: TouchEvent): void {
 
-            // this.jumpScene.show();
-            // this.c.removeFromParent();
-            // return;
+            this.jumpScene.show();
+            this.c.removeFromParent();
+            return;
 
             (<AppUIManager>lolo.ui).loadRpgMap(RpgScene.TEST_MAP_ID, lolo.handler(() => {
                 this.rpgScene.show();

@@ -100,7 +100,6 @@ namespace lolo {
         /**1像素的空白纹理（图片或动画纹理还未加载完成时显示）*/
         public static EMPTY_TEXTURE: cc.Texture2D;
         public static EMPTY_TEXTURE_RECT: Rectangle = new Rectangle(0, 0, 1, 1);
-        public static EMPTY_TEXTURE_ANCHOR: Point = new Point(0, 1);
         /**1像素的黑色纹理（模态黑背景）*/
         public static BLACK_TEXTURE: cc.Texture2D;
 
