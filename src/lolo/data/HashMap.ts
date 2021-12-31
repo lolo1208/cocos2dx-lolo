@@ -91,7 +91,7 @@ namespace lolo {
          */
         public getValueByKey(key: any): any {
             let index: number = this._keys.getItem(key);
-            if (index == undefined) return null;
+            if (index == null) return null;
             return this.getValueByIndex(index);
         }
 
@@ -105,17 +105,17 @@ namespace lolo {
         }
 
         /**
-         * 通过键获取索引
+         * 通过键获取索引。没有对应的值时，返回 -1
          * @param key
          * @return
          */
         public getIndexByKey(key: any): number {
             let index: number = this._keys.getItem(key);
-            return (index != undefined) ? index : -1;
+            return (index != null) ? index : -1;
         }
 
         /**
-         * 通过值获取索引
+         * 通过值获取索引。没有对应的值时，返回 -1
          * @param value
          * @return
          */
@@ -140,7 +140,7 @@ namespace lolo {
                 key = keys[i];
 
                 let valueIndex: number = this._keys.getItem(key);
-                if (valueIndex == undefined) return -1;// 没有这个key
+                if (valueIndex == null) return -1;// 没有这个key
 
                 if (index != -1) {
                     if (valueIndex != index) return -1;// 列表中的key不一致
@@ -184,7 +184,7 @@ namespace lolo {
          */
         public setValueByKey(key: any, value: any): void {
             let index: number = this._keys.getItem(key);
-            if (index != undefined) this.setValueByIndex(index, value);
+            if (index != null) this.setValueByIndex(index, value);
         }
 
 
@@ -204,7 +204,7 @@ namespace lolo {
          */
         public removeByKey(key: any): void {
             let index: number = this._keys.getItem(key);
-            if (index != undefined) this.removeByIndex(index);
+            if (index != null) this.removeByIndex(index);
         }
 
         /**
@@ -246,30 +246,32 @@ namespace lolo {
         }
 
         /**
-         * 通过索引为该值添加一个键，并返回该值的索引
+         * 通过索引为该值添加一个键，并返回该值的索引。如果值不存在，将会添加失败，并返回 -1
          * @param newKey
          * @param index
          * @return
          */
         public addKeyByIndex(newKey: any, index: number): number {
+            if (this._values[index] == null) {
+                return -1;
+            }
             this._keys.setItem(newKey, index);
             return index;
         }
 
         /**
-         * 通过键为该值添加一个键，并返回该值的索引。如果没有源键将添加失败，并返回-1
+         * 通过键为该值添加一个键，并返回该值的索引。如果没有源键，将会添加失败，并返回 -1
          * @param newKey
          * @param key
          * @return
          */
         public addKeyByKey(newKey: any, key: any): number {
             let index: number = this._keys.getItem(key);
-            if (index == undefined) {
-                this.addKeyByIndex(newKey, index);
-            }
-            else {
+            if (index == null) {
                 return -1;
             }
+            this.addKeyByIndex(newKey, index);
+            return index;
         }
 
         /**

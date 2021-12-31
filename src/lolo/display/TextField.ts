@@ -57,6 +57,9 @@ namespace lolo {
             if (value.valign != null) this.valign = value.valign;
             if (value.stroke != null) this.stroke = value.stroke;
             if (value.strokeSize != null) this.strokeSize = value.strokeSize;
+            if (value.shadow != null) this.shadow = value.shadow;
+            if (value.shadowOffset != null) this.shadowOffset = value.shadowOffset;
+            if (value.shadowBlur != null) this.shadowBlur = value.shadowBlur;
         }
 
 

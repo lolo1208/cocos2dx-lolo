@@ -46,18 +46,13 @@ namespace lolo {
          * @param size 文本尺寸
          * @return
          */
-        public static toHtmlFont(str: string, color: string = "", size: number = 0): String {
+        public static toHtmlFont(str: string, color?: string, size?: number): String {
             let s: string = "<font";
-
-            if (color != "") {
+            if (color != null) {
                 if (color.charAt(0) != "#") color = "#" + color;
                 s += " color='" + color + "'";
             }
-
-            if (size != 0) {
-                s += " size='" + size + "'";
-            }
-
+            if (size != null) s += " size='" + size + "'";
             s += ">" + str + "</font>";
             return s;
         }
@@ -93,19 +88,8 @@ namespace lolo {
 
 
         /**
-         * 获取目录，为了显示好看，去掉前面的"file:///"字符串
-         * @param directory
-         * @return
-         */
-        public static getDirectory(directory: string): string {
-            if (directory.slice(0, 8) != "file:///") return directory;
-            return directory.slice(8, directory.length);
-        }
-
-        /**
          * 将字符串中的所有正斜杠转换成反斜杠
          * @param str
-         * @return
          */
         public static slashToBackslash(str: string): string {
             return str.replace(/\//g, "\\");
@@ -114,7 +98,6 @@ namespace lolo {
         /**
          * 将字符串中的所有反斜杠转换成正斜杠
          * @param str
-         * @return
          */
         public static backslashToSlash(str: string): string {
             return str.replace(/\\/g, "/");
@@ -122,25 +105,12 @@ namespace lolo {
 
 
         /**
-         * 删除字符串开头和末尾的所有空格字符
+         * 删除字符串开头和末尾的所有空格字符。
+         * 请直接使用：str.trim()
          * @param str
-         * @return
          */
         public static trim(str: String): String {
-            if (str == null) return "";
-
-            let startIndex: number = 0;
-            while (StringUtil.isWhitespace(str.charAt(startIndex)))
-                ++startIndex;
-
-            let endIndex: number = str.length - 1;
-            while (StringUtil.isWhitespace(str.charAt(endIndex)))
-                --endIndex;
-
-            if (endIndex >= startIndex)
-                return str.slice(startIndex, endIndex + 1);
-            else
-                return "";
+            return str.trim();
         }
 
 
@@ -174,6 +144,95 @@ namespace lolo {
             while (str.length < 6) str = "0" + str;
             str = prefix + str.toLocaleUpperCase();
             return str;
+        }
+
+
+        public static parseHtmlText(htmltext: string): any[] {
+            let stackList = [];
+            let resutlList = [];
+            let tagReg: RegExp = /^(font|a)\s/;
+            let headReg: RegExp = /^(color|textColor|strokeColor|stroke|b|bold|size|fontFamily|href|target)(\s)*=/;
+
+            let str: string;
+            let firstIdx = 0;// 文本段开始位置
+            let length: number = htmltext.length;
+            while (firstIdx < length) {
+                let startIdx: number = htmltext.indexOf("<", firstIdx);
+                if (startIdx < 0) {
+                    str = htmltext.substring(firstIdx);
+                    if (str != "") {
+                        stackList.length > 0
+                            ? resutlList.push({text: str, style: stackList[stackList.length - 1]})
+                            : resutlList.push({text: str});
+                    }
+
+                    firstIdx = length;
+                }
+                else {
+                    str = htmltext.substring(firstIdx, startIdx);
+                    if (str != "") {
+                        stackList.length > 0
+                            ? resutlList.push({text: str, style: stackList[stackList.length - 1]})
+                            : resutlList.push({text: str});
+                    }
+
+                    let fontEnd = htmltext.indexOf(">", startIdx);
+                    if (fontEnd == -1) {
+                        throwError("[StringUtil.parseHtmlText] 语法错误，标签没有闭合！", htmltext);
+                        fontEnd = startIdx;
+                    }
+                    else if (htmltext.charAt(startIdx + 1) == "\/") {// 关闭
+                        stackList.pop();
+                    }
+                    else {
+                        str = htmltext.substring(startIdx + 1, fontEnd).trim();
+                        let info: any = {};
+
+                        let header = [];
+                        if (str.charAt(0) == "b") {
+                            info[str] = "true";
+                        }
+                        else if (header = str.match(tagReg)) {
+                            str = str.substring(header[0].length).trim();
+                            let titles, next: number;
+                            while (titles = str.match(headReg)) {
+                                let title = titles[0];
+                                let value = "";
+                                str = str.substring(title.length).trim();
+                                if (str.charAt(0) == "\"") {
+                                    next = str.indexOf("\"", 1);
+                                    value = str.substring(1, next);
+                                    next++;
+                                }
+                                else if (str.charAt(0) == "\'") {
+                                    next = str.indexOf("\'", 1);
+                                    value = str.substring(1, next);
+                                    next++;
+                                }
+                                else {
+                                    value = str.match(/(\S)+/)[0];
+                                    next = value.length;
+                                }
+                                info[title.substring(0, title.length - 1).trim()] = value.trim();
+
+                                str = str.substring(next).trim();
+                            }
+                        }
+
+                        if (stackList.length > 0) {
+                            let lastInfo: Object = stackList[stackList.length - 1];
+                            for (let key in lastInfo) {
+                                if (info[key] == null) info[key] = lastInfo[key];
+                            }
+                        }
+                        stackList.push(info);
+                    }
+
+                    firstIdx = fontEnd + 1;
+                }
+            }
+
+            return resutlList;
         }
 
 

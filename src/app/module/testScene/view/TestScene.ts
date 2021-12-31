@@ -33,6 +33,8 @@ namespace app.testScene {
     import JumpScene = app.jump.JumpScene;
     import Filter = lolo.Filter;
     import MotionStreak = lolo.MotionStreak;
+    import StringUtil = lolo.StringUtil;
+    import RichText = lolo.RichText;
 
 
     /**
@@ -93,30 +95,22 @@ namespace app.testScene {
             this.testBtn.event_addListener(TouchEvent.TOUCH_TAP, this.testBtn_touchTapHandler, this);
             this.errorBtn.event_addListener(TouchEvent.TOUCH_TAP, this.errorBtn_touchTapHandler, this);
 
+            // let str: string = '<b>粗体</b>' +'没有任何格式初始文本，' +
+            //     '<font color="#0000ff" size="30" fontFamily="Verdana">Verdana blue large</font>' +
+            //     '<font color="#ff7f50" size="10">珊瑚色<b>局部加粗</b>小字体</font>' +
+            //     '<b>粗体</b>' +
+            //     '正常的';
+            let str: string = '<label color="#FF0000">白色文字</label>' +
+                '没有任何格式的文本，' +
+                '<label size="50" font="Verdana">Verdana text!</label>' +
+                '<ani sourceName="avatar.female.run.1" fps="30"/>' +
+                '<bmp sourceName="aaaaaaa">' +
+                '正常的';
+            // let list = StringUtil.parseHtmlText(str);
+            // let list = RichText.parse(str);
+            // console.log(list.length);
 
             // this.c.visible = false;
-
-
-            let img: Image = new Image();
-            img.y = img.x = 200;
-            this.addChild(img);
-            img.hander = lolo.handler(() => {
-                let ms = new MotionStreak(img, 0.5, 10, false);
-                img.runAction(cc.sequence(
-                    cc.moveTo(0.5, 400, 200),
-                    cc.delayTime(0.5),
-                    cc.moveTo(0.5, 400, 400),
-                    cc.delayTime(0.5),
-                    cc.moveTo(0.5, 200, 300),
-                    cc.moveTo(0.5, 200, 200)
-                ).repeatForever());
-                delayedCall(1200, ms.start, ms);
-                delayedCall(4200, ms.stop, ms);
-                delayedCall(8200, ms.start, ms);
-                delayedCall(10200, ms.destroy, ms);
-            });
-            img.directory = "skillIcon";
-            img.fileName = "gongJi";
         }
 
 

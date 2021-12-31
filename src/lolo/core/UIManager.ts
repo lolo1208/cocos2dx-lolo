@@ -543,7 +543,7 @@ namespace lolo {
 
 
         /**
-         * 显示全屏模态（模态对象为单例，就算调用该方法多次，同时也只会有一个模态实例存在）
+         * 显示全屏模态（模态对象为单例，就算调用该方法多次，也只会有一个模态实例存在）
          * @param alpha 模态透明度
          * @param layerName 将模态放置在该图层，可使用 Constants.LAYER_NAME_xxx 系列常量
          * @param zIndex 模态在图层中的深度

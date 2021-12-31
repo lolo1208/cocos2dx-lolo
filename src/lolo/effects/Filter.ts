@@ -51,6 +51,7 @@ namespace lolo {
             return program;
         }
 
+
         //
 
 
@@ -74,7 +75,7 @@ namespace lolo {
             + "    v_fragmentColor = a_color; \n"
             + "    v_texCoord = a_texCoord; \n"
             + "}";
-
+        //
 
         ///////////////////////////[ Fragment Shader ]///////////////////////////
 

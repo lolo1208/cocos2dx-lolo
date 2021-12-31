@@ -5,7 +5,7 @@ namespace lolo {
      * 原地停留一段时间后隐藏
      * - step1: 渐显
      * - step2: 停留指定时间后，渐隐
-     * - step3: 浮动结束后，将目标从父容器中移除，并将 alpha 设置为1
+     * - step3: 渐隐后，将目标从父容器中移除，并将 alpha 设置为1
      * @author LOLO
      */
     export class DelayedHide implements IFloat {

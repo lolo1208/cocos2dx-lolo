@@ -19,16 +19,16 @@ namespace lolo {
         private static THRESHOLD_POSITION: number = 5;
         /**速度的权重列表。index越小，越是最近发生的*/
         private static VELOCITY_WEIGHTS: number[] = [2.33, 2, 1.66, 1.33, 1];
+        /**最多记录几次速度值*/
+        private static VELOCITY_MAX_COUNT: number = TouchScrollBar.VELOCITY_WEIGHTS.length;
         /**速度值记录间隔*/
         private static VELOCITY_INTERVAL: number = 10;
-        /**最多记录几次速度值*/
-        private static VELOCITY_MAX_COUNT: number = 5;
         /**最小的改变速度，解决浮点数精度问题*/
         private static MINIMUM_VELOCITY: number = 0.02;
-        /**当容器自动滚动时要应用的摩擦系数*/
-        private static FRICTION: number = 0.998;
         /**当容器自动滚动时并且滚动位置超出容器范围时要额外应用的摩擦系数*/
         private static EXTRA_FRICTION: number = 0.95;
+        /**当容器自动滚动时要应用的摩擦系数*/
+        private static FRICTION: number = 0.998;
         /**摩擦系数的自然对数*/
         private static FRICTION_LOG: number = Math.log(TouchScrollBar.FRICTION);
 

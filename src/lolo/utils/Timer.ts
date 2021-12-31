@@ -50,14 +50,14 @@ namespace lolo {
 
             let timer: Timer, i: number, delay: any, key: any, timerList: Object;
             let timerRunning: boolean, ignorable: boolean;
-            let delayChangedList: number[];//在回调中，delay有改变的定时器列表
+            let delayChangedList: number[] = [];//在回调中，delay有改变的定时器列表
 
             //添加应该启动的定时器，以及移除该停止的定时器。
             //	上一帧将这些操作延迟到现在来处理的目的，是为了防止循环和回调时造成的问题
             while (Timer._startingList.length > 0) {
                 timer = Timer._startingList.pop();
                 if (Timer._list[timer.delay] == null) Timer._list[timer.delay] = {list: {}, removeMark: 0};
-                Timer._list[timer.delay].markCount = 0;
+                Timer._list[timer.delay].removeMark = 0;
                 Timer._list[timer.delay].list[timer.key] = timer;
             }
 
@@ -70,7 +70,7 @@ namespace lolo {
             let time: number = TimeUtil.nowTime;
             let removedList: number[] = [];//需要被移除的定时器列表
             for (delay in Timer._list) {
-                delayChangedList = [];
+                delayChangedList.length = 0;
                 timerList = Timer._list[delay].list;
                 timerRunning = false;
                 for (key in timerList) {

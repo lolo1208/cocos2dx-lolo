@@ -5,7 +5,7 @@ namespace lolo {
      * 先向上浮动，停留一会，再浮动到某一点
      * - step1: 从 alpha=0 到 alpha=1 ，并向上浮动目标
      * - step2: 停留指定时间后，移动到目标位置，并缓动更新 scaleX、scaleY
-     * - step3: 浮动结束后，将目标从父容器中移除，并将 alpha、scaleX、scaleY 设置为 1
+     * - step3: 浮动结束后，将目标从父容器中移除，并将 scaleX、scaleY 设置为 1
      * @author LOLO
      */
     export class PositionFloat implements IFloat {

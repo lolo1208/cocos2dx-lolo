@@ -14,6 +14,9 @@ namespace app.jump {
      */
     export class Map extends Container {
 
+        private NUM_X: number = 30;
+        private NUM_Y: number = 20;
+
 
         private _role: Avatar;
 
@@ -36,9 +39,9 @@ namespace app.jump {
                 }
             }
 
-            this._role = new Avatar();
-            this.addChild(this._role);
-            this._role.setPosition(500, 300);
+            // this._role = new Avatar();
+            // this.addChild(this._role);
+            // this._role.setPosition(500, 300);
         }
 
 
